@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
@@ -21,12 +21,9 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Infrastructure\Configurations\" />
     <Folder Include="Interfaces\RepositoryInterfaces\" />
     <Folder Include="Interfaces\ServiceInterfaces\" />
-    <Folder Include="Models\" />
     <Folder Include="Mapping\" />
-    <Folder Include="Enums\" />
     <Folder Include="Repositories\" />
     <Folder Include="Services\" />
   </ItemGroup>

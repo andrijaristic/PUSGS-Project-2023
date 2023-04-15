@@ -3,6 +3,8 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Server.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 string _cors = "cors";
 var builder = WebApplication.CreateBuilder(args);
@@ -60,7 +62,7 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "http://localhost:7012",
+        ValidIssuer = "http://localhost:7060",
         IssuerSigningKey = key
     };
 });
@@ -80,6 +82,12 @@ builder.Services.AddCors(options =>
 #region Service and Repository registrations
 
 #endregion
+
+builder.Services.AddDbContext<eShopDbContext>(options => 
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("eShopDatabase"), 
+            b => b.MigrationsAssembly("Server"))
+        );
 
 #region Mapper registration
 var mapperConfig = new MapperConfiguration(mc =>
