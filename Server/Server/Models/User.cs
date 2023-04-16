@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 using Server.Enums;
 
 namespace Server.Models
@@ -18,5 +19,13 @@ namespace Server.Models
         // public string ImageURL { get; set; }
         public List<Product> Products { get; set; }  // Will be empty for Buyer, Admin
         public List<Order> Orders { get; set; } // Will be empty for Admin
+
+        public void Update(string username, string email, string name, DateTime dateOfBirth)
+        {
+            Username = username;
+            Email = email;
+            Name = name;
+            DateOfBirth = dateOfBirth;  
+        }
     }
 }

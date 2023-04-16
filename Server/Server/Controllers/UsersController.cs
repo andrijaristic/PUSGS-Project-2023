@@ -31,5 +31,13 @@ namespace Server.Controllers
             AuthDTO authDTO = await _userService.Login(loginDTO);
             return Ok(authDTO);
         }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> Put([FromBody]UpdateUserDTO updateUserDTO)
+        {
+            DisplayUserDTO displayUserDTO = await _userService.UpdateUser(updateUserDTO);
+            return Ok(displayUserDTO);
+        }
     }
 }

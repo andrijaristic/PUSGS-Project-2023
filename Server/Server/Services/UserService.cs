@@ -86,14 +86,36 @@ namespace Server.Services
             }
         }
 
-        private void ValidateUser(NewUserDTO newUserDTO)
+        public async Task<DisplayUserDTO> UpdateUser(UpdateUserDTO updateUserDTO)
+        {
+            ValidateUser(_mapper.Map<NewUserDTO>(updateUserDTO), true);
+            User user = await _unitOfWork.Users.Find(updateUserDTO.Id);
+            if (user == null)
+            {
+                throw new UserNotFoundException(user.Id);
+            }
+
+            bool usernameUpdate = !String.Equals(user.Username, updateUserDTO.Username);
+            bool userUsernameExists = await _unitOfWork.Users.FindByUsername(updateUserDTO.Username) != null && usernameUpdate;
+            if (userUsernameExists)
+            {
+                throw new UserUsernameExistsException(updateUserDTO.Username);
+            }
+
+            user.Update(updateUserDTO.Username.Trim(), updateUserDTO.Email.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth);
+            await _unitOfWork.Save();
+
+            return _mapper.Map<DisplayUserDTO>(user);
+        }
+
+        private void ValidateUser(NewUserDTO newUserDTO, bool registered = false)
         {
             if (String.IsNullOrWhiteSpace(newUserDTO.Username))
             {
                 throw new InvalidUserUsernameException(newUserDTO.Username);
             }
 
-            if (String.IsNullOrWhiteSpace(newUserDTO.Password))
+            if (!registered && String.IsNullOrWhiteSpace(newUserDTO.Password))
             {
                 throw new InvalidUserPasswordException(newUserDTO.Password);
             }
@@ -118,21 +140,22 @@ namespace Server.Services
                 throw new InvalidUserEmailException(newUserDTO.Email);
             }
 
-            if (!Enum.TryParse(newUserDTO.Role.ToUpper(), out UserRole role))
+            bool enumParseResult = Enum.TryParse(newUserDTO.Role.ToUpper(), out UserRole role);
+            if (!registered && !enumParseResult)
             {
                 throw new InvalidUserRoleException(newUserDTO.Role.ToString().ToUpper());
             }
 
-            if (role == UserRole.ADMIN)
+            if (!registered && role == UserRole.ADMIN)
             {
                 throw new InvalidUserAdminRoleException();
             }
 
-            bool IsValidEmail(string email)
+            static bool IsValidEmail(string email)
             {
                 if (email.EndsWith("."))
                 {
-                    return false; // suggested by @TK-421
+                    return false;
                 }
                 try
                 {
