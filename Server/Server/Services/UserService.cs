@@ -27,6 +27,28 @@ namespace Server.Services
             _mapper = mapper;
         }
 
+        public async Task VerifyUser(Guid userId)
+        {
+            User user = await _unitOfWork.Users.Find(userId);
+            if (user == null)
+            {
+                throw new UserNotFoundException(userId);
+            }
+
+            if (user.Role != UserRole.SELLER)
+            {
+                throw new InvalidUserVerificationRole(userId);
+            }
+
+            if (user.isVerified)
+            {
+                throw new UserAlreadyVerifiedException(userId);
+            }
+
+            user.isVerified = true;
+            await _unitOfWork.Save();
+        }
+
         public async Task<DisplayUserDTO> CreateUser(NewUserDTO newUserDTO)
         {
             ValidateUser(newUserDTO);

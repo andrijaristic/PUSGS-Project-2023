@@ -39,5 +39,13 @@ namespace Server.Controllers
             DisplayUserDTO displayUserDTO = await _userService.UpdateUser(updateUserDTO);
             return Ok(displayUserDTO);
         }
+
+        [HttpPut("verify/{id}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> Verify(Guid id)
+        {
+            await _userService.VerifyUser(id);
+            return Ok();
+        }
     }
 }
