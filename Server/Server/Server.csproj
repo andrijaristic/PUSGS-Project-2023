@@ -21,10 +21,8 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Interfaces\RepositoryInterfaces\" />
     <Folder Include="Interfaces\ServiceInterfaces\" />
     <Folder Include="Mapping\" />
-    <Folder Include="Repositories\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

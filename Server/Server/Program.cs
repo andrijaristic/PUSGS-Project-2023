@@ -5,6 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Server.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Server.Models.AppSettings;
+using Server.Interfaces.RepositoryInterfaces;
+using Server.Repositories;
 
 string _cors = "cors";
 var builder = WebApplication.CreateBuilder(args);
@@ -79,8 +82,17 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+builder.Services.AddOptions();
+
 #region Service and Repository registrations
 
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 #endregion
 
 builder.Services.AddDbContext<eShopDbContext>(options => 
