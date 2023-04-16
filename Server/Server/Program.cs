@@ -8,6 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Server.Models.AppSettings;
 using Server.Interfaces.RepositoryInterfaces;
 using Server.Repositories;
+using Server.Middleware;
+using Server.Interfaces.ServiceInterfaces;
+using Server.Services;
+using Microsoft.AspNetCore.Identity;
+using Server.Mapping;
 
 string _cors = "cors";
 var builder = WebApplication.CreateBuilder(args);
@@ -86,7 +91,7 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSet
 builder.Services.AddOptions();
 
 #region Service and Repository registrations
-
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -104,7 +109,7 @@ builder.Services.AddDbContext<eShopDbContext>(options =>
 #region Mapper registration
 var mapperConfig = new MapperConfiguration(mc =>
 {
-
+    mc.AddProfile(new UserMappingProfile());
 });
 
 IMapper mapper = mapperConfig.CreateMapper();
@@ -112,6 +117,9 @@ builder.Services.AddSingleton(mapper);
 #endregion
 
 // Middleware
+// Transient services are made and destroyed multiple times per request
+// Created for each object in request, every time it uses memory & resources
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 var app = builder.Build();
 
@@ -121,6 +129,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
