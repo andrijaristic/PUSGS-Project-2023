@@ -135,7 +135,7 @@ namespace Server.Services
                 throw new InvalidUserDateOfBirthException($"{newUserDTO.DateOfBirth.Day}/{newUserDTO.DateOfBirth.Month}/{newUserDTO.DateOfBirth.Year}");
             }
 
-            if (String.IsNullOrWhiteSpace(newUserDTO.Email) && !IsValidEmail(newUserDTO.Email))
+            if (String.IsNullOrWhiteSpace(newUserDTO.Email))
             {
                 throw new InvalidUserEmailException(newUserDTO.Email);
             }
@@ -149,23 +149,6 @@ namespace Server.Services
             if (!registered && role == UserRole.ADMIN)
             {
                 throw new InvalidUserAdminRoleException();
-            }
-
-            static bool IsValidEmail(string email)
-            {
-                if (email.EndsWith("."))
-                {
-                    return false;
-                }
-                try
-                {
-                    var addr = new System.Net.Mail.MailAddress(email);
-                    return addr.Address == email;
-                }
-                catch
-                {
-                    return false;
-                }
             }
         }
     }
