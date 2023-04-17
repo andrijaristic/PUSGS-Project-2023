@@ -17,12 +17,19 @@ namespace Server.Controllers
             _userService = userService;
         }
 
+        [HttpGet]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> Get()
+        {
+            List<DisplayUserDTO> displayUserDTOs = await _userService.GetSellers();
+            return Ok(displayUserDTOs);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]NewUserDTO newUserDTO)
         {
             DisplayUserDTO displayUserDTO = await _userService.CreateUser(newUserDTO);
-            return Ok(displayUserDTO);
-            //return CreatedAtAction(typeof(Get), new { id = displayUserDTO.Id}, displayUserDTO);
+            return CreatedAtAction(nameof(Get), new { id = displayUserDTO.Id }, displayUserDTO);
         }
 
         [HttpPost("login")]

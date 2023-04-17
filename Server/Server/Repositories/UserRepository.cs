@@ -17,5 +17,11 @@ namespace Server.Repositories
             User user = await _dbContext.Users.FirstOrDefaultAsync(x => String.Equals(x.Username, username));
             return user;
         }
+
+        public async Task<List<User>> GetSellers()
+        {
+            List<User> sellers = await _dbContext.Users.Where(x => x.Role == Enums.UserRole.SELLER).OrderBy(x => x.isVerified).ToListAsync();
+            return sellers;
+        }
     }
 }

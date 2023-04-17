@@ -8,5 +8,6 @@ namespace Server.Interfaces.ServiceInterfaces
         Task<AuthDTO> Login(LoginDTO loginDTO);
         Task<DisplayUserDTO> UpdateUser(UpdateUserDTO updateUserDTO);
         Task VerifyUser(Guid userId);
+        Task<List<DisplayUserDTO>> GetSellers();
     }
 }

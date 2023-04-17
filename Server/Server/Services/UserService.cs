@@ -130,6 +130,13 @@ namespace Server.Services
             return _mapper.Map<DisplayUserDTO>(user);
         }
 
+        public async Task<List<DisplayUserDTO>> GetSellers()
+        {
+            List<User> sellers = await _unitOfWork.Users.GetSellers();
+
+            return _mapper.Map<List<DisplayUserDTO>>(sellers);
+        }
+
         private void ValidateUser(NewUserDTO newUserDTO, bool registered = false)
         {
             if (String.IsNullOrWhiteSpace(newUserDTO.Username))
