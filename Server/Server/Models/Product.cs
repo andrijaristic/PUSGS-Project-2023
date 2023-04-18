@@ -12,5 +12,11 @@ namespace Server.Models
         // public string ImageURL { get; set; }
         public Guid SellerId { get; set; }
         public User Seller { get; set; }
+        
+        public void Update(string description, double individualPrice)
+        {
+            Description = description;
+            IndividualPrice = individualPrice;
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace Server.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        
+
         public ProductService(IUnitOfWork unitOfWork, IMapper mapper) 
         {
             _unitOfWork = unitOfWork;
@@ -69,9 +69,29 @@ namespace Server.Services
             await _unitOfWork.Save();
         }
 
-        private void ValidateProduct(NewProductDTO newProductDTO)
+        public async Task<DisplayProductDTO> UpdateProduct(UpdateProductDTO updateProductDTO)
         {
-            if (String.IsNullOrWhiteSpace(newProductDTO.Name)) 
+            ValidateProduct(_mapper.Map<NewProductDTO>(updateProductDTO), true);
+            Product product = await _unitOfWork.Products.Find(updateProductDTO.Id);
+            if (product == null)
+            {
+                throw new ProductNotFoundException(updateProductDTO.Id);
+            }
+
+            if (product.SellerId != updateProductDTO.SellerId)
+            {
+                throw new InvalidProductUserInRequestException(updateProductDTO.Id, updateProductDTO.SellerId);
+            }
+
+            product.Update(updateProductDTO.Description, updateProductDTO.IndividualPrice);
+            await _unitOfWork.Save();
+
+            return _mapper.Map<DisplayProductDTO>(product);
+        }
+
+        private void ValidateProduct(NewProductDTO newProductDTO, bool registered = false)
+        {
+            if (!registered && String.IsNullOrWhiteSpace(newProductDTO.Name)) 
             {
                 throw new InvalidProductNameException(newProductDTO.Name);
             }
@@ -81,7 +101,7 @@ namespace Server.Services
                 throw new InvalidProductDescriptionException(newProductDTO.Description);
             }
 
-            if (newProductDTO.Amount < 0)
+            if (!registered && newProductDTO.Amount < 0)
             {
                 throw new InvalidProductAmountException(newProductDTO.Amount);
             }

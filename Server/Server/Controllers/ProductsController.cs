@@ -25,6 +25,14 @@ namespace Server.Controllers
             return Ok(displayProductDTO);
         }
 
+        [HttpPut]
+        [Authorize(Roles = "seller")]
+        public async Task<IActionResult> Put([FromBody]UpdateProductDTO updateProductDTO)
+        {
+            DisplayProductDTO displayProductDTO = await _productService.UpdateProduct(updateProductDTO);
+            return Ok(displayProductDTO);
+        }
+
         [HttpDelete("")]
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> Delete(DeleteProductDTO deleteProductDTO)
