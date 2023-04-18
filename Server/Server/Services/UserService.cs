@@ -32,7 +32,7 @@ namespace Server.Services
             User user = await _unitOfWork.Users.Find(userId);
             if (user == null)
             {
-                throw new UserNotFoundException(userId);
+                throw new UserByIdNotFoundException(userId);
             }
 
             if (user.Role != UserRole.SELLER)
@@ -111,20 +111,13 @@ namespace Server.Services
         public async Task<DisplayUserDTO> UpdateUser(UpdateUserDTO updateUserDTO)
         {
             ValidateUser(_mapper.Map<NewUserDTO>(updateUserDTO), true);
-            User user = await _unitOfWork.Users.Find(updateUserDTO.Id);
+            User user = await _unitOfWork.Users.FindByUsername(updateUserDTO.Username);
             if (user == null)
             {
-                throw new UserNotFoundException(updateUserDTO.Id);
+                throw new UserNotFoundException();
             }
 
-            bool usernameUpdate = !String.Equals(user.Username, updateUserDTO.Username);
-            bool userUsernameExists = await _unitOfWork.Users.FindByUsername(updateUserDTO.Username) != null && usernameUpdate;
-            if (userUsernameExists)
-            {
-                throw new UserUsernameExistsException(updateUserDTO.Username);
-            }
-
-            user.Update(updateUserDTO.Username.Trim(), updateUserDTO.Email.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth);
+            user.Update(updateUserDTO.Address.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth);
             await _unitOfWork.Save();
 
             return _mapper.Map<DisplayUserDTO>(user);
@@ -144,11 +137,6 @@ namespace Server.Services
                 throw new InvalidUserUsernameException(newUserDTO.Username);
             }
 
-            if (!registered && String.IsNullOrWhiteSpace(newUserDTO.Password))
-            {
-                throw new InvalidUserPasswordException(newUserDTO.Password);
-            }
-
             if (String.IsNullOrWhiteSpace(newUserDTO.Name))
             {
                 throw new InvalidNameOfUserException(newUserDTO.Name);
@@ -164,20 +152,27 @@ namespace Server.Services
                 throw new InvalidUserDateOfBirthException($"{newUserDTO.DateOfBirth.Day}/{newUserDTO.DateOfBirth.Month}/{newUserDTO.DateOfBirth.Year}");
             }
 
-            if (String.IsNullOrWhiteSpace(newUserDTO.Email))
+            if (!registered)
             {
-                throw new InvalidUserEmailException(newUserDTO.Email);
-            }
+                if (String.IsNullOrWhiteSpace(newUserDTO.Password))
+                {
+                    throw new InvalidUserPasswordException(newUserDTO.Password);
+                }
+                if (String.IsNullOrWhiteSpace(newUserDTO.Email))
+                {
+                    throw new InvalidUserEmailException(newUserDTO.Email);
+                }
 
-            bool enumParseResult = Enum.TryParse(newUserDTO.Role.ToUpper(), out UserRole role);
-            if (!registered && !enumParseResult)
-            {
-                throw new InvalidUserRoleException(newUserDTO.Role.ToString().ToUpper());
-            }
+                bool enumParseResult = Enum.TryParse(newUserDTO.Role.ToUpper(), out UserRole role);
+                if (!enumParseResult)
+                {
+                    throw new InvalidUserRoleException(newUserDTO.Role.ToString().ToUpper());
+                }
 
-            if (!registered && role == UserRole.ADMIN)
-            {
-                throw new InvalidUserAdminRoleException();
+                if (role == UserRole.ADMIN)
+                {
+                    throw new InvalidUserAdminRoleException();
+                }
             }
         }
     }

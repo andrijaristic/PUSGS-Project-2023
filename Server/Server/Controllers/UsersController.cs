@@ -43,6 +43,7 @@ namespace Server.Controllers
         [Authorize]
         public async Task<IActionResult> Put([FromBody]UpdateUserDTO updateUserDTO)
         {
+            updateUserDTO.Username = User.Identity.Name;
             DisplayUserDTO displayUserDTO = await _userService.UpdateUser(updateUserDTO);
             return Ok(displayUserDTO);
         }

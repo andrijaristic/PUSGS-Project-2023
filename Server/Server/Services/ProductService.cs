@@ -48,7 +48,7 @@ namespace Server.Services
             User seller = await _unitOfWork.Users.Find(newProductDTO.SellerId);
             if (seller == null)
             {
-                throw new UserNotFoundException(newProductDTO.SellerId);
+                throw new UserByIdNotFoundException(newProductDTO.SellerId);
             }
 
             if (seller.Role != UserRole.SELLER)

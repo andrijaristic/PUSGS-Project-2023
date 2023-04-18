@@ -20,11 +20,10 @@ namespace Server.Models
         public List<Product> Products { get; set; }  // Will be empty for Buyer, Admin
         public List<Order> Orders { get; set; } // Will be empty for Admin
 
-        public void Update(string username, string email, string name, DateTime dateOfBirth)
+        public void Update(string address, string name, DateTime dateOfBirth)
         {
-            Username = username;
-            Email = email;
             Name = name;
+            Address = address;
             DateOfBirth = dateOfBirth;  
         }
     }
