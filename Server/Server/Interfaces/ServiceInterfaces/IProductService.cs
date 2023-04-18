@@ -1,0 +1,9 @@
+﻿using Server.Dto.ProductDTOs;
+
+namespace Server.Interfaces.ServiceInterfaces
+{
+    public interface IProductService
+    {
+        Task<DisplayProductDTO> CreateProduct(NewProductDTO newProductDTO);
+    }
+}

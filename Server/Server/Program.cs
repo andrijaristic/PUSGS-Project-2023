@@ -92,6 +92,7 @@ builder.Services.AddOptions();
 
 #region Service and Repository registrations
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -110,6 +111,7 @@ builder.Services.AddDbContext<eShopDbContext>(options =>
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new UserMappingProfile());
+    mc.AddProfile(new ProductMappingProfile());
 });
 
 IMapper mapper = mapperConfig.CreateMapper();

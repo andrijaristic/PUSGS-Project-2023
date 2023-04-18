@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Exceptions\OrderExceptions\" />
-    <Folder Include="Exceptions\ProductExceptions\" />
   </ItemGroup>
 
 </Project>
