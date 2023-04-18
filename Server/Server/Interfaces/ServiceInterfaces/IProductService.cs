@@ -5,5 +5,6 @@ namespace Server.Interfaces.ServiceInterfaces
     public interface IProductService
     {
         Task<DisplayProductDTO> CreateProduct(NewProductDTO newProductDTO);
+        Task DeleteProduct(DeleteProductDTO deleteProductDTO);
     }
 }

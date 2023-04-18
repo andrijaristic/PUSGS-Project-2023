@@ -50,6 +50,25 @@ namespace Server.Services
             return _mapper.Map<DisplayProductDTO>(product);
         }
 
+        public async Task DeleteProduct(DeleteProductDTO deleteProductDTO)
+        {
+            Product product = await _unitOfWork.Products.Find(deleteProductDTO.ProductId);
+            if (product == null)
+            {
+                throw new ProductNotFoundException(deleteProductDTO.ProductId);
+            }
+
+            if (product.SellerId != deleteProductDTO.UserId)
+            {
+                throw new InvalidProductUserInRequestException(deleteProductDTO.ProductId, deleteProductDTO.UserId);
+            }
+
+            // TODO: Decide whether allowed to delete products that are parts of existing and or delivered orders
+            // Potentially only logically delete product in that scenario, not physically
+            _unitOfWork.Products.Remove(product);
+            await _unitOfWork.Save();
+        }
+
         private void ValidateProduct(NewProductDTO newProductDTO)
         {
             if (String.IsNullOrWhiteSpace(newProductDTO.Name)) 

@@ -24,5 +24,13 @@ namespace Server.Controllers
             DisplayProductDTO displayProductDTO = await _productService.CreateProduct(newProductDTO);
             return Ok(displayProductDTO);
         }
+
+        [HttpDelete("")]
+        [Authorize(Roles = "seller")]
+        public async Task<IActionResult> Delete(DeleteProductDTO deleteProductDTO)
+        {
+            await _productService.DeleteProduct(deleteProductDTO);
+            return Ok();
+        }
     }
 }
