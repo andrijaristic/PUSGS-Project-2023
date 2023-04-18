@@ -8,6 +8,7 @@ using Server.Exceptions.UserExceptions;
 using Server.Interfaces.RepositoryInterfaces;
 using Server.Interfaces.ServiceInterfaces;
 using Server.Models;
+using System.ComponentModel;
 
 namespace Server.Services
 {
@@ -20,6 +21,13 @@ namespace Server.Services
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<List<DisplayProductDTO>> GetAllProducts()
+        {
+            List<Product> products = await _unitOfWork.Products.GetAll();
+            
+            return _mapper.Map<List<DisplayProductDTO>>(products);
         }
 
         public async Task<DisplayProductDTO> CreateProduct(NewProductDTO newProductDTO)

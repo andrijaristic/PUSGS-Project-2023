@@ -17,12 +17,20 @@ namespace Server.Controllers
             _productService = productService;
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Get()
+        {
+            List<DisplayProductDTO> displayProductDTOs = await _productService.GetAllProducts();
+            return Ok(displayProductDTOs);
+        }
+
         [HttpPost]
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> Post([FromBody]NewProductDTO newProductDTO)
         {
             DisplayProductDTO displayProductDTO = await _productService.CreateProduct(newProductDTO);
-            return Ok(displayProductDTO);
+            return CreatedAtAction(nameof(Get), new { id = displayProductDTO.Id}, displayProductDTO);
         }
 
         [HttpPut]

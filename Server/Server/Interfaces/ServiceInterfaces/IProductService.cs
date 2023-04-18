@@ -7,5 +7,6 @@ namespace Server.Interfaces.ServiceInterfaces
         Task<DisplayProductDTO> CreateProduct(NewProductDTO newProductDTO);
         Task DeleteProduct(DeleteProductDTO deleteProductDTO);
         Task<DisplayProductDTO> UpdateProduct(UpdateProductDTO updateProductDTO);
+        Task<List<DisplayProductDTO>> GetAllProducts();
     }
 }
