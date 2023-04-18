@@ -114,7 +114,7 @@ namespace Server.Services
             User user = await _unitOfWork.Users.Find(updateUserDTO.Id);
             if (user == null)
             {
-                throw new UserNotFoundException(user.Id);
+                throw new UserNotFoundException(updateUserDTO.Id);
             }
 
             bool usernameUpdate = !String.Equals(user.Username, updateUserDTO.Username);

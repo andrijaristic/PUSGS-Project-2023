@@ -4,5 +4,6 @@ namespace Server.Interfaces.RepositoryInterfaces
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
+        Task<List<Product>> GetProductsForSeller(Guid sellerId);
     }
 }

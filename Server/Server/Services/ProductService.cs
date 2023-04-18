@@ -30,6 +30,17 @@ namespace Server.Services
             return _mapper.Map<List<DisplayProductDTO>>(products);
         }
 
+        public async Task<List<DisplayProductDTO>> GetSellerProducts(Guid sellerId)
+        {
+            List<Product> products = await _unitOfWork.Products.GetProductsForSeller(sellerId);
+            if (products == null)
+            {
+                throw new SellerProductsNotFoundException(sellerId);
+            }
+
+            return _mapper.Map<List<DisplayProductDTO>>(products);
+        }
+
         public async Task<DisplayProductDTO> CreateProduct(NewProductDTO newProductDTO)
         {
             ValidateProduct(newProductDTO);
