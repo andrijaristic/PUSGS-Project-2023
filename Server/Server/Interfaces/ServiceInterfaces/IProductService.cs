@@ -9,5 +9,6 @@ namespace Server.Interfaces.ServiceInterfaces
         Task<DisplayProductDTO> UpdateProduct(UpdateProductDTO updateProductDTO);
         Task<List<DisplayProductDTO>> GetAllProducts();
         Task<List<DisplayProductDTO>> GetSellerProducts(Guid sellerId);
+        Task<List<DisplayProductDTO>> GetSellerProducts(string username);
     }
 }

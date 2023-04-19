@@ -9,6 +9,7 @@ using Server.Interfaces.RepositoryInterfaces;
 using Server.Interfaces.ServiceInterfaces;
 using Server.Models;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace Server.Services
 {
@@ -32,6 +33,34 @@ namespace Server.Services
 
         public async Task<List<DisplayProductDTO>> GetSellerProducts(Guid sellerId)
         {
+            User user = await _unitOfWork.Users.Find(sellerId);
+            if (user == null)
+            {
+                throw new UserByIdNotFoundException(sellerId);
+            }
+
+            if (user.Role != UserRole.SELLER)
+            {
+                throw new InvalidProductSellerTypeException(user.Id);
+            }
+
+            List<Product> products = await _unitOfWork.Products.GetProductsForSeller(sellerId);
+            if (products == null)
+            {
+                throw new SellerProductsNotFoundException(sellerId);
+            }
+
+            return _mapper.Map<List<DisplayProductDTO>>(products);
+        }
+
+        public async Task<List<DisplayProductDTO>> GetSellerProducts(string username)
+        {
+            Guid sellerId = await _unitOfWork.Users.FindUserIdByUsername(username);
+            if (sellerId == Guid.Empty)
+            {
+                throw new UserNotFoundException();
+            }
+
             List<Product> products = await _unitOfWork.Products.GetProductsForSeller(sellerId);
             if (products == null)
             {

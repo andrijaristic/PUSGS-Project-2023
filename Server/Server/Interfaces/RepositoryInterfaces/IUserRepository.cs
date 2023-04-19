@@ -6,5 +6,6 @@ namespace Server.Interfaces.RepositoryInterfaces
     {
         Task<User> FindByUsername(string username);
         Task<List<User>> GetSellers();
+        Task<Guid> FindUserIdByUsername(string username);
     }
 }

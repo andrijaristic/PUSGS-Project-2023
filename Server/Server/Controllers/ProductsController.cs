@@ -25,6 +25,14 @@ namespace Server.Controllers
             return Ok(displayProductDTOs);
         }
 
+        [HttpGet("seller")]
+        [Authorize]
+        public async Task<IActionResult> GetSellersProducts()
+        {
+            List<DisplayProductDTO> displayProductDTOs = await _productService.GetSellerProducts(User.Identity.Name);
+            return Ok(displayProductDTOs);
+        }
+
         [HttpGet("seller/{id}")]
         [Authorize]
         public async Task<IActionResult> Get(Guid id)
@@ -32,6 +40,7 @@ namespace Server.Controllers
             List<DisplayProductDTO> displayProductDTOs = await _productService.GetSellerProducts(id);
             return Ok(displayProductDTOs);
         }
+
 
         [HttpPost]
         [Authorize(Roles = "seller")]

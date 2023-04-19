@@ -23,5 +23,11 @@ namespace Server.Repositories
             List<User> sellers = await _dbContext.Users.Where(x => x.Role == Enums.UserRole.SELLER).OrderBy(x => x.isVerified).ToListAsync();
             return sellers;
         }
+
+        public async Task<Guid> FindUserIdByUsername(string username)
+        {
+            Guid id = await _dbContext.Users.Where(x => String.Equals(x.Username, username)).Select(x => x.Id).FirstOrDefaultAsync();
+            return id;
+        }
     }
 }
