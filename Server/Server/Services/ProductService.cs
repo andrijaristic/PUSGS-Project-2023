@@ -85,7 +85,7 @@ namespace Server.Services
                 throw new InvalidProductSellerTypeException(seller.Id);
             }
 
-            if (!seller.isVerified)
+            if (seller.VerificationStatus == VerificationStatus.PENDING || seller.VerificationStatus == VerificationStatus.DENIED)
             {
                 throw new InvalidSellerVerificationException(seller.Id);
             }

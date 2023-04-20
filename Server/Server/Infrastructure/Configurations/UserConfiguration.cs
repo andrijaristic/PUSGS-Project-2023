@@ -27,6 +27,12 @@ namespace Server.Infrastructure.Configurations
                         x => x.ToString(), 
                         x => Enum.Parse<UserRole>(x)
                     );
+
+            builder.Property(x => x.VerificationStatus)
+                   .HasConversion(
+                        x => x.ToString(),
+                        x => Enum.Parse<VerificationStatus>(x)
+        );
         }
     }
 }

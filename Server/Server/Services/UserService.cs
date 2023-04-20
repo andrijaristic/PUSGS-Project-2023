@@ -27,25 +27,25 @@ namespace Server.Services
             _mapper = mapper;
         }
 
-        public async Task VerifyUser(Guid userId)
+        public async Task VerifyUser(VerifyUserDTO verifyUserDTO)
         {
-            User user = await _unitOfWork.Users.Find(userId);
+            User user = await _unitOfWork.Users.Find(verifyUserDTO.UserId);
             if (user == null)
             {
-                throw new UserByIdNotFoundException(userId);
+                throw new UserByIdNotFoundException(verifyUserDTO.UserId);
             }
 
             if (user.Role != UserRole.SELLER)
             {
-                throw new InvalidUserVerificationRole(userId);
+                throw new InvalidUserVerificationRole(verifyUserDTO.UserId);
             }
 
-            if (user.isVerified)
+            if (user.VerificationStatus == VerificationStatus.ACCEPTED || user.VerificationStatus == VerificationStatus.DENIED)
             {
-                throw new UserAlreadyVerifiedException(userId);
+                throw new UserAlreadyVerifiedException(verifyUserDTO.UserId);
             }
 
-            user.isVerified = true;
+            user.VerificationStatus = verifyUserDTO.Verified ? VerificationStatus.ACCEPTED : VerificationStatus.DENIED;
             await _unitOfWork.Save();
         }
 
@@ -58,6 +58,11 @@ namespace Server.Services
             if (userUsernameExists)
             {
                 throw new UserUsernameExistsException(user.Username);
+            }
+
+            if (user.Role != UserRole.SELLER)
+            {
+                user.VerificationStatus = VerificationStatus.EXEMPT;
             }
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, BCrypt.Net.BCrypt.GenerateSalt());

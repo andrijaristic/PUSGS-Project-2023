@@ -51,11 +51,11 @@ namespace Server.Controllers
             return Ok(displayUserDTO);
         }
 
-        [HttpPut("verify/{id}")]
+        [HttpPut("verify")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Verify(Guid id)
+        public async Task<IActionResult> Verify(VerifyUserDTO verifyUserDTO)
         {
-            await _userService.VerifyUser(id);
+            await _userService.VerifyUser(verifyUserDTO);
             return Ok();
         }
     }

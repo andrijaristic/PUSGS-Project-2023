@@ -20,7 +20,7 @@ namespace Server.Repositories
 
         public async Task<List<User>> GetSellers()
         {
-            List<User> sellers = await _dbContext.Users.Where(x => x.Role == Enums.UserRole.SELLER).OrderBy(x => x.isVerified).ToListAsync();
+            List<User> sellers = await _dbContext.Users.Where(x => x.Role == Enums.UserRole.SELLER).OrderByDescending(x => x.VerificationStatus).ToListAsync();
             return sellers;
         }
 
