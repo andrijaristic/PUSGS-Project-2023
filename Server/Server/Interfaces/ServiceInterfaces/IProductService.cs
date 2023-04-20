@@ -10,5 +10,6 @@ namespace Server.Interfaces.ServiceInterfaces
         Task<List<DisplayProductDTO>> GetAllProducts();
         Task<List<DisplayProductDTO>> GetSellerProducts(Guid sellerId);
         Task<List<DisplayProductDTO>> GetSellerProducts(string username);
+        Task<DisplayProductDTO> RestockProduct(ProductRestockDTO productRestockDTO, string username);
     }
 }

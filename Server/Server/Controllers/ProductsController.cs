@@ -58,6 +58,14 @@ namespace Server.Controllers
             return Ok(displayProductDTO);
         }
 
+        [HttpPut("restock")]
+        [Authorize(Roles = "seller")]
+        public async Task<IActionResult> ProductRestock(ProductRestockDTO productRestockDTO)
+        {
+            DisplayProductDTO displayProductDTO = await _productService.RestockProduct(productRestockDTO, User.Identity.Name);
+            return Ok(displayProductDTO);
+        }
+
         [HttpDelete]
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> Delete(DeleteProductDTO deleteProductDTO)

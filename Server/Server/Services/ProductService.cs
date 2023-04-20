@@ -137,6 +137,31 @@ namespace Server.Services
             return _mapper.Map<DisplayProductDTO>(product);
         }
 
+        public async Task<DisplayProductDTO> RestockProduct(ProductRestockDTO productRestockDTO, string username)
+        {
+            if (productRestockDTO.Amount <= 0)
+            {
+                throw new InvalidProductAmountException(productRestockDTO.Amount);
+            }
+
+            Guid sellerId = await _unitOfWork.Users.FindUserIdByUsername(username);
+            if (sellerId == Guid.Empty)
+            {
+                throw new UserNotFoundException();
+            }
+
+            Product product = await _unitOfWork.Products.Find(productRestockDTO.Id);
+            if (product == null)
+            {
+                throw new ProductNotFoundException(productRestockDTO.Id);
+            }
+
+            product.Amount += productRestockDTO.Amount;
+            await _unitOfWork.Save();
+
+            return _mapper.Map<DisplayProductDTO>(product);
+        }
+
         private void ValidateProduct(NewProductDTO newProductDTO, bool registered = false)
         {
             if (!registered && String.IsNullOrWhiteSpace(newProductDTO.Name)) 
