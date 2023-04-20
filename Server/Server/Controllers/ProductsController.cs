@@ -29,7 +29,10 @@ namespace Server.Controllers
         [Authorize]
         public async Task<IActionResult> GetSellersProducts()
         {
-            List<DisplayProductDTO> displayProductDTOs = await _productService.GetSellerProducts(User.Identity.Name);
+            Guid userId = Guid.Empty;
+            Guid.TryParse(User.Identity.Name, out userId);
+
+            List<DisplayProductDTO> displayProductDTOs = await _productService.GetSellerProducts(userId);
             return Ok(displayProductDTOs);
         }
 
@@ -41,11 +44,14 @@ namespace Server.Controllers
             return Ok(displayProductDTOs);
         }
 
-
         [HttpPost]
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> Post([FromBody]NewProductDTO newProductDTO)
         {
+            Guid userId = Guid.Empty;
+            Guid.TryParse(User.Identity.Name, out userId);
+            newProductDTO.UserId = userId;
+
             DisplayProductDTO displayProductDTO = await _productService.CreateProduct(newProductDTO);
             return CreatedAtAction(nameof(Get), new { id = displayProductDTO.Id}, displayProductDTO);
         }
@@ -54,6 +60,10 @@ namespace Server.Controllers
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> Put([FromBody]UpdateProductDTO updateProductDTO)
         {
+            Guid userId = Guid.Empty;
+            Guid.TryParse(User.Identity.Name, out userId);
+            updateProductDTO.SellerId = userId;
+
             DisplayProductDTO displayProductDTO = await _productService.UpdateProduct(updateProductDTO);
             return Ok(displayProductDTO);
         }
@@ -62,7 +72,11 @@ namespace Server.Controllers
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> ProductRestock(ProductRestockDTO productRestockDTO)
         {
-            DisplayProductDTO displayProductDTO = await _productService.RestockProduct(productRestockDTO, User.Identity.Name);
+            Guid userId = Guid.Empty;
+            Guid.TryParse(User.Identity.Name, out userId);
+            productRestockDTO.UserId = userId;
+
+            DisplayProductDTO displayProductDTO = await _productService.RestockProduct(productRestockDTO);
             return Ok(displayProductDTO);
         }
 

@@ -53,31 +53,31 @@ namespace Server.Services
             return _mapper.Map<List<DisplayProductDTO>>(products);
         }
 
-        public async Task<List<DisplayProductDTO>> GetSellerProducts(string username)
-        {
-            Guid sellerId = await _unitOfWork.Users.FindUserIdByUsername(username);
-            if (sellerId == Guid.Empty)
-            {
-                throw new UserNotFoundException();
-            }
+        //public async Task<List<DisplayProductDTO>> GetSellerProducts(string username)
+        //{
+        //    Guid sellerId = await _unitOfWork.Users.FindUserIdByUsername(username);
+        //    if (sellerId == Guid.Empty)
+        //    {
+        //        throw new UserNotFoundException();
+        //    }
 
-            List<Product> products = await _unitOfWork.Products.GetProductsForSeller(sellerId);
-            if (products == null)
-            {
-                throw new SellerProductsNotFoundException(sellerId);
-            }
+        //    List<Product> products = await _unitOfWork.Products.GetProductsForSeller(sellerId);
+        //    if (products == null)
+        //    {
+        //        throw new SellerProductsNotFoundException(sellerId);
+        //    }
 
-            return _mapper.Map<List<DisplayProductDTO>>(products);
-        }
+        //    return _mapper.Map<List<DisplayProductDTO>>(products);
+        //}
 
         public async Task<DisplayProductDTO> CreateProduct(NewProductDTO newProductDTO)
         {
             ValidateProduct(newProductDTO);
 
-            User seller = await _unitOfWork.Users.Find(newProductDTO.SellerId);
+            User seller = await _unitOfWork.Users.Find(newProductDTO.UserId);
             if (seller == null)
             {
-                throw new UserByIdNotFoundException(newProductDTO.SellerId);
+                throw new UserByIdNotFoundException(newProductDTO.UserId);
             }
 
             if (seller.Role != UserRole.SELLER)
@@ -137,23 +137,28 @@ namespace Server.Services
             return _mapper.Map<DisplayProductDTO>(product);
         }
 
-        public async Task<DisplayProductDTO> RestockProduct(ProductRestockDTO productRestockDTO, string username)
+        public async Task<DisplayProductDTO> RestockProduct(ProductRestockDTO productRestockDTO)
         {
             if (productRestockDTO.Amount <= 0)
             {
                 throw new InvalidProductAmountException(productRestockDTO.Amount);
             }
 
-            Guid sellerId = await _unitOfWork.Users.FindUserIdByUsername(username);
-            if (sellerId == Guid.Empty)
+            bool sellerExists = await _unitOfWork.Users.Find(productRestockDTO.UserId) != null;
+            if (!sellerExists)
             {
-                throw new UserNotFoundException();
+                throw new UserByIdNotFoundException(productRestockDTO.UserId);
             }
 
             Product product = await _unitOfWork.Products.Find(productRestockDTO.Id);
             if (product == null)
             {
                 throw new ProductNotFoundException(productRestockDTO.Id);
+            }
+
+            if (product.SellerId != productRestockDTO.UserId)
+            {
+                throw new InvalidProductUserInRequestException(productRestockDTO.Id, productRestockDTO.UserId);
             }
 
             product.Amount += productRestockDTO.Amount;

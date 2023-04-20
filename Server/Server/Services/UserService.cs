@@ -93,7 +93,7 @@ namespace Server.Services
                 if (user.Role == UserRole.SELLER) { claims.Add(new Claim(ClaimTypes.Role, "seller")); }
                 if (user.Role == UserRole.ADMIN) { claims.Add(new Claim(ClaimTypes.Role, "admin")); }
 
-                claims.Add(new Claim(ClaimTypes.Name, user.Username));
+                claims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
 
                 var signInCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Value.SecretKey)), SecurityAlgorithms.HmacSha256);
                 var tokenOptions = new JwtSecurityToken(
@@ -111,10 +111,10 @@ namespace Server.Services
         public async Task<DisplayUserDTO> UpdateUser(UpdateUserDTO updateUserDTO)
         {
             ValidateUser(_mapper.Map<NewUserDTO>(updateUserDTO), true);
-            User user = await _unitOfWork.Users.FindByUsername(updateUserDTO.Username);
+            User user = await _unitOfWork.Users.Find(updateUserDTO.Id);
             if (user == null)
             {
-                throw new UserNotFoundException();
+                throw new UserByIdNotFoundException(updateUserDTO.Id);
             }
 
             user.Update(updateUserDTO.Address.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth);
