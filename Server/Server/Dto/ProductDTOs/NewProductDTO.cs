@@ -10,6 +10,6 @@ namespace Server.Dto.ProductDTOs
         public double IndividualPrice { get; set; }
         public string Description { get; set; }
         // public string ImageURL { get; set; }
-        public Guid UserId { get; set; }
+        public Guid SellerId { get; set; }
     }
 }

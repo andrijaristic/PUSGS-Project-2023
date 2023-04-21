@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Dto.UserDTOs;
 using Server.Interfaces.ServiceInterfaces;
+using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 
 namespace Server.Controllers
 {
@@ -11,10 +12,12 @@ namespace Server.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IAuthHelperService _authHelperService;
 
-        public UsersController(IUserService userService) 
+        public UsersController(IUserService userService, IAuthHelperService authHelperService) 
         {
             _userService = userService;
+            _authHelperService = authHelperService;
         }
 
         [HttpGet]
@@ -43,9 +46,7 @@ namespace Server.Controllers
         [Authorize]
         public async Task<IActionResult> Put([FromBody]UpdateUserDTO updateUserDTO)
         {
-            Guid id = Guid.Empty;
-            Guid.TryParse(User.Identity.Name, out id);
-            updateUserDTO.Id = id;
+            updateUserDTO.Id = _authHelperService.GetUserIdFromToken(User);
 
             DisplayUserDTO displayUserDTO = await _userService.UpdateUser(updateUserDTO);
             return Ok(displayUserDTO);

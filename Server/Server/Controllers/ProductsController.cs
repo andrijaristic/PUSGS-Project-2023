@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Dto.ProductDTOs;
 using Server.Interfaces.ServiceInterfaces;
+using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 
 namespace Server.Controllers
 {
@@ -11,10 +12,12 @@ namespace Server.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IAuthHelperService _authHelperService;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, IAuthHelperService authHelperService)
         {
             _productService = productService;
+            _authHelperService = authHelperService;
         }
 
         [HttpGet]
@@ -29,8 +32,7 @@ namespace Server.Controllers
         [Authorize]
         public async Task<IActionResult> GetSellersProducts()
         {
-            Guid userId = Guid.Empty;
-            Guid.TryParse(User.Identity.Name, out userId);
+            Guid userId = _authHelperService.GetUserIdFromToken(User);
 
             List<DisplayProductDTO> displayProductDTOs = await _productService.GetSellerProducts(userId);
             return Ok(displayProductDTOs);
@@ -48,9 +50,7 @@ namespace Server.Controllers
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> Post([FromBody]NewProductDTO newProductDTO)
         {
-            Guid userId = Guid.Empty;
-            Guid.TryParse(User.Identity.Name, out userId);
-            newProductDTO.UserId = userId;
+            newProductDTO.SellerId = _authHelperService.GetUserIdFromToken(User);
 
             DisplayProductDTO displayProductDTO = await _productService.CreateProduct(newProductDTO);
             return CreatedAtAction(nameof(Get), new { id = displayProductDTO.Id}, displayProductDTO);
@@ -60,9 +60,7 @@ namespace Server.Controllers
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> Put([FromBody]UpdateProductDTO updateProductDTO)
         {
-            Guid userId = Guid.Empty;
-            Guid.TryParse(User.Identity.Name, out userId);
-            updateProductDTO.SellerId = userId;
+            updateProductDTO.SellerId = _authHelperService.GetUserIdFromToken(User);
 
             DisplayProductDTO displayProductDTO = await _productService.UpdateProduct(updateProductDTO);
             return Ok(displayProductDTO);
@@ -72,9 +70,7 @@ namespace Server.Controllers
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> ProductRestock(ProductRestockDTO productRestockDTO)
         {
-            Guid userId = Guid.Empty;
-            Guid.TryParse(User.Identity.Name, out userId);
-            productRestockDTO.UserId = userId;
+            productRestockDTO.UserId = _authHelperService.GetUserIdFromToken(User);
 
             DisplayProductDTO displayProductDTO = await _productService.RestockProduct(productRestockDTO);
             return Ok(displayProductDTO);

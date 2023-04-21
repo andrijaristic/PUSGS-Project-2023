@@ -6,6 +6,7 @@ using Server.Enums;
 using Server.Exceptions.UserExceptions;
 using Server.Interfaces.RepositoryInterfaces;
 using Server.Interfaces.ServiceInterfaces;
+using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 using Server.Models;
 using Server.Models.AppSettings;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,13 +17,13 @@ namespace Server.Services
 {
     public class UserService : IUserService
     {
-        private readonly IOptions<AppSettings> _settings;
+        private readonly IAuthHelperService _authHelperService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UserService(IOptions<AppSettings> settings, IUnitOfWork unitOfWork, IMapper mapper)
+        public UserService(IAuthHelperService authHelperService, IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _settings = settings;
+            _authHelperService = authHelperService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -86,31 +87,9 @@ namespace Server.Services
             }
 
             AuthDTO authDTO = _mapper.Map<AuthDTO>(user);
-            authDTO.Token = CreateToken();
+            authDTO.Token = _authHelperService.CreateToken(user);
 
             return authDTO;
-
-            string CreateToken()
-            {
-                List<Claim> claims = new List<Claim>();
-
-                if (user.Role == UserRole.BUYER) { claims.Add(new Claim(ClaimTypes.Role, "buyer")); }
-                if (user.Role == UserRole.SELLER) { claims.Add(new Claim(ClaimTypes.Role, "seller")); }
-                if (user.Role == UserRole.ADMIN) { claims.Add(new Claim(ClaimTypes.Role, "admin")); }
-
-                claims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
-
-                var signInCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Value.SecretKey)), SecurityAlgorithms.HmacSha256);
-                var tokenOptions = new JwtSecurityToken(
-                                  issuer: "http://localhost:7060",
-                                  claims: claims,
-                                  expires: DateTime.Now.AddMinutes(60),
-                                  signingCredentials: signInCredentials
-                            );
-
-                string token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-                return token;
-            }
         }
 
         public async Task<DisplayUserDTO> UpdateUser(UpdateUserDTO updateUserDTO)

@@ -13,6 +13,8 @@ using Server.Interfaces.ServiceInterfaces;
 using Server.Services;
 using Microsoft.AspNetCore.Identity;
 using Server.Mapping;
+using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
+using Server.Services.Utility;
 
 string _cors = "cors";
 var builder = WebApplication.CreateBuilder(args);
@@ -91,6 +93,8 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSet
 builder.Services.AddOptions();
 
 #region Service and Repository registrations
+builder.Services.AddScoped<IAuthHelperService, AuthHelperService>();
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 

@@ -74,10 +74,10 @@ namespace Server.Services
         {
             ValidateProduct(newProductDTO);
 
-            User seller = await _unitOfWork.Users.Find(newProductDTO.UserId);
+            User seller = await _unitOfWork.Users.Find(newProductDTO.SellerId);
             if (seller == null)
             {
-                throw new UserByIdNotFoundException(newProductDTO.UserId);
+                throw new UserByIdNotFoundException(newProductDTO.SellerId);
             }
 
             if (seller.Role != UserRole.SELLER)
