@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Google.Apis.Auth;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Server.Dto.UserDTOs;
 using Server.Enums;
 using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 using Server.Models;
@@ -46,6 +48,31 @@ namespace Server.Services.Utility
             Guid.TryParse(user.Identity.Name, out id);
 
             return id;
+        }
+
+        public async Task<SocialMediaInfoDTO> VerifyGoogleToken(ExternalLoginDTO externalLoginDTO)
+        {
+            try
+            {
+                var validationSettings = new GoogleJsonWebSignature.ValidationSettings()
+                {
+                    Audience = new List<string>() { _settings.Value.GoogleClientId }
+                };
+
+                var googleUserInfo = await GoogleJsonWebSignature.ValidateAsync(externalLoginDTO.Token, validationSettings);
+
+                SocialMediaInfoDTO socialMediaInfoDTO = new SocialMediaInfoDTO()
+                {
+                    Username = googleUserInfo.Email.Split("@")[0],
+                    Name = googleUserInfo.Name,
+                    Email = googleUserInfo.Email,
+                };
+
+                return socialMediaInfoDTO;
+            } catch
+            {
+                return null;
+            }
         }
     }
 }

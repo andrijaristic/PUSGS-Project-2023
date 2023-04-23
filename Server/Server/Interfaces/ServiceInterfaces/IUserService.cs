@@ -9,5 +9,6 @@ namespace Server.Interfaces.ServiceInterfaces
         Task<DisplayUserDTO> UpdateUser(UpdateUserDTO updateUserDTO);
         Task VerifyUser(VerifyUserDTO verifyUserDTO);
         Task<List<DisplayUserDTO>> GetSellers();
+        Task<AuthDTO> ExternalLogin(ExternalLoginDTO externalLoginDTO);
     }
 }

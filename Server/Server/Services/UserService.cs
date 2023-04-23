@@ -92,6 +92,38 @@ namespace Server.Services
             return authDTO;
         }
 
+        public async Task<AuthDTO> ExternalLogin(ExternalLoginDTO externalLoginDTO)
+        {
+            SocialMediaInfoDTO socialMediaInfoDTO = await _authHelperService.VerifyGoogleToken(externalLoginDTO);
+            if (socialMediaInfoDTO == null)
+            {
+                throw new InvalidUserGoogleTokenException();
+            }
+
+            User user = await _unitOfWork.Users.FindByUsername(socialMediaInfoDTO.Username);
+            if (user == null)
+            {
+                user = new User()
+                {
+                    Name = socialMediaInfoDTO.Name,
+                    Username = socialMediaInfoDTO.Username,
+                    Password = "",
+                    Address = "",
+                    DateOfBirth = DateTime.Now.ToLocalTime(),
+                    Email = socialMediaInfoDTO.Email,
+                    Role = UserRole.BUYER
+                };
+
+                await _unitOfWork.Users.Add(user);
+                await _unitOfWork.Save();
+            }
+
+            AuthDTO authDTO = _mapper.Map<AuthDTO>(user);
+            authDTO.Token = _authHelperService.CreateToken(user);
+
+            return authDTO;
+        }
+
         public async Task<DisplayUserDTO> UpdateUser(UpdateUserDTO updateUserDTO)
         {
             ValidateUser(_mapper.Map<NewUserDTO>(updateUserDTO), true);

@@ -42,6 +42,13 @@ namespace Server.Controllers
             return Ok(authDTO);
         }
 
+        [HttpPost("external-login")]
+        public async Task<IActionResult> ExternalLogin([FromBody]ExternalLoginDTO externalLoginDTO)
+        {
+            AuthDTO authDTO = await _userService.ExternalLogin(externalLoginDTO);
+            return Ok(authDTO);
+        }
+
         [HttpPut]
         [Authorize]
         public async Task<IActionResult> Put([FromBody]UpdateUserDTO updateUserDTO)
