@@ -35,7 +35,8 @@ namespace Server.Repositories
 
         public async Task<List<Order>> GetSellerOrders(Guid sellerId)
         {
-            List<Order> orders = await _dbContext.Orders.Include(x => x.Products.Where(x => Guid.Equals(x.Product.SellerId, sellerId)))
+            List<Order> orders = await _dbContext.Orders.Where(x => x.Status != Enums.OrderStatus.CANCELED)
+                                                        .Include(x => x.Products.Where(x => Guid.Equals(x.Product.SellerId, sellerId)))
                                                         .ThenInclude(x => x.Product)
                                                         .ToListAsync();
             return orders;
