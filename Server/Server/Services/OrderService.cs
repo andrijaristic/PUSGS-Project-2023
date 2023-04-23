@@ -80,7 +80,6 @@ namespace Server.Services
                 throw new InvalidOrderUserInRequestException(newOrderDTO.BuyerId);
             }
 
-            double priceSum = 0;
             foreach (var item in newOrderDTO.Products)
             {
                 Product product = await _unitOfWork.Products.Find(item.ProductId);
@@ -96,10 +95,9 @@ namespace Server.Services
 
                 product.Amount -= item.Amount;
                 item.ItemPrice = product.IndividualPrice * item.Amount;
-                priceSum += item.ItemPrice;
+                newOrderDTO.Price += item.ItemPrice;
             }
 
-            newOrderDTO.Price = priceSum;
             if (newOrderDTO.Price <= 0)
             {
                 throw new InvalidOrderPriceAmountException(newOrderDTO.Price);
@@ -110,6 +108,13 @@ namespace Server.Services
             await _unitOfWork.Save();
 
             return _mapper.Map<DisplayOrderDTO>(order);
+        }
+
+        public async Task<List<DisplayOrderDTO>> GetBuyerOrders(Guid buyerId)
+        {
+            List<Order> orders = await _unitOfWork.Orders.GetBuyerOrders(buyerId);
+
+            return _mapper.Map<List<DisplayOrderDTO>>(orders);
         }
 
         private static DateTime RandomDate()

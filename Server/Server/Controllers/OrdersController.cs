@@ -19,6 +19,15 @@ namespace Server.Controllers
             _authHelperService = authHelperService;
         }
 
+        [HttpGet("buyer-orders")]
+        [Authorize(Roles = "buyer")]
+        public async Task<IActionResult> Get()
+        {
+            Guid buyerId = _authHelperService.GetUserIdFromToken(User);
+            List<DisplayOrderDTO> displayOrderDTOs = await _orderService.GetBuyerOrders(buyerId);
+            return Ok(displayOrderDTOs);
+        }
+
         [HttpPost]
         [Authorize(Roles = "buyer")]
         public async Task<IActionResult> Post([FromBody]NewOrderDTO newOrderDTO)
@@ -26,8 +35,7 @@ namespace Server.Controllers
             newOrderDTO.BuyerId = _authHelperService.GetUserIdFromToken(User);
 
             DisplayOrderDTO displayOrderDTO = await _orderService.CreateOrder(newOrderDTO);
-            //return CreatedAtAction(nameof(Get), new { Id = displayOrderDTO.Id }, displayOrderDTO);
-            return Ok(displayOrderDTO);
+            return CreatedAtAction(nameof(Get), new { Id = displayOrderDTO.Id }, displayOrderDTO);
         }
 
         [HttpPut("cancel-order")]
