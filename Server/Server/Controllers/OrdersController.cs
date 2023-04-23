@@ -29,5 +29,14 @@ namespace Server.Controllers
             //return CreatedAtAction(nameof(Get), new { Id = displayOrderDTO.Id }, displayOrderDTO);
             return Ok(displayOrderDTO);
         }
+
+        [HttpPut("cancel-order")]
+        [Authorize(Roles = "buyer")]
+        public async Task<IActionResult> Put(CancelOrderDTO cancelOrderDTO)
+        {
+            cancelOrderDTO.BuyerId = _authHelperService.GetUserIdFromToken(User);
+            await _orderService.CancelOrder(cancelOrderDTO);
+            return Ok();
+        }
     }
 }

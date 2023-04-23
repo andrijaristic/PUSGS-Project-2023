@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Identity;
 using Server.Mapping;
 using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 using Server.Services.Utility;
-using System.Text.Json.Serialization;
 
 string _cors = "cors";
 var builder = WebApplication.CreateBuilder(args);

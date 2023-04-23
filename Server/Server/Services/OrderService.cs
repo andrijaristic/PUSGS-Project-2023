@@ -20,7 +20,46 @@ namespace Server.Services
         { 
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-        }   
+        }
+
+        public async Task CancelOrder(CancelOrderDTO cancelOrderDTO)
+        {
+            Order order = await _unitOfWork.Orders.GetFullOrder(cancelOrderDTO.OrderId);
+            if (order == null)
+            {
+                throw new OrderNotFoundException(cancelOrderDTO.OrderId);
+            }
+
+            if (order.BuyerId != cancelOrderDTO.BuyerId)
+            {
+                throw new InvalidOrderBuyerInRequestException(cancelOrderDTO.OrderId, cancelOrderDTO.BuyerId);
+            }
+
+            if (order.CancellationWindow <= DateTime.Now.ToLocalTime())
+            {
+                throw new OrderCancellationWindowExpiredException(order.CancellationWindow.ToLongDateString());
+            }
+
+            if (order.Status != OrderStatus.PENDING)
+            {
+                throw new InvalidOrderStatusForCancelException(order.Status.ToString());
+            }
+
+            order.Status = OrderStatus.CANCELED;
+            
+            foreach (var item in order.Products)
+            {
+                Product product = await _unitOfWork.Products.Find(item.ProductId);
+                if (product == null) 
+                {
+                    throw new ProductNotFoundException(item.ProductId);
+                }
+
+                product.Amount += item.Amount;
+            }
+
+            await _unitOfWork.Save();
+        }
 
         public async Task<DisplayOrderDTO> CreateOrder(NewOrderDTO newOrderDTO)
         {
