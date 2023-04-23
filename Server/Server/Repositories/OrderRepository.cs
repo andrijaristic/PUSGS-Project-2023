@@ -12,9 +12,15 @@ namespace Server.Repositories
 
         }
 
+        public async Task<List<Order>> GetAllOrdersFull()
+        {
+            List<Order> orders = await _dbContext.Orders.Include(x => x.Products).ThenInclude(x => x.Product).ToListAsync();
+            return orders;
+        }
+
         public async Task<List<Order>> GetBuyerOrders(Guid buyerId)
         {
-            List<Order> orders = await _dbContext.Orders.Where(x => Guid.Equals(x.BuyerId, buyerId)).Include(x => x.Products).ThenInclude(x => x.Product).ToListAsync();
+            List<Order> orders = await _dbContext.Orders.Where(x => Guid.Equals(x.BuyerId, buyerId) && x.Status != Enums.OrderStatus.CANCELED).Include(x => x.Products).ThenInclude(x => x.Product).ToListAsync();
             return orders;
         }
 

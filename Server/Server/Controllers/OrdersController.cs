@@ -19,9 +19,17 @@ namespace Server.Controllers
             _authHelperService = authHelperService;
         }
 
+        [HttpGet]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> Get()
+        {
+            List<DisplayOrderDTO> displayOrderDTOs = await _orderService.GetOrders();
+            return Ok(displayOrderDTOs);
+        }
+
         [HttpGet("buyer-orders")]
         [Authorize(Roles = "buyer")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetBuyerOrders()
         {
             Guid buyerId = _authHelperService.GetUserIdFromToken(User);
             List<DisplayOrderDTO> displayOrderDTOs = await _orderService.GetBuyerOrders(buyerId);

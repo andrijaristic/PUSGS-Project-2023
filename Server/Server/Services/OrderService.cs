@@ -117,6 +117,13 @@ namespace Server.Services
             return _mapper.Map<List<DisplayOrderDTO>>(orders);
         }
 
+        public async Task<List<DisplayOrderDTO>> GetOrders()
+        {
+            List<Order> orders = await _unitOfWork.Orders.GetAllOrdersFull();
+
+            return _mapper.Map<List<DisplayOrderDTO>>(orders);
+        }
+
         private static DateTime RandomDate()
         {
             Random gen = new Random();

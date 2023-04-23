@@ -5,6 +5,7 @@ namespace Server.Interfaces.RepositoryInterfaces
     public interface IOrderRepository : IGenericRepository<Order>
     {
         Task<Order> GetFullOrder(Guid id);
+        Task<List<Order>> GetAllOrdersFull();
         Task<List<Order>> GetBuyerOrders(Guid buyerId);
     }
 }
