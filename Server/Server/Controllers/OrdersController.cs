@@ -32,7 +32,18 @@ namespace Server.Controllers
         public async Task<IActionResult> GetBuyerOrders()
         {
             Guid buyerId = _authHelperService.GetUserIdFromToken(User);
+
             List<DisplayOrderDTO> displayOrderDTOs = await _orderService.GetBuyerOrders(buyerId);
+            return Ok(displayOrderDTOs);
+        }
+
+        [HttpGet("seller-orders")]
+        [Authorize(Roles = "seller")]
+        public async Task<IActionResult> GetSellerOrders()
+        {
+            Guid sellerId = _authHelperService.GetUserIdFromToken(User);
+
+            List<DisplayOrderDTO> displayOrderDTOs = await _orderService.GetSellerOrders(sellerId);
             return Ok(displayOrderDTOs);
         }
 

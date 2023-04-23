@@ -117,6 +117,13 @@ namespace Server.Services
             return _mapper.Map<List<DisplayOrderDTO>>(orders);
         }
 
+        public async Task<List<DisplayOrderDTO>> GetSellerOrders(Guid sellerId)
+        {
+            List<Order> orders = await _unitOfWork.Orders.GetSellerOrders(sellerId);
+
+            return _mapper.Map<List<DisplayOrderDTO>>(orders);
+        }
+
         public async Task<List<DisplayOrderDTO>> GetOrders()
         {
             List<Order> orders = await _unitOfWork.Orders.GetAllOrdersFull();

@@ -8,5 +8,6 @@ namespace Server.Interfaces.ServiceInterfaces
         Task CancelOrder(CancelOrderDTO cancelOrderDTO);
         Task<List<DisplayOrderDTO>> GetBuyerOrders(Guid buyerId);
         Task<List<DisplayOrderDTO>> GetOrders();
+        Task<List<DisplayOrderDTO>> GetSellerOrders(Guid sellerId);
     }
 }

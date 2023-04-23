@@ -20,7 +20,10 @@ namespace Server.Repositories
 
         public async Task<List<Order>> GetBuyerOrders(Guid buyerId)
         {
-            List<Order> orders = await _dbContext.Orders.Where(x => Guid.Equals(x.BuyerId, buyerId) && x.Status != Enums.OrderStatus.CANCELED).Include(x => x.Products).ThenInclude(x => x.Product).ToListAsync();
+            List<Order> orders = await _dbContext.Orders.Where(x => Guid.Equals(x.BuyerId, buyerId) && x.Status != Enums.OrderStatus.CANCELED)
+                                                        .Include(x => x.Products)
+                                                        .ThenInclude(x => x.Product)
+                                                        .ToListAsync();
             return orders;
         }
 
@@ -28,6 +31,14 @@ namespace Server.Repositories
         {
             Order order = await _dbContext.Orders.Where(x => Guid.Equals(x.Id, id)).Include(x => x.Products).FirstOrDefaultAsync();
             return order;
+        }
+
+        public async Task<List<Order>> GetSellerOrders(Guid sellerId)
+        {
+            List<Order> orders = await _dbContext.Orders.Include(x => x.Products.Where(x => Guid.Equals(x.Product.SellerId, sellerId)))
+                                                        .ThenInclude(x => x.Product)
+                                                        .ToListAsync();
+            return orders;
         }
     }
 }
