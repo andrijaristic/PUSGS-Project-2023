@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Server.Mapping;
 using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 using Server.Services.Utility;
+using System.Text.Json.Serialization;
 
 string _cors = "cors";
 var builder = WebApplication.CreateBuilder(args);
@@ -97,6 +98,7 @@ builder.Services.AddScoped<IAuthHelperService, AuthHelperService>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -116,6 +118,8 @@ var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new UserMappingProfile());
     mc.AddProfile(new ProductMappingProfile());
+    mc.AddProfile(new OrderMappingProfile());
+    mc.AddProfile(new OrderItemMappingProfile());
 });
 
 IMapper mapper = mapperConfig.CreateMapper();

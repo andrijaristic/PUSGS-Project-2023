@@ -7,8 +7,8 @@ using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 
 namespace Server.Controllers
 {
-    [Route("api/products")]
     [ApiController]
+    [Route("api/products")]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;

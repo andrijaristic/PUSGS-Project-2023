@@ -54,7 +54,7 @@ namespace Server.Migrations
 
                     b.HasIndex("BuyerId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Server.Models.OrderItem", b =>
@@ -81,7 +81,7 @@ namespace Server.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("Server.Models.Product", b =>
@@ -109,7 +109,7 @@ namespace Server.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Server.Models.User", b =>
@@ -150,7 +150,7 @@ namespace Server.Migrations
                         .IsUnique()
                         .HasFilter("[Username] IS NOT NULL");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Server.Models.Order", b =>
