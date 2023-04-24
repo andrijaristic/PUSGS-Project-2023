@@ -94,6 +94,7 @@ builder.Services.AddOptions();
 
 #region Service and Repository registrations
 builder.Services.AddScoped<IAuthHelperService, AuthHelperService>();
+builder.Services.AddScoped<IMailingService, MailingService>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();

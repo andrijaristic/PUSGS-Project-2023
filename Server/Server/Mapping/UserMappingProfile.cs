@@ -20,7 +20,7 @@ namespace Server.Mapping
         {
             user.Username = user.Username.Trim();
             user.Name = user.Name.Trim();
-            user.Email = user.Password.Trim();
+            user.Email = user.Email.Trim();
             user.Address = user.Address.Trim();
         }
     }

@@ -18,14 +18,16 @@ namespace Server.Services
     public class UserService : IUserService
     {
         private readonly IAuthHelperService _authHelperService;
+        private readonly IMailingService _mailingService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UserService(IAuthHelperService authHelperService, IUnitOfWork unitOfWork, IMapper mapper)
+        public UserService(IAuthHelperService authHelperService, IUnitOfWork unitOfWork, IMapper mapper, IMailingService mailingService)
         {
             _authHelperService = authHelperService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _mailingService = mailingService;
         }
 
         public async Task VerifyUser(VerifyUserDTO verifyUserDTO)
@@ -69,6 +71,18 @@ namespace Server.Services
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, BCrypt.Net.BCrypt.GenerateSalt());
             await _unitOfWork.Users.Add(user);
             await _unitOfWork.Save();
+
+            string subject = "Registration status";
+            string body = "";
+            if (user.Role == UserRole.BUYER)
+            {
+                body = "Registration successful. Happy shopping!";
+            } else
+            {
+                body = "Registration pending. Waiting on admin to verify account to enable product selling";
+            }
+
+            await _mailingService.SendEmail(user.Email, subject, body);
 
             return _mapper.Map<DisplayUserDTO>(user);
         }
