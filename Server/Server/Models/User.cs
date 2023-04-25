@@ -16,7 +16,7 @@ namespace Server.Models
         public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
         public UserRole Role { get; set; }
-        // public string ImageURL { get; set; }
+        public string ImageURL { get; set; }
         public List<Product> Products { get; set; }  // Will be empty for Buyer, Admin
         public List<Order> Orders { get; set; } // Will be empty for Admin
 
