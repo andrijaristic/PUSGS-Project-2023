@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
+﻿using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 
 namespace Server.Services.Utility
 {

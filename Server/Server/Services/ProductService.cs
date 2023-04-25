@@ -7,6 +7,7 @@ using Server.Exceptions.ProductExceptions;
 using Server.Exceptions.UserExceptions;
 using Server.Interfaces.RepositoryInterfaces;
 using Server.Interfaces.ServiceInterfaces;
+using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 using Server.Models;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -16,12 +17,14 @@ namespace Server.Services
     public class ProductService : IProductService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IImageService _imageService;
         private readonly IMapper _mapper;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper) 
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService) 
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _imageService = imageService;
         }
 
         public async Task<List<DisplayProductDTO>> GetAllProducts()
@@ -92,10 +95,39 @@ namespace Server.Services
 
             Product product = _mapper.Map<Product>(newProductDTO);
 
+            product.ImageURL = $"Images/Default/product.png";
+            if (newProductDTO.Image != null)
+            {
+                string path = "Products";
+                string name = $"{product.Name}_{DateTime.Now.ToLocalTime()}";
+
+                product.ImageURL = await _imageService.SaveImage(newProductDTO.Image, name, path);
+            }
+
             await _unitOfWork.Products.Add(product);
             await _unitOfWork.Save();
 
             return _mapper.Map<DisplayProductDTO>(product);
+        }
+
+        public async Task<ProductImageDTO> GetProductImage(Guid id)
+        {
+            Product product = await _unitOfWork.Products.Find(id);
+            if (product == null)
+            {
+                throw new ProductNotFoundException(id);
+            }
+
+            string fileName = product.ImageURL.Split('/')[2];
+            FileStream stream = _imageService.DownloadImage(product.ImageURL);
+
+            ProductImageDTO productImageDTO = new ProductImageDTO()
+            {
+                Stream = stream,
+                FileName = fileName
+            };
+
+            return productImageDTO;
         }
 
         public async Task DeleteProduct(DeleteProductDTO deleteProductDTO)

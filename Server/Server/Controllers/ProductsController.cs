@@ -46,6 +46,14 @@ namespace Server.Controllers
             return Ok(displayProductDTOs);
         }
 
+        [HttpGet("image/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetImage(Guid id)
+        {
+            ProductImageDTO productImageDTO = await _productService.GetProductImage(id);
+            return File(productImageDTO.Stream, "application/octet-stream", productImageDTO.FileName);
+        }
+
         [HttpPost]
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> Post([FromBody]NewProductDTO newProductDTO)
