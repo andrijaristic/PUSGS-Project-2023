@@ -93,8 +93,9 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSet
 builder.Services.AddOptions();
 
 #region Service and Repository registrations
-builder.Services.AddScoped<IAuthHelperService, AuthHelperService>();
-builder.Services.AddScoped<IMailingService, MailingService>();
+builder.Services.AddTransient<IAuthHelperService, AuthHelperService>();
+builder.Services.AddTransient<IMailingService, MailingService>();
+builder.Services.AddTransient<IImageService, ImageService>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
