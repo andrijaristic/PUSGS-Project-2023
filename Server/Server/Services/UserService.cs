@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Server.Dto.UserDTOs;
 using Server.Enums;
 using Server.Exceptions.UserExceptions;
@@ -8,10 +6,6 @@ using Server.Interfaces.RepositoryInterfaces;
 using Server.Interfaces.ServiceInterfaces;
 using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 using Server.Models;
-using Server.Models.AppSettings;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Server.Services
 {
@@ -19,15 +13,17 @@ namespace Server.Services
     {
         private readonly IAuthHelperService _authHelperService;
         private readonly IMailingService _mailingService;
+        private readonly IImageService _imageService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UserService(IAuthHelperService authHelperService, IUnitOfWork unitOfWork, IMapper mapper, IMailingService mailingService)
+        public UserService(IAuthHelperService authHelperService, IUnitOfWork unitOfWork, IMapper mapper, IMailingService mailingService, IImageService imageService)
         {
             _authHelperService = authHelperService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _mailingService = mailingService;
+            _imageService = imageService;
         }
 
         public async Task VerifyUser(VerifyUserDTO verifyUserDTO)
@@ -68,12 +64,21 @@ namespace Server.Services
                 user.VerificationStatus = VerificationStatus.EXEMPT;
             }
 
+            user.ImageURL = $"Images/Default/user.jpg";
+            if (newUserDTO.Image != null)
+            {
+                string path = "Users";
+                string name = user.Email.Split("@")[0];
+
+                user.ImageURL = await _imageService.SaveImage(newUserDTO.Image, name, path);
+            }
+
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, BCrypt.Net.BCrypt.GenerateSalt());
             await _unitOfWork.Users.Add(user);
             await _unitOfWork.Save();
 
             string subject = "Registration status";
-            string body = "";
+            string body;
             if (user.Role == UserRole.BUYER)
             {
                 body = "Registration successful. Happy shopping!";
@@ -156,8 +161,28 @@ namespace Server.Services
         public async Task<List<DisplayUserDTO>> GetSellers()
         {
             List<User> sellers = await _unitOfWork.Users.GetSellers();
-
+            
             return _mapper.Map<List<DisplayUserDTO>>(sellers);
+        }
+
+        public async Task<UserAvatarDTO> GetUserAvatar(Guid id)
+        {
+            User user = await _unitOfWork.Users.Find(id);
+            if (user == null)
+            {
+                throw new UserByIdNotFoundException(id);
+            }
+
+            string fileName = user.ImageURL.Split('/')[2];
+            FileStream stream = _imageService.DownloadImage(user.ImageURL);
+            
+            UserAvatarDTO userAvatarDTO = new UserAvatarDTO()
+            {
+                Stream = stream,
+                FileName = fileName
+            };
+
+            return userAvatarDTO;
         }
 
         private void ValidateUser(NewUserDTO newUserDTO, bool registered = false)
@@ -188,7 +213,8 @@ namespace Server.Services
                 {
                     throw new InvalidUserPasswordException(newUserDTO.Password);
                 }
-                if (String.IsNullOrWhiteSpace(newUserDTO.Email))
+
+                if (String.IsNullOrWhiteSpace(newUserDTO.Email) || !newUserDTO.Email.Contains('@'))
                 {
                     throw new InvalidUserEmailException(newUserDTO.Email);
                 }

@@ -1,4 +1,5 @@
-﻿using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 
 namespace Server.Services.Utility
 {
@@ -16,6 +17,17 @@ namespace Server.Services.Utility
             }
 
             return imagePath;
+        }
+
+        public FileStream DownloadImage(string path)
+        {
+            if (File.Exists(path))
+            {
+                FileStream stream = new FileStream(path, FileMode.Open);
+                return stream;
+            }
+
+            return null;
         }
     }
 }

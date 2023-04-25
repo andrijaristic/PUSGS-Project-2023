@@ -3,5 +3,6 @@
     public interface IImageService
     {
         Task<string> SaveImage(IFormFile imageFile, string name, string path);
+        FileStream DownloadImage(string path);
     }
 }

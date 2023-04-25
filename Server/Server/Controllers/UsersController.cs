@@ -28,6 +28,14 @@ namespace Server.Controllers
             return Ok(displayUserDTOs);
         }
 
+        [HttpGet("avatar/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetAvatar(Guid id)
+        {
+            UserAvatarDTO userAvatarDTO = await _userService.GetUserAvatar(id);
+            return File(userAvatarDTO.Stream, "application/octet-stream", userAvatarDTO.FileName);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]NewUserDTO newUserDTO)
         {
