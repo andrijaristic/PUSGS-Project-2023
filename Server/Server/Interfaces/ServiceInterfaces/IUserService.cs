@@ -11,5 +11,6 @@ namespace Server.Interfaces.ServiceInterfaces
         Task<List<DisplayUserDTO>> GetSellers();
         Task<AuthDTO> ExternalLogin(ExternalLoginDTO externalLoginDTO);
         Task<UserAvatarDTO> GetUserAvatar(Guid id);
+        Task<DisplayUserDTO> GetUserInformation(Guid id);
     }
 }

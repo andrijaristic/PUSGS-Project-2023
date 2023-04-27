@@ -165,6 +165,17 @@ namespace Server.Services
             return _mapper.Map<List<DisplayUserDTO>>(sellers);
         }
 
+        public async Task<DisplayUserDTO> GetUserInformation(Guid id)
+        {
+            User user = await _unitOfWork.Users.Find(id);
+            if (user == null)
+            {
+                throw new UserByIdNotFoundException(id);
+            }
+
+            return _mapper.Map<DisplayUserDTO>(user);
+        }
+
         public async Task<UserAvatarDTO> GetUserAvatar(Guid id)
         {
             User user = await _unitOfWork.Users.Find(id);

@@ -20,12 +20,22 @@ namespace Server.Controllers
             _authHelperService = authHelperService;
         }
 
-        [HttpGet]
+        [HttpGet("all-sellers")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Get()
         {
             List<DisplayUserDTO> displayUserDTOs = await _userService.GetSellers();
             return Ok(displayUserDTOs);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetUserInformation()
+        {
+            Guid id = _authHelperService.GetUserIdFromToken(User);
+
+            DisplayUserDTO displayUserDTO = await _userService.GetUserInformation(id);
+            return Ok(displayUserDTO);
         }
 
         [HttpGet("avatar/{id}")]
