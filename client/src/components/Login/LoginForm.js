@@ -36,6 +36,13 @@ const LoginForm = () => {
           />
           <button onClick={submitHandler}>Sign in</button>
         </form>
+        <button
+          onClick={() => {
+            nav("/register");
+          }}
+        >
+          Register
+        </button>
       </Card>
     </div>
   );

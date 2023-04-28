@@ -4,6 +4,7 @@ import axios from "axios";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import UserProfilePage from "./pages/UserProfilePage";
 
 import { UserContextProvider } from "./store/user-context";
@@ -56,7 +57,7 @@ function App() {
           }
         ></Route>
       )}
-
+      <Route path="/register" element={<RegisterPage />}></Route>
       <Route path="*" element={<Navigate to="/login" />}></Route>
     </Routes>
   );

@@ -6,9 +6,9 @@ const AuthContext = React.createContext({
   isLoggedIn: false,
   user: {},
   token: null,
-  onLogin: () => {},
+  onLogin: (data) => {},
   onLogout: () => {},
-  onRegister: () => {},
+  onRegister: (data) => {},
 });
 
 const initToken = localStorage.getItem("token");

@@ -64,7 +64,7 @@ namespace Server.Services
                 user.VerificationStatus = VerificationStatus.EXEMPT;
             }
 
-            user.ImageURL = $"Images/Default/user.jpg";
+            user.ImageURL = $"Images\\Default\\user.jpg";
             if (newUserDTO.Image != null)
             {
                 string path = "Users";
@@ -184,7 +184,7 @@ namespace Server.Services
                 throw new UserByIdNotFoundException(id);
             }
 
-            string fileName = user.ImageURL.Split('/')[2];
+            string fileName = user.ImageURL.Split('\\')[2];
             FileStream stream = _imageService.DownloadImage(user.ImageURL);
             
             UserAvatarDTO userAvatarDTO = new UserAvatarDTO()

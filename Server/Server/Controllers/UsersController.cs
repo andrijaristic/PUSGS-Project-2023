@@ -47,7 +47,7 @@ namespace Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]NewUserDTO newUserDTO)
+        public async Task<IActionResult> Post([FromForm]NewUserDTO newUserDTO)
         {
             DisplayUserDTO displayUserDTO = await _userService.CreateUser(newUserDTO);
             return CreatedAtAction(nameof(Get), new { id = displayUserDTO.Id }, displayUserDTO);
