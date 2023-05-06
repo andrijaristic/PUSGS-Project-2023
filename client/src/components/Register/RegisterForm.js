@@ -1,12 +1,11 @@
-import React, { useContext, useRef, useState } from "react";
-import AuthContext from "../../store/auth-context";
+import React, { useRef } from "react";
 import Input from "../UI/Input/Input";
 import Card from "../UI/Card/Card";
+import { useDispatch } from "react-redux";
+import { registerAction } from "../../store/userSlice";
 
 const RegisterForm = () => {
-  const ctx = useContext(AuthContext);
-
-  const [image, setImage] = useState();
+  const dispatch = useDispatch();
 
   const usernameInput = useRef();
   const passwordInput = useRef();
@@ -31,7 +30,7 @@ const RegisterForm = () => {
     formData.append("role", roleInput.current.value);
     formData.append("image", imageInput.current.files[0]);
 
-    ctx.onRegister(formData);
+    dispatch(registerAction(formData));
   };
 
   return (

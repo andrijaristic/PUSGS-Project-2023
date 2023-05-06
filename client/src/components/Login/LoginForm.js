@@ -1,14 +1,17 @@
-import React, { useRef, useContext } from "react";
+import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../../store/auth-context";
 import Input from "../UI/Input/Input";
 import Card from "../UI/Card/Card";
 
+import { useDispatch } from "react-redux";
+
 import styles from "../Login/LoginForm.module.css";
+import { loginAction } from "../../store/userSlice";
 
 const LoginForm = () => {
-  const ctx = useContext(AuthContext);
   const nav = useNavigate();
+  const dispatch = useDispatch();
+
   const usernameInput = useRef();
   const passwordInput = useRef();
 
@@ -20,7 +23,7 @@ const LoginForm = () => {
       password: passwordInput.current.value,
     };
 
-    ctx.onLogin(requestBody);
+    dispatch(loginAction(requestBody));
   };
 
   return (
