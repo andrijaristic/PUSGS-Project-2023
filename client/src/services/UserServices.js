@@ -1,7 +1,7 @@
-import axios from "axios";
+import { axiosClient } from "./AxiosClient";
 
 export const Login = async (requestBody) => {
-  return axios
+  return await axiosClient
     .post(`${process.env.REACT_APP_API_ENDPOINT}/users/login`, requestBody)
     .then((data) => {
       return {
@@ -30,7 +30,7 @@ export const Login = async (requestBody) => {
 };
 
 export const Register = async (requestBody) => {
-  return axios
+  return await axiosClient
     .post(`${process.env.REACT_APP_API_ENDPOINT}/users`, requestBody)
     .then((data) => {
       return {
@@ -59,7 +59,7 @@ export const Register = async (requestBody) => {
 };
 
 export const UpdateUser = async (requestBody) => {
-  return axios
+  return await axiosClient
     .put(`${process.env.REACT_APP_API_ENDPOINT}/users`, requestBody)
     .then((data) => {
       return {
@@ -88,7 +88,7 @@ export const UpdateUser = async (requestBody) => {
 };
 
 export const GetUserInformation = async (requestBody) => {
-  return axios
+  return await axiosClient
     .get(`${process.env.REACT_APP_API_ENDPOINT}/users`, requestBody)
     .then((data) => {
       return {
@@ -117,7 +117,7 @@ export const GetUserInformation = async (requestBody) => {
 };
 
 export const GetUserAvatar = async (userId) => {
-  return axios
+  return await axiosClient
     .get(`${process.env.REACT_APP_API_ENDPOINT}/users/avatar/${userId}`, {
       responseType: "blob",
     })
