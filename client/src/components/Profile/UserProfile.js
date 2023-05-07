@@ -15,8 +15,10 @@ const UserProfile = () => {
   useEffect(() => {
     const execute = async () => {
       const postAction = await dispatch(getUserInformationAction());
-      const { id } = postAction.payload;
-      dispatch(getUserAvatarAction(id));
+      const { id, imageSrc } = postAction.payload;
+      if (imageSrc === "") {
+        dispatch(getUserAvatarAction(id));
+      }
     };
 
     execute();

@@ -12,5 +12,6 @@ namespace Server.Interfaces.ServiceInterfaces
         Task<AuthDTO> ExternalLogin(ExternalLoginDTO externalLoginDTO);
         Task<UserAvatarDTO> GetUserAvatar(Guid id);
         Task<DisplayUserDTO> GetUserInformation(Guid id);
+        Task<AuthDTO> FinishRegistration(FinishRegistrationDTO finishRegistrationDTO);
     }
 }

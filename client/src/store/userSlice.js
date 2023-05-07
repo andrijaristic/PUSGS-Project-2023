@@ -3,8 +3,10 @@ import { toast } from "react-toastify";
 import {
   GetUserInformation,
   Login,
+  GoogleLogin,
   Register,
   GetUserAvatar,
+  FinishRegistration,
 } from "../services/UserServices";
 
 const initialState = {
@@ -14,6 +16,10 @@ const initialState = {
     localStorage.getItem("user") !== null
       ? JSON.parse(localStorage.getItem("user"))
       : null,
+  finishedRegistration:
+    localStorage.getItem("user") !== null
+      ? JSON.parse(localStorage.getItem("user")).finishedRegistration
+      : false,
 };
 
 export const loginAction = createAsyncThunk(
@@ -28,11 +34,35 @@ export const loginAction = createAsyncThunk(
   }
 );
 
+export const googleLoginAction = createAsyncThunk(
+  "user/googleLogin",
+  async (data, thunkApi) => {
+    try {
+      const response = await GoogleLogin(data);
+      return thunkApi.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
 export const registerAction = createAsyncThunk(
   "user/register",
   async (data, thunkApi) => {
     try {
       const response = await Register(data);
+      return thunkApi.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
+export const finishRegistrationAction = createAsyncThunk(
+  "user/finishRegistration",
+  async (data, thunkApi) => {
+    try {
+      const response = await FinishRegistration(data);
       return thunkApi.fulfillWithValue(response.data);
     } catch (error) {
       return thunkApi.rejectWithValue(error.response.data.error);
@@ -98,6 +128,27 @@ const userSlice = createSlice({
         pauseOnHover: false,
       });
     });
+    builder.addCase(googleLoginAction.fulfilled, (state, action) => {
+      const token = action.payload.token;
+      state.token = token;
+      state.isLoggedIn = true;
+      state.finishedRegistration = action.payload.finishedRegistration;
+
+      localStorage.setItem("token", token);
+    });
+    builder.addCase(googleLoginAction.rejected, (state, action) => {
+      let error = "GOOGLE LOGIN ERROR"; // Make a default error message constant somewhere
+      if (typeof action.payload === "string") {
+        error = action.payload;
+      }
+
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+    });
     builder.addCase(registerAction.fulfilled, (state, action) => {
       toast.success("You have registered successfully.", {
         position: "top-center",
@@ -107,7 +158,35 @@ const userSlice = createSlice({
       });
     });
     builder.addCase(registerAction.rejected, (state, action) => {
-      let error = "Error"; // Make a default error message constant somewhere
+      let error = "REGISTRATION ERROR"; // Make a default error message constant somewhere
+      if (typeof action.payload === "string") {
+        error = action.payload;
+      }
+
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+    });
+    builder.addCase(finishRegistrationAction.fulfilled, (state, action) => {
+      const token = action.payload.token;
+      state.token = token;
+      state.isLoggedIn = true;
+      state.finishedRegistration = true;
+
+      localStorage.setItem("token", token);
+
+      toast.success("You have registered successfully.", {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+    });
+    builder.addCase(finishRegistrationAction.rejected, (state, action) => {
+      let error = "FINISH REGISTRATION ERROR"; // Make a default error message constant somewhere
       if (typeof action.payload === "string") {
         error = action.payload;
       }

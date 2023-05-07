@@ -67,6 +67,16 @@ namespace Server.Controllers
             return Ok(authDTO);
         }
 
+        [HttpPut("finish-registration")]
+        [Authorize]
+        public async Task<IActionResult> FinishRegistration([FromBody]FinishRegistrationDTO finishRegistrationDTO)
+        {
+            finishRegistrationDTO.Id = _authHelperService.GetUserIdFromToken(User);
+
+            AuthDTO authDTO = await _userService.FinishRegistration(finishRegistrationDTO);
+            return Ok(authDTO);
+        }
+
         [HttpPut]
         [Authorize]
         public async Task<IActionResult> Put([FromBody]UpdateUserDTO updateUserDTO)

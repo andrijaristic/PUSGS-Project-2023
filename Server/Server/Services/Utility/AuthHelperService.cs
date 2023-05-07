@@ -66,6 +66,7 @@ namespace Server.Services.Utility
                     Username = googleUserInfo.Email.Split("@")[0],
                     Name = googleUserInfo.Name,
                     Email = googleUserInfo.Email,
+                    ImageSrc = googleUserInfo.Picture
                 };
 
                 return socialMediaInfoDTO;

@@ -153,8 +153,6 @@ const RegisterForm = () => {
       return;
     }
 
-    console.log(date);
-
     if (password !== confirmPassword) {
       setDoPasswordsMatch(false);
       setIsPasswordValid(false);
@@ -230,7 +228,6 @@ const RegisterForm = () => {
                 id="password"
                 label="Password"
                 name="password"
-                hidden={secondaryInformation}
                 error={isPasswordTouched && !isPasswordValid}
                 onChange={passwordChangeHandler}
                 onBlur={passwordBlurHandler}
@@ -252,7 +249,6 @@ const RegisterForm = () => {
                 id="confirm-password"
                 label="Confirm Password"
                 name="confirm-password"
-                hidden={secondaryInformation}
                 error={isConfirmPasswordTouched && !isConfirmPasswordValid}
                 onChange={confirmPasswordChangeHandler}
                 onBlur={confirmPasswordBlurHandler}
@@ -274,7 +270,6 @@ const RegisterForm = () => {
                 id="email"
                 label="Email"
                 name="email"
-                hidden={secondaryInformation}
                 error={isEmailTouched && !isEmailValid}
                 onChange={emailChangeHandler}
                 onBlur={emailBlurHandler}

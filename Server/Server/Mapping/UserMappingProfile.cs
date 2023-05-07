@@ -9,10 +9,11 @@ namespace Server.Mapping
         public UserMappingProfile() 
         {
             CreateMap<User, AuthDTO>().ReverseMap().AfterMap((authDTO, user) => StringTrimmer(user));
-            CreateMap<User, LoginDTO>().ReverseMap().AfterMap((authDTO, user) => StringTrimmer(user)); ;
-            CreateMap<User, NewUserDTO>().ReverseMap().AfterMap((authDTO, user) => StringTrimmer(user)); ;
-            CreateMap<User, DisplayUserDTO>().ReverseMap().AfterMap((authDTO, user) => StringTrimmer(user)); ;
-            CreateMap<User, UpdateUserDTO>().ReverseMap().AfterMap((authDTO, user) => StringTrimmer(user)); ;
+            CreateMap<User, LoginDTO>().ReverseMap().AfterMap((authDTO, user) => StringTrimmer(user));
+            CreateMap<User, NewUserDTO>().ReverseMap().AfterMap((authDTO, user) => StringTrimmer(user));
+            CreateMap<User, DisplayUserDTO>().ReverseMap().AfterMap((authDTO, user) => StringTrimmer(user));
+            CreateMap<User, UpdateUserDTO>().ReverseMap().AfterMap((authDTO, user) => StringTrimmer(user));
+            CreateMap<User, FinishRegistrationDTO>().ReverseMap();
             CreateMap<NewUserDTO, UpdateUserDTO>().ReverseMap();
         }
 

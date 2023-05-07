@@ -17,6 +17,7 @@ namespace Server.Models
         public string Address { get; set; }
         public UserRole Role { get; set; }
         public string ImageURL { get; set; }
+        public bool FinishedRegistration { get; set; } = false;
         public List<Product> Products { get; set; }  // Will be empty for Buyer, Admin
         public List<Order> Orders { get; set; } // Will be empty for Admin
 

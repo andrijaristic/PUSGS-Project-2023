@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { loginAction } from "../../store/userSlice";
+import { loginAction, googleLoginAction } from "../../store/userSlice";
 import {
   Container,
   CssBaseline,
@@ -63,7 +63,9 @@ const LoginForm = () => {
     dispatch(loginAction(requestBody));
   };
 
-  const googleLoginHandler = () => {};
+  const googleLoginHandler = (response) => {
+    dispatch(googleLoginAction({ token: response.credential }));
+  };
 
   const googleLoginErrorHandler = () => {
     toast.error("Google login error", {

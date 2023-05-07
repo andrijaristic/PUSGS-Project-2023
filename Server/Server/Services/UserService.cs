@@ -107,6 +107,7 @@ namespace Server.Services
 
             AuthDTO authDTO = _mapper.Map<AuthDTO>(user);
             authDTO.Token = _authHelperService.CreateToken(user);
+            authDTO.FinishedRegistration = true;
 
             return authDTO;
         }
@@ -130,12 +131,57 @@ namespace Server.Services
                     Address = "",
                     DateOfBirth = DateTime.Now.ToLocalTime(),
                     Email = socialMediaInfoDTO.Email,
-                    Role = UserRole.BUYER
+                    Role = UserRole.BUYER,
+                    FinishedRegistration = false,
+                    ImageURL = socialMediaInfoDTO.ImageSrc
                 };
 
                 await _unitOfWork.Users.Add(user);
                 await _unitOfWork.Save();
             }
+
+            AuthDTO authDTO = _mapper.Map<AuthDTO>(user);
+            authDTO.Token = _authHelperService.CreateToken(user);
+
+            return authDTO;
+        }
+
+        public async Task<AuthDTO> FinishRegistration(FinishRegistrationDTO finishRegistrationDTO)
+        {
+            User user = await _unitOfWork.Users.Find(finishRegistrationDTO.Id);
+            if (user == null)
+            {
+                throw new UserByIdNotFoundException(finishRegistrationDTO.Id);
+            }
+
+            if (user.FinishedRegistration)
+            {
+                throw new UserRegistrationFinishedException(finishRegistrationDTO.Id);
+            }
+
+            if (finishRegistrationDTO.DateOfBirth > new DateTime(year: 2018, month: 1, day: 1, hour: 0, minute: 0, second: 0))
+            {
+                throw new InvalidUserDateOfBirthException($"{finishRegistrationDTO.DateOfBirth.Day}/{finishRegistrationDTO.DateOfBirth.Month}/{finishRegistrationDTO.DateOfBirth.Year}");
+            }
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, BCrypt.Net.BCrypt.GenerateSalt());
+            user.Address = finishRegistrationDTO.Address.Trim();
+            user.DateOfBirth = finishRegistrationDTO.DateOfBirth.ToLocalTime();
+
+            if (!Enum.TryParse(finishRegistrationDTO.Role, out UserRole role))
+            {
+                throw new InvalidUserRoleException(role.ToString());
+            }
+
+            if (role != UserRole.SELLER)
+            {
+                user.VerificationStatus = VerificationStatus.EXEMPT;
+            }
+
+            user.Role = role;
+            user.FinishedRegistration = true;
+            
+            await _unitOfWork.Save();
 
             AuthDTO authDTO = _mapper.Map<AuthDTO>(user);
             authDTO.Token = _authHelperService.CreateToken(user);
@@ -173,7 +219,15 @@ namespace Server.Services
                 throw new UserByIdNotFoundException(id);
             }
 
-            return _mapper.Map<DisplayUserDTO>(user);
+            DisplayUserDTO displayUserDTO = _mapper.Map<DisplayUserDTO>(user);
+
+            string googlePicture = "googleusercontent";
+            if (user.ImageURL.Contains(googlePicture))
+            {
+                displayUserDTO.ImageSrc = user.ImageURL;
+            }
+
+            return displayUserDTO;
         }
 
         public async Task<UserAvatarDTO> GetUserAvatar(Guid id)

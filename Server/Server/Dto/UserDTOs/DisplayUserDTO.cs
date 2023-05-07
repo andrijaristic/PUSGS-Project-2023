@@ -12,5 +12,7 @@ namespace Server.Dto.UserDTOs
         public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
         public string Role { get; set; }
+        public string ImageSrc { get; set; }
+        public string FinishedRegistration { get; set; }
     }
 }
