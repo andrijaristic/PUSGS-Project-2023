@@ -1,6 +1,17 @@
-/* .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-} */
+.link {
+  text-decoration: none;
+  color: black;
+}
+
+.link:visited {
+  color: black;
+}
+
+.link:hover {
+  color: rgba(115, 115, 115, 0.881);
+  transition: ease-in-out 250ms;
+}
+
+.link:not(hover) {
+  transition: ease-in-out 250ms;
+}

@@ -469,7 +469,7 @@ const RegisterForm = () => {
             }}
           >
             <Link className={styles.link} to="/login">
-              {"Already have an account?"}
+              {"Already have an account? Sign In"}
             </Link>
           </Box>
         </Box>
