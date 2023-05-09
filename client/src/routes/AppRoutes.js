@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
-import UserProfilePage from "../pages/UserProfilePage";
+import ProfilePage from "../pages/ProfilePage";
 import FinishRegisterPage from "../pages/FinishRegisterPage";
 
 const AppRoutes = () => {
@@ -23,7 +23,7 @@ const AppRoutes = () => {
       )}
       {isLoggedIn && finishedRegistration && (
         <>
-          <Route path="/profile" element={<UserProfilePage />}></Route>
+          <Route path="/profile" element={<ProfilePage />}></Route>
           <Route
             path="*"
             element={<Navigate replace to={"/profile"} />}

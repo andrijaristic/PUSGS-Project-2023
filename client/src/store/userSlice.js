@@ -7,6 +7,7 @@ import {
   Register,
   GetUserAvatar,
   FinishRegistration,
+  UpdateUser,
 } from "../services/UserServices";
 
 const initialState = {
@@ -94,6 +95,18 @@ export const getUserAvatarAction = createAsyncThunk(
   }
 );
 
+export const updateUserAction = createAsyncThunk(
+  "user/update",
+  async (data, thunkApi) => {
+    try {
+      const response = await UpdateUser(data);
+      return thunkApi.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -112,6 +125,7 @@ const userSlice = createSlice({
       const token = action.payload.token;
       state.token = token;
       state.isLoggedIn = true;
+      state.finishedRegistration = action.payload.finishedRegistration;
 
       localStorage.setItem("token", token);
     });
@@ -222,6 +236,26 @@ const userSlice = createSlice({
     });
     builder.addCase(getUserAvatarAction.rejected, (state, action) => {
       let error = "IMAGE ERROR"; // Make a default error message constant somewhere
+      if (typeof action.payload === "string") {
+        error = action.payload;
+      }
+
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+    });
+    builder.addCase(updateUserAction.fulfilled, (state, action) => {
+      state.user.name = action.payload.name;
+      state.user.address = action.payload.address;
+      state.user.dateOfBirth = action.payload.dateOfBirth;
+
+      localStorage.setItem("user", JSON.stringify(state.user));
+    });
+    builder.addCase(updateUserAction.rejected, (state, action) => {
+      let error = "USER UPDATE ERROR"; // Make a default error message constant somewhere
       if (typeof action.payload === "string") {
         error = action.payload;
       }

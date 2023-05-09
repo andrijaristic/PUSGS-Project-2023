@@ -30,32 +30,10 @@ export const FinishRegistration = async (requestBody) => {
 };
 
 export const UpdateUser = async (requestBody) => {
-  return await axiosClient
-    .put(`${process.env.REACT_APP_API_ENDPOINT}/users`, requestBody)
-    .then((data) => {
-      return {
-        userData: data.data,
-        status: data.status,
-      };
-    })
-    .catch((error) => {
-      if (error.response) {
-        return {
-          error: error.response.data.error,
-          status: error.response.status,
-        };
-      } else if (error.request) {
-        return {
-          error: error.request.respons,
-          status: error.request.status,
-        };
-      }
-
-      return {
-        error: "Endpoint not hit",
-        status: 404,
-      };
-    });
+  return await axiosClient.put(
+    `${process.env.REACT_APP_API_ENDPOINT}/users`,
+    requestBody
+  );
 };
 
 export const GetUserInformation = async (requestBody) => {

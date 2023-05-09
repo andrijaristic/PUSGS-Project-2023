@@ -356,6 +356,7 @@ const RegisterForm = () => {
                 format="dd/MM/yyyy"
                 required
                 fullWidth
+                disableFuture
                 label="Birthday"
                 error={isDateTouched && !isDateValid}
                 onChange={(value) => dateChangeHandler(new Date(value))}
