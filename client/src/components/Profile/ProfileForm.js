@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getUserAvatarAction,
   getUserInformationAction,
+  updateUserAction,
 } from "../../store/userSlice";
 import {
   Box,
@@ -85,6 +86,9 @@ const ProfileForm = () => {
     }
 
     const data = new FormData();
+    data.append("name", name);
+    data.append("address", address);
+
     if (date !== null) {
       data.append("dateOfBirth", date.toISOString());
     }
@@ -92,6 +96,8 @@ const ProfileForm = () => {
     if (uploadedImage !== null) {
       data.append("image", uploadedImage);
     }
+
+    dispatch(updateUserAction(data));
   };
 
   if (user) {

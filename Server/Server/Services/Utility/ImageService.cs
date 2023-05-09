@@ -30,5 +30,13 @@ namespace Server.Services.Utility
 
             return null;
         }
+
+        public void DeleteImage(string path)
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
     }
 }

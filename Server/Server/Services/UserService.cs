@@ -198,6 +198,19 @@ namespace Server.Services
                 throw new UserByIdNotFoundException(updateUserDTO.Id);
             }
 
+            if (updateUserDTO.Image != null)
+            {
+                string path = "Users";
+                string name = user.Email.Split("@")[0];
+
+                if (!String.Equals(user.ImageURL, "Images\\Default\\user.jpg"))
+                {
+                    _imageService.DeleteImage(user.ImageURL);
+                }
+
+                user.ImageURL = await _imageService.SaveImage(updateUserDTO.Image, name, path);
+            }
+
             user.Update(updateUserDTO.Address.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth);
             await _unitOfWork.Save();
 
@@ -252,11 +265,6 @@ namespace Server.Services
 
         private void ValidateUser(NewUserDTO newUserDTO, bool registered = false)
         {
-            if (String.IsNullOrWhiteSpace(newUserDTO.Username))
-            {
-                throw new InvalidUserUsernameException(newUserDTO.Username);
-            }
-
             if (String.IsNullOrWhiteSpace(newUserDTO.Name))
             {
                 throw new InvalidNameOfUserException(newUserDTO.Name);
@@ -274,6 +282,11 @@ namespace Server.Services
 
             if (!registered)
             {
+                if (String.IsNullOrWhiteSpace(newUserDTO.Username))
+                {
+                    throw new InvalidUserUsernameException(newUserDTO.Username);
+                }
+
                 if (String.IsNullOrWhiteSpace(newUserDTO.Password))
                 {
                     throw new InvalidUserPasswordException(newUserDTO.Password);

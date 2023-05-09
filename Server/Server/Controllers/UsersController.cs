@@ -79,7 +79,7 @@ namespace Server.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> Put([FromBody]UpdateUserDTO updateUserDTO)
+        public async Task<IActionResult> Put([FromForm]UpdateUserDTO updateUserDTO)
         {
             updateUserDTO.Id = _authHelperService.GetUserIdFromToken(User);
 
