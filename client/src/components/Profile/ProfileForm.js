@@ -16,6 +16,7 @@ import {
   Switch,
   Zoom,
 } from "@mui/material";
+import LoadingModal from "../UI/Modal/LoadingModal";
 import ProfileFormItem from "../Profile/ProfileFormItem";
 import ProfileFormDateItem from "./ProfileFormDateItem";
 import ProfileFormImageItem from "./ProfileFormImageItem";
@@ -30,6 +31,10 @@ const ProfileForm = () => {
   const [editable, setEditable] = useState(false);
 
   useEffect(() => {
+    if (user !== null) {
+      return;
+    }
+
     const execute = async () => {
       const postAction = await dispatch(getUserInformationAction());
       const { id, imageSrc } = postAction.payload;
@@ -40,7 +45,7 @@ const ProfileForm = () => {
     };
 
     execute();
-  }, [dispatch]);
+  }, [user, dispatch]);
 
   const editEnableHandler = (event) => {
     setEditable((editState) => !editState);
@@ -103,14 +108,16 @@ const ProfileForm = () => {
   if (user) {
     return (
       <Container
+        margin="normal"
         component="main"
-        maxWidth="sx"
+        maxWidth
         justifyContent="center"
         sx={{
-          border: 1,
+          padding: 0,
+          position: "static",
           display: "flex",
           alignItems: "center",
-          minHeight: "100vh",
+          minHeight: "80vh",
         }}
       >
         <CssBaseline />
@@ -121,9 +128,6 @@ const ProfileForm = () => {
             justifyContent="center"
             spacing={2}
             maxHeight="70vh"
-            sx={{
-              ml: 10,
-            }}
           >
             <Grid item minWidth="20rem">
               <Card
@@ -131,8 +135,6 @@ const ProfileForm = () => {
                   height: "34rem",
                   display: "flex",
                   justifyContent: "flex-end",
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === "dark" ? "#1A2027" : "#fff",
                 }}
               >
                 <Box>
@@ -144,15 +146,13 @@ const ProfileForm = () => {
             </Grid>
             <Grid item minWidth="50rem">
               <Card
-                minWidth="xs"
+                raised
                 sx={{
                   height: "34rem",
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === "dark" ? "#1A2027" : "#fff",
                 }}
               >
                 <Grid container minHeight="34rem" maxHeight="40rem">
-                  <Grid item maxWidth="20rem">
+                  <Grid item>
                     <Box
                       noValidate
                       sx={{
@@ -263,7 +263,7 @@ const ProfileForm = () => {
       </Container>
     );
   } else {
-    return null;
+    return <LoadingModal show={true} />;
   }
 };
 

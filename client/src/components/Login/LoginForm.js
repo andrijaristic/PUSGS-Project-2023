@@ -77,7 +77,7 @@ const LoginForm = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ position: "static" }}>
       <CssBaseline />
       <Zoom in={true}>
         <Box
