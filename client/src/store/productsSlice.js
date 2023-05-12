@@ -15,6 +15,7 @@ const initialState = {
   products: [],
   sellerProducts: [],
   productImages: [],
+  productsLoaded: false,
 };
 
 export const getAllProductsAction = createAsyncThunk(
@@ -118,7 +119,11 @@ const productsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getAllProductsAction.fulfilled, (state, action) => {});
+    builder.addCase(getAllProductsAction.fulfilled, (state, action) => {
+      state.sellerProducts = [];
+      state.products = [...action.payload];
+      state.productsLoaded = true;
+    });
     builder.addCase(getAllProductsAction.rejected, (state, action) => {
       let error = "PRODUCT FETCH ERROR"; // Make a default error message constant somewhere
       if (typeof action.payload === "string") {
@@ -135,8 +140,8 @@ const productsSlice = createSlice({
     builder.addCase(
       getProductsForLoggedInSellerAction.fulfilled,
       (state, action) => {
-        state.sellerProducts = [];
-        state.products = [...action.payload];
+        state.sellerProducts = [...action.payload];
+        state.products = [];
       }
     );
     builder.addCase(

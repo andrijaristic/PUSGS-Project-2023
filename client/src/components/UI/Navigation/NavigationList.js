@@ -98,20 +98,22 @@ const NavigationList = () => {
       setSelectedIndex(value);
     },
   });
-
-  const drawerItems = items.map((item) => {
-    return (
-      <ListItemButton key={item.index} {...buttonProps}>
-        <ListItemIcon sx={{ ml: 1, mr: -2 }}>
-          {icons.get(item.name)}
-        </ListItemIcon>
-        <ListItemText
-          sx={{ mr: 6 }}
-          primary={item.name === "" ? "Products" : item.name}
-        />
-      </ListItemButton>
-    );
-  });
+  let drawerItems;
+  if (items) {
+    drawerItems = items?.map((item) => {
+      return (
+        <ListItemButton key={item.index} {...buttonProps}>
+          <ListItemIcon sx={{ ml: 1, mr: -2 }}>
+            {icons.get(item.name)}
+          </ListItemIcon>
+          <ListItemText
+            sx={{ mr: 6 }}
+            primary={item.name === "" ? "Products" : item.name}
+          />
+        </ListItemButton>
+      );
+    });
+  }
 
   // To stop constant re-renders from force changing current page
   useEffect(() => {

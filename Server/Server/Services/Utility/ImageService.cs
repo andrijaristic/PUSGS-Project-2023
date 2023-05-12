@@ -24,7 +24,7 @@ namespace Server.Services.Utility
         {
             if (File.Exists(path))
             {
-                FileStream stream = new FileStream(path, FileMode.Open);
+                FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
                 return stream;
             }
 
