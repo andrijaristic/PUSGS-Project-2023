@@ -113,7 +113,6 @@ const ProfileForm = () => {
         maxWidth
         justifyContent="center"
         sx={{
-          padding: 0,
           position: "static",
           display: "flex",
           alignItems: "center",

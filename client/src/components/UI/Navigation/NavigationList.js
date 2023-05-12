@@ -81,12 +81,12 @@ const NavigationList = () => {
   }, [user]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-  //   const buttonClickHandler = (value) => {
-  //     if (items !== null) {
-  //       navigate(`/${items[value].name.toLowerCase().replace(" ", "-")}`);
-  //     }
-  //     setSelectedIndex(value);
-  //   }; => Triggers constant re-renders
+  // const buttonClickHandler = (value) => {
+  //   if (items !== null) {
+  //     navigate(`/${items[value].name.toLowerCase().replace(" ", "-")}`);
+  //   }
+  //   setSelectedIndex(value);
+  // }; => Triggers constant re-renders
 
   // Doing it this way doesn't
   const buttonProps = (value) => ({
@@ -100,9 +100,9 @@ const NavigationList = () => {
   });
   let drawerItems;
   if (items) {
-    drawerItems = items?.map((item) => {
+    drawerItems = items.map((item) => {
       return (
-        <ListItemButton key={item.index} {...buttonProps}>
+        <ListItemButton key={item.index} {...buttonProps(item.index)}>
           <ListItemIcon sx={{ ml: 1, mr: -2 }}>
             {icons.get(item.name)}
           </ListItemIcon>

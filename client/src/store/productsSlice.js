@@ -16,6 +16,7 @@ const initialState = {
   sellerProducts: [],
   productImages: [],
   productsLoaded: false,
+  sellerProductsLoaded: false,
 };
 
 export const getAllProductsAction = createAsyncThunk(
@@ -142,6 +143,8 @@ const productsSlice = createSlice({
       (state, action) => {
         state.sellerProducts = [...action.payload];
         state.products = [];
+        state.productImages = [];
+        state.sellerProductsLoaded = true;
       }
     );
     builder.addCase(
