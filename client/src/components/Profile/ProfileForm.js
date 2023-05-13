@@ -20,6 +20,7 @@ import LoadingModal from "../UI/Modal/LoadingModal";
 import ProfileFormItem from "../Profile/ProfileFormItem";
 import ProfileFormDateItem from "./ProfileFormDateItem";
 import ProfileFormImageItem from "./ProfileFormImageItem";
+import ProfileFormIcon from "./ProfileFormIcon";
 
 const ProfileForm = () => {
   const dispatch = useDispatch();
@@ -170,7 +171,7 @@ const ProfileForm = () => {
                       ></ProfileFormImageItem>
                       <Box
                         sx={{
-                          ml: 1,
+                          ml: 2,
                           mt: 2,
                         }}
                       >
@@ -180,12 +181,24 @@ const ProfileForm = () => {
                           initialValue={user.email}
                           editable={false}
                         ></ProfileFormItem>
-                        <ProfileFormItem
-                          id="role"
-                          label="User type"
-                          initialValue={user.role}
-                          editable={false}
-                        ></ProfileFormItem>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <ProfileFormItem
+                            id="role"
+                            label="User type"
+                            initialValue={user.role}
+                            editable={false}
+                          ></ProfileFormItem>
+                          {user.role === "SELLER" && (
+                            <ProfileFormIcon
+                              verificationStatus={user.verificationStatus}
+                            ></ProfileFormIcon>
+                          )}
+                        </Box>
                       </Box>
                     </Box>
                   </Grid>
