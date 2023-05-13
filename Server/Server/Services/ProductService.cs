@@ -29,7 +29,7 @@ namespace Server.Services
 
         public async Task<List<DisplayProductDTO>> GetAllProducts()
         {
-            List<Product> products = await _unitOfWork.Products.GetAll();
+            List<Product> products = await _unitOfWork.Products.GetAllProducts();
 
             return _mapper.Map<List<DisplayProductDTO>>(products);
         }
@@ -37,12 +37,10 @@ namespace Server.Services
         public async Task<DisplayProductDTO> GetProductById(Guid id)
         {
             Product product = await _unitOfWork.Products.Find(id);
-            if (product == null) 
+            if (product == null || product.IsDeleted) 
             {
                 throw new ProductNotFoundException(id);
             }
-
-            // TODO: If deleted (when soft delete implemented)
 
             return _mapper.Map<DisplayProductDTO>(product);
         }
@@ -68,23 +66,6 @@ namespace Server.Services
 
             return _mapper.Map<List<DisplayProductDTO>>(products);
         }
-
-        //public async Task<List<DisplayProductDTO>> GetSellerProducts(string username)
-        //{
-        //    Guid sellerId = await _unitOfWork.Users.FindUserIdByUsername(username);
-        //    if (sellerId == Guid.Empty)
-        //    {
-        //        throw new UserNotFoundException();
-        //    }
-
-        //    List<Product> products = await _unitOfWork.Products.GetProductsForSeller(sellerId);
-        //    if (products == null)
-        //    {
-        //        throw new SellerProductsNotFoundException(sellerId);
-        //    }
-
-        //    return _mapper.Map<List<DisplayProductDTO>>(products);
-        //}
 
         public async Task<DisplayProductDTO> CreateProduct(NewProductDTO newProductDTO)
         {
@@ -146,7 +127,7 @@ namespace Server.Services
         public async Task DeleteProduct(DeleteProductDTO deleteProductDTO)
         {
             Product product = await _unitOfWork.Products.Find(deleteProductDTO.ProductId);
-            if (product == null)
+            if (product == null || product.IsDeleted)
             {
                 throw new ProductNotFoundException(deleteProductDTO.ProductId);
             }
@@ -156,9 +137,15 @@ namespace Server.Services
                 throw new InvalidProductUserInRequestException(deleteProductDTO.ProductId, deleteProductDTO.UserId);
             }
 
-            // TODO: Decide whether allowed to delete products that are parts of existing and or delivered orders
-            // Potentially only logically delete product in that scenario, not physically
-            _unitOfWork.Products.Remove(product);
+            bool inOrder = await _unitOfWork.OrderItems.FindOrderForItem(deleteProductDTO.ProductId);
+            if (!inOrder)
+            {
+                _unitOfWork.Products.Remove(product);
+            } else
+            {
+                product.IsDeleted = true;
+            }
+
             await _unitOfWork.Save();
         }
 
@@ -166,7 +153,7 @@ namespace Server.Services
         {
             ValidateProduct(_mapper.Map<NewProductDTO>(updateProductDTO), true);
             Product product = await _unitOfWork.Products.Find(updateProductDTO.Id);
-            if (product == null)
+            if (product == null || product.IsDeleted)
             {
                 throw new ProductNotFoundException(updateProductDTO.Id);
             }
@@ -210,7 +197,7 @@ namespace Server.Services
             }
 
             Product product = await _unitOfWork.Products.Find(productRestockDTO.Id);
-            if (product == null)
+            if (product == null || product.IsDeleted)
             {
                 throw new ProductNotFoundException(productRestockDTO.Id);
             }

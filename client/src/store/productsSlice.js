@@ -310,8 +310,6 @@ const productsSlice = createSlice({
       });
     });
     builder.addCase(deleteProductAction.fulfilled, (state, action) => {
-      // TODO: Change if needed when delete functionality implemented
-      // Potentially not because will refresh page and fetch all products again on deletion
       const index = state.sellerProducts.findIndex(
         (product) => product.id === action.meta.arg
       );

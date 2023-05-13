@@ -12,6 +12,7 @@ namespace Server.Models
         public string ImageURL { get; set; }
         public Guid SellerId { get; set; }
         public User Seller { get; set; }
+        public bool IsDeleted { get; set; } = false;
         
         public void Update(string description, double individualPrice)
         {
