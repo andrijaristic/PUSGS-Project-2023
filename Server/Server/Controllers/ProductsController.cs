@@ -92,10 +92,16 @@ namespace Server.Controllers
             return Ok(displayProductDTO);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [Authorize(Roles = "seller")]
-        public async Task<IActionResult> Delete(DeleteProductDTO deleteProductDTO)
+        public async Task<IActionResult> Delete(Guid id)
         {
+            DeleteProductDTO deleteProductDTO = new DeleteProductDTO() 
+            {
+                UserId = _authHelperService.GetUserIdFromToken(User),
+                ProductId = id
+            };
+
             await _productService.DeleteProduct(deleteProductDTO);
             return Ok();
         }
