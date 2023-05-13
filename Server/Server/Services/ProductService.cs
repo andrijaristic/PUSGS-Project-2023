@@ -30,8 +30,21 @@ namespace Server.Services
         public async Task<List<DisplayProductDTO>> GetAllProducts()
         {
             List<Product> products = await _unitOfWork.Products.GetAll();
-            
+
             return _mapper.Map<List<DisplayProductDTO>>(products);
+        }
+
+        public async Task<DisplayProductDTO> GetProductById(Guid id)
+        {
+            Product product = await _unitOfWork.Products.Find(id);
+            if (product == null) 
+            {
+                throw new ProductNotFoundException(id);
+            }
+
+            // TODO: If deleted (when soft delete implemented)
+
+            return _mapper.Map<DisplayProductDTO>(product);
         }
 
         public async Task<List<DisplayProductDTO>> GetSellerProducts(Guid sellerId)
@@ -95,7 +108,7 @@ namespace Server.Services
 
             Product product = _mapper.Map<Product>(newProductDTO);
 
-            product.ImageURL = $"Images/Default/product.png";
+            product.ImageURL = $"Images\\Default\\product.png";
             if (newProductDTO.Image != null)
             {
                 string path = "Products";
@@ -118,13 +131,13 @@ namespace Server.Services
                 throw new ProductNotFoundException(id);
             }
 
-            string fileName = product.ImageURL.Split('/')[2];
+            string fileName = product.ImageURL.Split('\\')[2];
             FileStream stream = _imageService.DownloadImage(product.ImageURL);
 
             ProductImageDTO productImageDTO = new ProductImageDTO()
             {
                 Stream = stream,
-                FileName = fileName
+                FileName = product.Id.ToString()
             };
 
             return productImageDTO;
@@ -161,6 +174,20 @@ namespace Server.Services
             if (product.SellerId != updateProductDTO.SellerId)
             {
                 throw new InvalidProductUserInRequestException(updateProductDTO.Id, updateProductDTO.SellerId);
+            }
+
+            if (updateProductDTO.Image != null)
+            {
+                string defaultImagePath = "Images\\Default";
+                if (!String.Equals(product.ImageURL, $"{defaultImagePath}\\product.png"))
+                {
+                    _imageService.DeleteImage(product.ImageURL);
+                }
+
+                defaultImagePath = "Images\\Products";
+                string name = product.Name;
+
+                product.ImageURL = await _imageService.SaveImage(updateProductDTO.Image, name, defaultImagePath);
             }
 
             product.Update(updateProductDTO.Description, updateProductDTO.IndividualPrice);
@@ -220,7 +247,7 @@ namespace Server.Services
             {
                 throw new InvalidProductInvididualPriceException(newProductDTO.IndividualPrice);
             }
-        } 
+        }
     }
 }
 

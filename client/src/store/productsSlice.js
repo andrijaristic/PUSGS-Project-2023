@@ -3,6 +3,7 @@ import {
   GetAllProducts,
   GetProductsForLoggedInSeller,
   GetSellerProducts,
+  GetProductById,
   GetProductImage,
   CreateNewProduct,
   UpdateExistingProduct,
@@ -14,6 +15,7 @@ import { toast } from "react-toastify";
 const initialState = {
   products: [],
   sellerProducts: [],
+  editProduct: null,
   productImages: [],
   productsLoaded: false,
   sellerProductsLoaded: false,
@@ -45,9 +47,21 @@ export const getProductsForLoggedInSellerAction = createAsyncThunk(
 
 export const getSellerProductsAction = createAsyncThunk(
   "products/getForSeller",
-  async (id, thunkApi) => {
+  async (sellerId, thunkApi) => {
     try {
-      const response = await GetSellerProducts(id);
+      const response = await GetSellerProducts(sellerId);
+      return thunkApi.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
+export const getProductByIdAction = createAsyncThunk(
+  "products/getById",
+  async (productId, thunkApi) => {
+    try {
+      const response = await GetProductById(productId);
       return thunkApi.fulfillWithValue(response.data);
     } catch (error) {
       return thunkApi.rejectWithValue(error.response.data.error);
@@ -118,7 +132,20 @@ export const deleteProductAction = createAsyncThunk(
 const productsSlice = createSlice({
   name: "products",
   initialState,
-  reducers: {},
+  reducers: {
+    clearProducts(state) {
+      state.products = [];
+      state.productImages = [];
+    },
+    clearSellerProducts(state) {
+      state.sellerProducts = [];
+      state.productImages = [];
+    },
+    clearEditProduct(state) {
+      state.editProduct = null;
+      state.productImages = [];
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getAllProductsAction.fulfilled, (state, action) => {
       state.sellerProducts = [];
@@ -179,9 +206,28 @@ const productsSlice = createSlice({
         pauseOnHover: false,
       });
     });
+    builder.addCase(getProductByIdAction.fulfilled, (state, action) => {
+      state.editProduct = { ...action.payload };
+      state.products = [];
+      state.sellerProducts = [];
+      state.productImages = [];
+    });
+    builder.addCase(getProductByIdAction.rejected, (state, action) => {
+      let error = "PRODUCT BY ID FETCH ERROR"; // Make a default error message constant somewhere
+      if (typeof action.payload === "string") {
+        error = action.payload;
+      }
+
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+    });
     builder.addCase(getProductImageAction.fulfilled, (state, action) => {
       const imageSrc = URL.createObjectURL(new Blob([action.payload]));
-      state.productImages.push(imageSrc);
+      state.productImages.push({ id: action.meta.arg, imageSrc });
     });
     builder.addCase(getProductImageAction.rejected, (state, action) => {
       let error = "PRODUCT IMAGE FETCH ERROR"; // Make a default error message constant somewhere
@@ -218,11 +264,8 @@ const productsSlice = createSlice({
       });
     });
     builder.addCase(updateProductAction.fulfilled, (state, action) => {
-      // TODO: Change when update product functionality is implemented
-      const { id } = action.payload;
-      const index = state.products.findIndex((product) => product.id === id);
-
-      state.products[index] = action.payload;
+      console.log(action.payload);
+      state.editProduct = { ...action.payload };
 
       toast.success("Product successfully updated", {
         position: "top-center",
@@ -245,10 +288,13 @@ const productsSlice = createSlice({
       });
     });
     builder.addCase(restockProductAction.fulfilled, (state, action) => {
-      const { id, amount } = action.payload;
-      const index = state.products.findIndex((product) => product.id === id);
-
-      state.products[index].amount = amount;
+      state.editProduct = { ...action.payload };
+      toast.success("Product successfully restocked", {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
     });
     builder.addCase(restockProductAction.rejected, (state, action) => {
       let error = "PRODUCT RESTOCK ERROR"; // Make a default error message constant somewhere
@@ -289,5 +335,8 @@ const productsSlice = createSlice({
     });
   },
 });
+
+export const { clearProducts, clearSellerProducts, clearEditProduct } =
+  productsSlice.actions;
 
 export default productsSlice.reducer;

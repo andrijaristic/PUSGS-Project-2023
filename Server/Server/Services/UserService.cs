@@ -200,15 +200,17 @@ namespace Server.Services
 
             if (updateUserDTO.Image != null)
             {
-                string path = "Users";
-                string name = user.Email.Split("@")[0];
+                string defaultImagePath = "Images\\Default";
 
-                if (!String.Equals(user.ImageURL, "Images\\Default\\user.jpg"))
+                if (!String.Equals(user.ImageURL, $"{defaultImagePath}\\user.jpg"))
                 {
                     _imageService.DeleteImage(user.ImageURL);
                 }
 
-                user.ImageURL = await _imageService.SaveImage(updateUserDTO.Image, name, path);
+                defaultImagePath = "Images\\Users";
+                string name = user.Email.Split("@")[0];
+
+                user.ImageURL = await _imageService.SaveImage(updateUserDTO.Image, name, defaultImagePath);
             }
 
             user.Update(updateUserDTO.Address.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth);

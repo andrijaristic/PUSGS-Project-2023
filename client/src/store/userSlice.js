@@ -230,7 +230,6 @@ const userSlice = createSlice({
       });
     });
     builder.addCase(getUserAvatarAction.fulfilled, (state, action) => {
-      console.log(action.payload);
       const imageSrc = URL.createObjectURL(new Blob([action.payload]));
       state.user = { ...state.user, imageSrc: imageSrc };
     });

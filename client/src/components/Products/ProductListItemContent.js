@@ -7,6 +7,7 @@ import {
   Grid,
   Divider,
 } from "@mui/material";
+import SellerEditAction from "./SellerProducts/SellerEditAction";
 
 const ProductListItemContent = (props) => {
   return (
@@ -43,11 +44,18 @@ const ProductListItemContent = (props) => {
             </Grid>
             <Grid
               item
-              sx={{ display: "flex", flexGrow: 1, justifyContent: "right" }}
+              sx={{
+                display: "flex",
+                flexGrow: 1,
+                justifyContent: "right",
+              }}
             >
               <Typography variant="h5" component="div">
                 {`$${props.item.individualPrice}`}
               </Typography>
+              {props.showSellerActions && (
+                <SellerEditAction id={props.item.id} />
+              )}
             </Grid>
           </Grid>
           <Divider />

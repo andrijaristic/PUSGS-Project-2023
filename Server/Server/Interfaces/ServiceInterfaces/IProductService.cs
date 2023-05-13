@@ -12,5 +12,6 @@ namespace Server.Interfaces.ServiceInterfaces
         //Task<List<DisplayProductDTO>> GetSellerProducts(string username);
         Task<DisplayProductDTO> RestockProduct(ProductRestockDTO productRestockDTO);
         Task<ProductImageDTO> GetProductImage(Guid id);
+        Task<DisplayProductDTO> GetProductById(Guid id);
     }
 }

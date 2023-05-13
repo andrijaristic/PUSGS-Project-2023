@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SellerProductListItem from "./SellerProductListItem";
 import {
+  clearSellerProducts,
   getProductImageAction,
   getProductsForLoggedInSellerAction,
 } from "../../../store/productsSlice";
@@ -15,6 +16,10 @@ const SellerProductsList = () => {
     (state) => state.products.sellerProductsLoaded
   );
   const productImages = useSelector((state) => state.products.productImages);
+
+  useEffect(() => {
+    clearSellerProducts();
+  }, [dispatch]);
 
   useEffect(() => {
     if (!user) {
@@ -38,15 +43,20 @@ const SellerProductsList = () => {
     }
   }, [dispatch, sellerProductsLoaded, sellerProducts]);
 
-  let index = 0;
-  const items = sellerProducts.map((item) => {
-    return (
-      <SellerProductListItem
-        key={item.id}
-        item={item}
-        imgSrc={productImages[index++]}
-      />
-    );
+  const items = sellerProducts.map((product) => {
+    const image = productImages.find((image) => image.id === product.id);
+
+    if (image) {
+      return (
+        <SellerProductListItem
+          key={product.id}
+          item={product}
+          imgSrc={image.imageSrc}
+        />
+      );
+    } else {
+      return null;
+    }
   });
 
   return (

@@ -29,9 +29,10 @@ const ProfileForm = () => {
   const [date, setDate] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [editable, setEditable] = useState(false);
+  const [isInitial, setIsInitial] = useState(true);
 
   useEffect(() => {
-    if (user !== null) {
+    if (!isInitial) {
       return;
     }
 
@@ -45,7 +46,8 @@ const ProfileForm = () => {
     };
 
     execute();
-  }, [user, dispatch]);
+    setIsInitial(false);
+  }, [isInitial, dispatch]);
 
   const editEnableHandler = (event) => {
     setEditable((editState) => !editState);
@@ -161,7 +163,7 @@ const ProfileForm = () => {
                     >
                       <ProfileFormImageItem
                         disabled={editable}
-                        image={displayImage}
+                        image={displayImage ? displayImage : user.imageSrc}
                         imageInput={imageInput}
                         uploadHandler={imageChangeHandler}
                         avatarClickHandler={imageUploadHandler}

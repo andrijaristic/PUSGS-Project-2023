@@ -1,4 +1,5 @@
-﻿using Server.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Server.Models;
 
 namespace Server.Dto.ProductDTOs
 {
@@ -9,7 +10,6 @@ namespace Server.Dto.ProductDTOs
         public int Amount { get; set; }
         public double IndividualPrice { get; set; }
         public string Description { get; set; }
-        // public string ImageURL { get; set; }
         public Guid SellerId { get; set; }
     }
 }

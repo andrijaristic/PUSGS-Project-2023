@@ -10,7 +10,7 @@ namespace Server.Services.Utility
             //string imageName = new string(Path.GetFileNameWithoutExtension(imageFile.FileName));
             string currentTime = DateTime.Now.ToLocalTime().ToString().Replace(':', '-');
             string imageName = name + "_" + currentTime + Path.GetExtension(imageFile.FileName);
-            var imagePath = Path.Combine(@"Images", "Users", imageName);
+            var imagePath = Path.Combine(path, imageName);
 
             using (var fileStream = new FileStream(imagePath, FileMode.Create, FileAccess.Write))
             {

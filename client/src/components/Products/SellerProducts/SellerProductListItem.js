@@ -1,6 +1,6 @@
 import { Grid, Card, Zoom } from "@mui/material";
 import React from "react";
-import SellerProductListItemContent from "./SellerProductListItemContent";
+import ProductListItemContent from "../ProductListItemContent";
 const SellerProductListItem = (props) => {
   return (
     <Zoom in={true}>
@@ -15,8 +15,9 @@ const SellerProductListItem = (props) => {
             alignItems: "center",
           }}
         >
-          <SellerProductListItemContent
+          <ProductListItemContent
             item={{ ...props.item, imgSrc: props.imgSrc }}
+            showSellerActions={true}
           />
         </Card>
       </Grid>

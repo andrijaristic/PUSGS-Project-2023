@@ -28,6 +28,14 @@ namespace Server.Controllers
             return Ok(displayProductDTOs);
         }
 
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            DisplayProductDTO displayProductDTO = await _productService.GetProductById(id);
+            return Ok(displayProductDTO);
+        }
+
         [HttpGet("seller")]
         [Authorize]
         public async Task<IActionResult> GetSellersProducts()
@@ -66,7 +74,7 @@ namespace Server.Controllers
 
         [HttpPut]
         [Authorize(Roles = "seller")]
-        public async Task<IActionResult> Put([FromBody]UpdateProductDTO updateProductDTO)
+        public async Task<IActionResult> Put([FromForm]UpdateProductDTO updateProductDTO)
         {
             updateProductDTO.SellerId = _authHelperService.GetUserIdFromToken(User);
 

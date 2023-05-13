@@ -18,6 +18,12 @@ export const GetSellerProducts = async (sellerId) => {
   );
 };
 
+export const GetProductById = async (productId) => {
+  return await axiosClient.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/products/${productId}`
+  );
+};
+
 export const GetProductImage = async (productId) => {
   return await axiosClient.get(
     `${process.env.REACT_APP_API_ENDPOINT}/products/image/${productId}`,
