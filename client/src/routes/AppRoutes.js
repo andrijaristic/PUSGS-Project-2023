@@ -9,6 +9,7 @@ import Navigation from "../components/UI/Navigation/Navigation";
 import HomePage from "../pages/HomePage";
 import SellerProductsPage from "../pages/SellerProductsPage";
 import EditProductPage from "../pages/EditProductPage";
+import NewProductPage from "../pages/NewProductPage";
 
 const AppRoutes = () => {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -56,6 +57,9 @@ const AppRoutes = () => {
               path="/my-products/:productId/edit"
               element={<EditProductPage />}
             />
+          )}
+          {isVerifiedSeller && (
+            <Route path="/new-product" element={<NewProductPage />} />
           )}
           <Route path="*" element={<Navigate replace to={""} />} />
         </Route>

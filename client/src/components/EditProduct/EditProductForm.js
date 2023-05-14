@@ -156,6 +156,7 @@ const EditProductForm = () => {
             </Grid>
             <Grid item>
               <Card
+                wrap="nowrap"
                 sx={{
                   height: "32rem",
                   display: "flex",
@@ -163,6 +164,7 @@ const EditProductForm = () => {
                   justifyContent: "center",
                   alignItems: "center",
                   width: "20rem",
+                  overflow: "auto",
                 }}
               >
                 <Box component="form" onSubmit={submitHandler} sx={{ mt: 2 }}>

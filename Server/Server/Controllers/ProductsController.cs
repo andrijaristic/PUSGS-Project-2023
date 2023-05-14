@@ -64,7 +64,7 @@ namespace Server.Controllers
 
         [HttpPost]
         [Authorize(Roles = "seller")]
-        public async Task<IActionResult> Post([FromBody]NewProductDTO newProductDTO)
+        public async Task<IActionResult> Post([FromForm]NewProductDTO newProductDTO)
         {
             newProductDTO.SellerId = _authHelperService.GetUserIdFromToken(User);
 
