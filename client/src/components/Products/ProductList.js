@@ -5,9 +5,13 @@ import {
   getAllProductsAction,
   getProductImageAction,
 } from "../../store/productsSlice";
-import { getUserInformationAction } from "../../store/userSlice";
+import {
+  getUserInformationAction,
+  getUserAvatarAction,
+} from "../../store/userSlice";
 import ProductListItem from "./ProductListItem";
 import { Container, CssBaseline, Grid } from "@mui/material";
+import AvatarWithOptions from "../UI/Avatar/AvatarWithOptions";
 
 const ProductList = () => {
   const dispatch = useDispatch();
@@ -26,8 +30,19 @@ const ProductList = () => {
       return;
     }
 
-    setUserLoaded(true);
-    dispatch(getUserInformationAction());
+    const execute = async () => {
+      const postAction = await dispatch(getUserInformationAction());
+      const { id, imageSrc } = postAction.payload;
+
+      if (!imageSrc) {
+        dispatch(getUserAvatarAction(id));
+      }
+    };
+
+    if (!userLoaded) {
+      execute();
+      setUserLoaded(true);
+    }
   }, [dispatch, userLoaded]);
 
   useEffect(() => {

@@ -29,7 +29,7 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      {!isLoggedIn && !finishedRegistration && (
+      {!isLoggedIn && (
         <>
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="/register" element={<RegisterPage />}></Route>

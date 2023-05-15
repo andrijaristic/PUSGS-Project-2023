@@ -13,6 +13,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import React, { useState } from "react";
 import NavigationList from "./NavigationList";
 import { Outlet } from "react-router-dom";
+import AvatarWithOptions from "../Avatar/AvatarWithOptions";
 
 const Navigation = () => {
   const [open, setOpen] = useState(true);
@@ -37,6 +38,9 @@ const Navigation = () => {
         <Toolbar
           sx={{
             pr: "24px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
           }}
         >
           <IconButton
@@ -51,6 +55,7 @@ const Navigation = () => {
           >
             <MenuIcon />
           </IconButton>
+          <AvatarWithOptions />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" border={1} open={open}>
