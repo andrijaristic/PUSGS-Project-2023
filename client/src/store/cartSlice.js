@@ -4,15 +4,15 @@ const initialState = {
   items:
     localStorage.getItem("cart") !== null
       ? JSON.parse(localStorage.getItem("cart"))
-      : null,
+      : [],
   amount:
     localStorage.getItem("cartAmount") !== null
       ? JSON.parse(localStorage.getItem("cartAmount"))
-      : null,
+      : 0,
   price:
     localStorage.getItem("cartPrice") !== null
       ? JSON.parse(localStorage.getItem("cartPrice"))
-      : null,
+      : 0,
 };
 
 const storeCart = (state) => {
@@ -40,7 +40,7 @@ const cartSlice = createSlice({
       }
 
       state.amount++;
-      state.price += action.payload.price;
+      state.price += action.payload.individualPrice;
 
       storeCart(state);
     },
@@ -71,7 +71,7 @@ const cartSlice = createSlice({
       }
 
       state.amount++;
-      state.price += action.payload.price;
+      state.price += action.payload.individualPrice;
 
       storeCart(state);
     },
@@ -83,7 +83,7 @@ const cartSlice = createSlice({
 
       item.amount--;
       state.amount--;
-      state.price -= action.payload.price;
+      state.price -= action.payload.individualPrice;
       if (item.amount === 0) {
         // Everything but item
         state.items = state.items.filter(
