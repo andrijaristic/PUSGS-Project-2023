@@ -59,7 +59,7 @@ namespace Server.Controllers
 
         [HttpPut("cancel-order")]
         [Authorize(Roles = "buyer")]
-        public async Task<IActionResult> Put(CancelOrderDTO cancelOrderDTO)
+        public async Task<IActionResult> Put([FromBody]CancelOrderDTO cancelOrderDTO)
         {
             cancelOrderDTO.BuyerId = _authHelperService.GetUserIdFromToken(User);
             await _orderService.CancelOrder(cancelOrderDTO);
