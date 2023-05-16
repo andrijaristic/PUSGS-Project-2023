@@ -9,8 +9,10 @@ import {
 } from "@mui/material";
 import SellerEditAction from "./SellerProducts/SellerEditAction";
 import SellerDeleteAction from "./SellerProducts/SellerDeleteAction";
+import AddProductAction from "./AddProductAction";
 
 const ProductListItemContent = (props) => {
+  const error = props.item.amount <= 1 ? "red" : "black";
   return (
     <>
       <Box
@@ -38,7 +40,12 @@ const ProductListItemContent = (props) => {
                 gutterBottom
                 variant="body1"
                 component="div"
-                sx={{ mt: -1, fontSize: "0.8rem", fontStyle: "italic" }}
+                sx={{
+                  mt: -1,
+                  fontSize: "0.8rem",
+                  fontStyle: "italic",
+                  color: error,
+                }}
               >
                 {`(${props.item.amount} articles left)`}
               </Typography>
@@ -52,8 +59,9 @@ const ProductListItemContent = (props) => {
               }}
             >
               <Typography variant="h5" component="div">
-                {`$${props.item.individualPrice}`}
+                {`€${props.item.individualPrice}`}
               </Typography>
+              <AddProductAction item={props.item} />
               {props.showSellerActions && (
                 <>
                   <SellerEditAction id={props.item.id} />

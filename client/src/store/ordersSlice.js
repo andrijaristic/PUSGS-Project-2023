@@ -12,6 +12,7 @@ const initialState = {
   allOrders: [],
   sellerOrders: [],
   buyerOrders: [],
+  apiState: "COMPLETED",
 };
 
 export const getAllOrdersAction = createAsyncThunk(
@@ -140,7 +141,12 @@ const ordersSlice = createSlice({
         pauseOnHover: false,
       });
     });
+    builder.addCase(createOrderAction.pending, (state, action) => {
+      state.apiState = "PENDING";
+    });
     builder.addCase(createOrderAction.fulfilled, (state, action) => {
+      state.apiState = "COMPLETED";
+
       toast.success("Order successfully created", {
         position: "top-center",
         autoClose: 2500,
@@ -149,6 +155,8 @@ const ordersSlice = createSlice({
       });
     });
     builder.addCase(createOrderAction.rejected, (state, action) => {
+      state.apiState = "REJECTED";
+
       let error = "ORDER CREATE ERROR"; // Make a default error message constant somewhere
       if (typeof action.payload === "string") {
         error = action.payload;
