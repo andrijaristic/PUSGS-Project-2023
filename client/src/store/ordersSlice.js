@@ -51,7 +51,7 @@ export const getAllValidSellerOrdersAction = createAsyncThunk(
 );
 
 export const createOrderAction = createAsyncThunk(
-  "orders/getAll",
+  "orders/create",
   async (data, thunkApi) => {
     try {
       const response = await CreateOrder(data);
@@ -63,7 +63,7 @@ export const createOrderAction = createAsyncThunk(
 );
 
 export const cancelOrderAction = createAsyncThunk(
-  "orders/getAll",
+  "orders/cancelOrder",
   async (data, thunkApi) => {
     try {
       const response = await CancelOrder(data);
