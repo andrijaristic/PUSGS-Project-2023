@@ -52,7 +52,7 @@ const cartSlice = createSlice({
 
       state.items = state.items.filter((item) => item.id !== action.payload.id);
       state.amount -= item.amount;
-      state.price -= item.amount * action.payload.price;
+      state.price -= item.amount * action.payload.individualPrice;
 
       storeCart(state);
     },
