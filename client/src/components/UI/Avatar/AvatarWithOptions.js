@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { Logout } from "@mui/icons-material";
 import PersonIcon from "@mui/icons-material/Person";
+import { clearCart } from "../../../store/cartSlice";
 
 const AvatarWithOptions = () => {
   const dispatch = useDispatch();
@@ -55,6 +56,7 @@ const AvatarWithOptions = () => {
   const logoutHandler = () => {
     dispatch(logout());
     dispatch(clearProducts());
+    dispatch(clearCart());
 
     setAnchorEl(null);
   };
