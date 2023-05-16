@@ -11,7 +11,6 @@ import {
 } from "../../store/userSlice";
 import ProductListItem from "./ProductListItem";
 import { Container, CssBaseline, Grid } from "@mui/material";
-import AvatarWithOptions from "../UI/Avatar/AvatarWithOptions";
 
 const ProductList = () => {
   const dispatch = useDispatch();

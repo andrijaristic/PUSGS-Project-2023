@@ -63,7 +63,7 @@ namespace Server.Services
 
         public async Task<DisplayOrderDTO> CreateOrder(NewOrderDTO newOrderDTO)
         {
-            newOrderDTO.CancellationWindow = DateTime.Now.AddHours(1).AddMinutes(1);
+            newOrderDTO.CancellationWindow = DateTime.Now.AddMinutes(60).ToLocalTime();
             newOrderDTO.TimeOfDelivery = RandomDate();
             newOrderDTO.Status = "PENDING";
 
@@ -80,6 +80,7 @@ namespace Server.Services
                 throw new InvalidOrderUserInRequestException(newOrderDTO.BuyerId);
             }
 
+            newOrderDTO.Price = 0;
             foreach (var item in newOrderDTO.Products)
             {
                 Product product = await _unitOfWork.Products.Find(item.ProductId);
@@ -124,6 +125,20 @@ namespace Server.Services
             return _mapper.Map<List<DisplayOrderDTO>>(orders);
         }
 
+        public async Task<List<DisplayOrderDTO>> GetNewBuyerOrders(Guid buyerId)
+        {
+            List<Order> orders = await _unitOfWork.Orders.GetBuyerOrders(buyerId, true);
+
+            return _mapper.Map<List<DisplayOrderDTO>>(orders);
+        }
+
+        public async Task<List<DisplayOrderDTO>> GetNewSellerOrders(Guid sellerId)
+        {
+            List<Order> orders = await _unitOfWork.Orders.GetSellerOrders(sellerId, true);
+
+            return _mapper.Map<List<DisplayOrderDTO>>(orders);
+        }
+
         public async Task<List<DisplayOrderDTO>> GetOrders()
         {
             List<Order> orders = await _unitOfWork.Orders.GetAllOrdersFull();
@@ -162,12 +177,12 @@ namespace Server.Services
                 throw new InvalidOrderPriceAmountException(newOrderDTO.Price);
             }
 
-            if (newOrderDTO.CancellationWindow.ToLocalTime() < DateTime.Now.AddHours(1).ToLocalTime())
-            {
-                throw new InvalidOrderCancellationWindowException(newOrderDTO.CancellationWindow.ToLongDateString());
-            }
+            //if (newOrderDTO.CancellationWindow.ToLocalTime() < DateTime.Now.AddMinutes(60).ToLocalTime())
+            //{
+            //    throw new InvalidOrderCancellationWindowException(newOrderDTO.CancellationWindow.ToLongDateString());
+            //}
 
-            if (newOrderDTO.TimeOfDelivery.ToLocalTime() <= DateTime.Now.AddHours(1).ToLocalTime())
+            if (newOrderDTO.TimeOfDelivery.ToLocalTime() <= DateTime.Now.AddMinutes(60).ToLocalTime())
             {
                 throw new InvalidOrderTimeOfDeliveryException(newOrderDTO.TimeOfDelivery.ToLongDateString());
             }

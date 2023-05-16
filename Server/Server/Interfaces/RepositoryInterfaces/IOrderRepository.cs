@@ -6,7 +6,7 @@ namespace Server.Interfaces.RepositoryInterfaces
     {
         Task<Order> GetFullOrder(Guid id);
         Task<List<Order>> GetAllOrdersFull();
-        Task<List<Order>> GetBuyerOrders(Guid buyerId);
-        Task<List<Order>> GetSellerOrders(Guid sellerId);
+        Task<List<Order>> GetBuyerOrders(Guid buyerId, bool newOrder = false);
+        Task<List<Order>> GetSellerOrders(Guid sellerId, bool newOrder = false);
     }
 }

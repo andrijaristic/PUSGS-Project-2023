@@ -37,6 +37,16 @@ namespace Server.Controllers
             return Ok(displayOrderDTOs);
         }
 
+        [HttpGet("buyer-orders/new")]
+        [Authorize(Roles = "buyer")]
+        public async Task<IActionResult> GetNewBuyerOrders()
+        {
+            Guid buyerId = _authHelperService.GetUserIdFromToken(User);
+
+            List<DisplayOrderDTO> displayOrderDTOs = await _orderService.GetNewBuyerOrders(buyerId);
+            return Ok(displayOrderDTOs);
+        }
+
         [HttpGet("seller-orders")]
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> GetSellerOrders()
@@ -44,6 +54,16 @@ namespace Server.Controllers
             Guid sellerId = _authHelperService.GetUserIdFromToken(User);
 
             List<DisplayOrderDTO> displayOrderDTOs = await _orderService.GetSellerOrders(sellerId);
+            return Ok(displayOrderDTOs);
+        }
+
+        [HttpGet("seller-orders/new")]
+        [Authorize(Roles = "seller")]
+        public async Task<IActionResult> GetNewSellerOrders()
+        {
+            Guid sellerId = _authHelperService.GetUserIdFromToken(User);
+
+            List<DisplayOrderDTO> displayOrderDTOs = await _orderService.GetNewSellerOrders(sellerId);
             return Ok(displayOrderDTOs);
         }
 
