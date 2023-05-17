@@ -44,7 +44,8 @@ namespace Server.Repositories
                                                         .Include(x => x.Products.Where(x => Guid.Equals(x.Product.SellerId, sellerId)))
                                                         .ThenInclude(x => x.Product)
                                                         .ToListAsync();
-            return orders;
+            
+            return orders.FindAll(x => x.Products.FindAll(x => x.Product.SellerId == sellerId).Count != 0);
         }
     }
 }
