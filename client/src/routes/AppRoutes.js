@@ -13,6 +13,7 @@ import NewProductPage from "../pages/NewProductPage";
 import CheckoutPage from "../pages/CheckoutPage";
 import ActiveOrdersPage from "../pages/ActiveOrdersPage";
 import HistoryPage from "../pages/HistoryPage";
+import MyOrdersPage from "../pages/MyOrdersPage";
 
 const AppRoutes = () => {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -69,6 +70,9 @@ const AppRoutes = () => {
             <Route path="/active-orders" element={<ActiveOrdersPage />} />
           )}
           {isBuyer && <Route path="/history" element={<HistoryPage />} />}
+          {isVerifiedSeller && (
+            <Route path="/my-orders" element={<MyOrdersPage />} />
+          )}
           <Route path="*" element={<Navigate replace to={""} />} />
         </Route>
       )}
