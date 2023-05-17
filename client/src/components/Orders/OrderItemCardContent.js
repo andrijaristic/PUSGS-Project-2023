@@ -54,22 +54,24 @@ const OrderItemCardContent = (props) => {
             </OrderItemCardSection>
             <OrderItemCardSection>
               <InputLabel sx={{ fontSize: "14px", mb: 1 }}>
-                Cancellation timer
+                {props.active ? "Cancellation window" : "Status"}
               </InputLabel>
               <Typography
                 variant="h4"
                 component="div"
-                color="red"
+                color={props.active ? "red" : "black"}
                 sx={{
                   display: "flex",
                   justifyContent: "flex-start",
                   alignItems: "center",
                 }}
               >
-                {props.active && (
+                {props.active ? (
                   <OrderCancelTimer
                     cancellationWindow={new Date(props.item.cancellationWindow)}
                   />
+                ) : (
+                  props.item.status
                 )}
               </Typography>
             </OrderItemCardSection>
@@ -94,7 +96,7 @@ const OrderItemCardContent = (props) => {
                 alignItems: "center",
               }}
             >
-              <OrderItemActions id={props.item.id} />
+              <OrderItemActions id={props.item.id} active={props.active} />
             </OrderItemCardSection>
           </Grid>
         </CardContent>

@@ -2,25 +2,25 @@ import React, { useEffect } from "react";
 import OrdersList from "../components/Orders/OrdersList";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  clearNewBuyerOrders,
-  getAllNewBuyerOrdersAction,
+  clearOldBuyerOrders,
+  getAllOldBuyerOrdersAction,
 } from "../store/ordersSlice";
 
-const ActiveOrdersPage = () => {
+const HistoryPage = () => {
   const dispatch = useDispatch();
-  const buyerNewOrders = useSelector((state) => state.orders.buyerNewOrders);
+  const buyerOldOrders = useSelector((state) => state.orders.buyerOldOrders);
 
   useEffect(() => {
     return () => {
-      dispatch(clearNewBuyerOrders());
+      dispatch(clearOldBuyerOrders());
     };
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getAllNewBuyerOrdersAction());
+    dispatch(getAllOldBuyerOrdersAction());
   }, [dispatch]);
 
-  return <OrdersList orders={buyerNewOrders} active={true} />;
+  return <OrdersList orders={buyerOldOrders} active={false} />;
 };
 
-export default ActiveOrdersPage;
+export default HistoryPage;

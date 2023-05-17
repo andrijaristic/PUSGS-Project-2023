@@ -233,6 +233,9 @@ const ordersSlice = createSlice({
       });
     });
     builder.addCase(cancelOrderAction.fulfilled, (state, action) => {
+      state.buyerNewOrders = state.buyerNewOrders.filter(
+        (order) => order.id !== action.meta.arg.orderId
+      );
       toast.success("Order successfully cancelled", {
         position: "top-center",
         autoClose: 2500,
