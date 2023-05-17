@@ -11,6 +11,7 @@ import SellerProductsPage from "../pages/SellerProductsPage";
 import EditProductPage from "../pages/EditProductPage";
 import NewProductPage from "../pages/NewProductPage";
 import CheckoutPage from "../pages/CheckoutPage";
+import ActiveOrdersPage from "../pages/ActiveOrdersPage";
 
 const AppRoutes = () => {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -63,6 +64,9 @@ const AppRoutes = () => {
             <Route path="/new-product" element={<NewProductPage />} />
           )}
           {isBuyer && <Route path="/checkout" element={<CheckoutPage />} />}
+          {isBuyer && (
+            <Route path="/active-orders" element={<ActiveOrdersPage />} />
+          )}
           <Route path="*" element={<Navigate replace to={""} />} />
         </Route>
       )}

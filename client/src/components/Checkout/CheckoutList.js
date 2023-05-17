@@ -109,7 +109,7 @@ const CheckoutList = () => {
     setTimeout(() => {
       dispatch(clearCart());
     }, 500);
-    navigate("");
+    navigate("/active-orders");
   }, [dispatch, navigate, requestSent, apiState]);
 
   return (
