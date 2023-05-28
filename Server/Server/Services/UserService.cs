@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Options;
 using Server.Dto.UserDTOs;
 using Server.Enums;
 using Server.Exceptions.UserExceptions;
@@ -6,6 +7,7 @@ using Server.Interfaces.RepositoryInterfaces;
 using Server.Interfaces.ServiceInterfaces;
 using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 using Server.Models;
+using Server.Models.AppSettings;
 
 namespace Server.Services
 {
@@ -14,16 +16,18 @@ namespace Server.Services
         private readonly IAuthHelperService _authHelperService;
         private readonly IMailingService _mailingService;
         private readonly IImageService _imageService;
+        private readonly IOptions<AppSettings> _settings;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UserService(IAuthHelperService authHelperService, IUnitOfWork unitOfWork, IMapper mapper, IMailingService mailingService, IImageService imageService)
+        public UserService(IAuthHelperService authHelperService, IUnitOfWork unitOfWork, IMapper mapper, IMailingService mailingService, IImageService imageService, IOptions<AppSettings> settings)
         {
             _authHelperService = authHelperService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _mailingService = mailingService;
             _imageService = imageService;
+            _settings = settings;
         }
 
         public async Task VerifyUser(VerifyUserDTO verifyUserDTO)
@@ -64,7 +68,7 @@ namespace Server.Services
                 user.VerificationStatus = VerificationStatus.EXEMPT;
             }
 
-            user.ImageURL = $"Images\\Default\\user.jpg";
+            user.ImageURL = _settings.Value.DefaultUserImagePath;
             if (newUserDTO.Image != null)
             {
                 string path = "Users";
@@ -127,9 +131,9 @@ namespace Server.Services
                 {
                     Name = socialMediaInfoDTO.Name,
                     Username = socialMediaInfoDTO.Username,
-                    Password = "",
-                    Address = "",
-                    DateOfBirth = DateTime.Now.ToLocalTime(),
+                    Password = _settings.Value.DefaultPassword,
+                    Address = _settings.Value.DefaultAddress,
+                    DateOfBirth = DateTime.Parse(_settings.Value.DefaultDateOfBirth),
                     Email = socialMediaInfoDTO.Email,
                     Role = UserRole.BUYER,
                     FinishedRegistration = false,
@@ -200,17 +204,15 @@ namespace Server.Services
 
             if (updateUserDTO.Image != null)
             {
-                string defaultImagePath = "Images\\Default";
-
-                if (!String.Equals(user.ImageURL, $"{defaultImagePath}\\user.jpg"))
+                if (!String.Equals(user.ImageURL, _settings.Value.DefaultUserImagePath))
                 {
                     _imageService.DeleteImage(user.ImageURL);
                 }
 
-                defaultImagePath = "Images\\Users";
+                string imagePath = "Images\\Users";
                 string name = user.Email.Split("@")[0];
 
-                user.ImageURL = await _imageService.SaveImage(updateUserDTO.Image, name, defaultImagePath);
+                user.ImageURL = await _imageService.SaveImage(updateUserDTO.Image, name, imagePath);
             }
 
             user.Update(updateUserDTO.Address.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth);

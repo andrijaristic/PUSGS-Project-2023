@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Options;
 using Server.Dto.ProductDTOs;
 using Server.Dto.UserDTOs;
 using Server.Enums;
@@ -9,6 +10,7 @@ using Server.Interfaces.RepositoryInterfaces;
 using Server.Interfaces.ServiceInterfaces;
 using Server.Interfaces.ServiceInterfaces.UtilityInterfaces;
 using Server.Models;
+using Server.Models.AppSettings;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
@@ -19,12 +21,14 @@ namespace Server.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IImageService _imageService;
         private readonly IMapper _mapper;
+        private readonly IOptions<AppSettings> _settings;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService) 
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService, IOptions<AppSettings> settings) 
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _imageService = imageService;
+            _settings = settings;
         }
 
         public async Task<List<DisplayProductDTO>> GetAllProducts()
@@ -89,7 +93,7 @@ namespace Server.Services
 
             Product product = _mapper.Map<Product>(newProductDTO);
 
-            product.ImageURL = $"Images\\Default\\product.png";
+            product.ImageURL = _settings.Value.DefaultProductImagePath;
             if (newProductDTO.Image != null)
             {
                 string path = "Products";
@@ -165,16 +169,15 @@ namespace Server.Services
 
             if (updateProductDTO.Image != null)
             {
-                string defaultImagePath = "Images\\Default";
-                if (!String.Equals(product.ImageURL, $"{defaultImagePath}\\product.png"))
+                if (!String.Equals(product.ImageURL, _settings.Value.DefaultProductImagePath))
                 {
                     _imageService.DeleteImage(product.ImageURL);
                 }
 
-                defaultImagePath = "Images\\Products";
+                string imagePath = "Images\\Products";
                 string name = product.Name;
 
-                product.ImageURL = await _imageService.SaveImage(updateProductDTO.Image, name, defaultImagePath);
+                product.ImageURL = await _imageService.SaveImage(updateProductDTO.Image, name, imagePath);
             }
 
             product.Update(updateProductDTO.Description, updateProductDTO.IndividualPrice);
