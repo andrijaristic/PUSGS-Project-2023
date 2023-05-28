@@ -13,5 +13,6 @@
         public string DefaultUserImagePath { get; set; }
         public string DefaultProductImagePath { get; set; }
         public string DefaultDateOfBirth { get; set; }
+        public int DeliveryFee { get; set; }
     }
 }

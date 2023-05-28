@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Options;
 using Server.Dto.OrderDTOs;
 using Server.Dto.UserDTOs;
 using Server.Enums;
@@ -9,6 +10,7 @@ using Server.Exceptions.UserExceptions;
 using Server.Interfaces.RepositoryInterfaces;
 using Server.Interfaces.ServiceInterfaces;
 using Server.Models;
+using Server.Models.AppSettings;
 
 namespace Server.Services
 {
@@ -16,10 +18,12 @@ namespace Server.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public OrderService(IUnitOfWork unitOfWork, IMapper mapper) 
+        private readonly IOptions<AppSettings> _settings;
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IOptions<AppSettings> settings) 
         { 
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _settings = settings;
         }
 
         public async Task CancelOrder(CancelOrderDTO cancelOrderDTO)
@@ -103,6 +107,8 @@ namespace Server.Services
             {
                 throw new InvalidOrderPriceAmountException(newOrderDTO.Price);
             }
+
+            newOrderDTO.Price += _settings.Value.DeliveryFee;
             
             Order order = _mapper.Map<Order>(newOrderDTO);
             await _unitOfWork.Orders.Add(order);
