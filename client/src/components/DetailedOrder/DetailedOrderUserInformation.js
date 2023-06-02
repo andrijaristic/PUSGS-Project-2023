@@ -64,7 +64,7 @@ const DetailedOrderUserInformation = (props) => {
                     >
                       <ProfileFormImageItem
                         disabled={editable}
-                        image={props.user.imageSrc}
+                        image={props.avatar}
                       ></ProfileFormImageItem>
                       <Box
                         sx={{

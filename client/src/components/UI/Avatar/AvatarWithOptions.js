@@ -23,6 +23,7 @@ const AvatarWithOptions = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
+  const avatar = useSelector((state) => state.user.avatar);
   const finishedRegistration = user && user.finishedRegistration;
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -87,7 +88,7 @@ const AvatarWithOptions = () => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar alt="avatar" src={user ? user.imageSrc : null} />
+            <Avatar alt="avatar" src={avatar ? avatar : null} />
           </IconButton>
         </Box>
       </Tooltip>

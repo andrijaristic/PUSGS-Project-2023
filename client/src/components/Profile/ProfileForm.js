@@ -26,7 +26,8 @@ const ProfileForm = () => {
   const dispatch = useDispatch();
   const imageInput = useRef(null);
   const user = useSelector((state) => state.user.user);
-  const [displayImage, setDisplayImage] = useState(null); // (user.imageSrc)
+  const avatar = useSelector((state) => state.user.avatar);
+  const [displayImage, setDisplayImage] = useState(avatar);
   const [date, setDate] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [editable, setEditable] = useState(false);

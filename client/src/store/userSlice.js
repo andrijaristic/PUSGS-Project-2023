@@ -18,6 +18,7 @@ const initialState = {
     localStorage.getItem("user") !== null
       ? JSON.parse(localStorage.getItem("user"))
       : null,
+  avatar: null,
   finishedRegistration:
     localStorage.getItem("user") !== null
       ? JSON.parse(localStorage.getItem("user")).finishedRegistration
@@ -265,7 +266,7 @@ const userSlice = createSlice({
     });
     builder.addCase(getUserAvatarAction.fulfilled, (state, action) => {
       const imageSrc = URL.createObjectURL(new Blob([action.payload]));
-      state.user = { ...state.user, imageSrc: imageSrc };
+      state.avatar = imageSrc;
     });
     builder.addCase(getUserAvatarAction.rejected, (state, action) => {
       let error = "IMAGE ERROR"; // Make a default error message constant somewhere

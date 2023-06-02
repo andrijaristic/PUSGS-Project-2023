@@ -11,13 +11,16 @@ import {
 } from "../../store/userSlice";
 import ProductListItem from "./ProductListItem";
 import { Container, CssBaseline, Grid } from "@mui/material";
+import jwtDecode from "jwt-decode";
 
 const ProductList = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products.products);
   const productImages = useSelector((state) => state.products.productImages);
   const productsLoaded = useSelector((state) => state.products.productsLoaded);
+  const token = useSelector((state) => state.user.token);
 
+  const { id } = jwtDecode(token);
   const [userLoaded, setUserLoaded] = useState(false);
 
   useEffect(() => {
@@ -30,19 +33,15 @@ const ProductList = () => {
     }
 
     const execute = async () => {
-      const postAction = await dispatch(getUserInformationAction());
-      const { id, imageSrc } = postAction.payload;
-
-      if (!imageSrc) {
-        dispatch(getUserAvatarAction(id));
-      }
+      dispatch(getUserInformationAction());
+      dispatch(getUserAvatarAction(id));
     };
 
     if (!userLoaded) {
       execute();
       setUserLoaded(true);
     }
-  }, [dispatch, userLoaded]);
+  }, [dispatch, userLoaded, id]);
 
   useEffect(() => {
     if (!userLoaded) {

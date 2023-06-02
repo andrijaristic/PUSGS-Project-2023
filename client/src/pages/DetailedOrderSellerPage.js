@@ -12,6 +12,7 @@ const DetailedOrderSellerPage = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.fetchedUser);
+  const avatar = useSelector((state) => state.user.avatar);
   const id = params.sellerId || "";
 
   console.log(id);
@@ -26,7 +27,7 @@ const DetailedOrderSellerPage = () => {
     dispatch(getUserAvatarAction(id));
   }, [dispatch, id]);
 
-  return <DetailedOrderUserInformation user={user} />;
+  return <DetailedOrderUserInformation user={user} avatar={avatar} />;
 };
 
 export default DetailedOrderSellerPage;

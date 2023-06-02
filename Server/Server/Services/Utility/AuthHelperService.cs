@@ -28,7 +28,7 @@ namespace Server.Services.Utility
             if (user.Role == UserRole.BUYER) { claims.Add(new Claim(ClaimTypes.Role, "buyer")); }
             if (user.Role == UserRole.SELLER) { claims.Add(new Claim(ClaimTypes.Role, "seller")); }
             if (user.Role == UserRole.ADMIN) { claims.Add(new Claim(ClaimTypes.Role, "admin")); }
-            claims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
+            claims.Add(new Claim("id", user.Id.ToString()));
 
             var signInCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Value.SecretKey)), SecurityAlgorithms.HmacSha256);
             var tokenOptions = new JwtSecurityToken(
@@ -45,8 +45,8 @@ namespace Server.Services.Utility
         public Guid GetUserIdFromToken(ClaimsPrincipal user)
         {
             Guid id = Guid.Empty;
-            Guid.TryParse(user.Identity.Name, out id);
-
+            Guid.TryParse(user.Claims.Where(c => c.Type == "id").Select(x => x.Value).FirstOrDefault(), out id);
+            Console.WriteLine();
             return id;
         }
 
