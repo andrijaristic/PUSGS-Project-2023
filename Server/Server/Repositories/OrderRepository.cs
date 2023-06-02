@@ -12,9 +12,9 @@ namespace Server.Repositories
 
         }
 
-        public async Task<List<Order>> GetAllOrdersFull()
+        public async Task<List<Order>> GetAllOrders()
         {
-            List<Order> orders = await _dbContext.Orders.Include(x => x.Products).ThenInclude(x => x.Product).ToListAsync();
+            List<Order> orders = await _dbContext.Orders.ToListAsync();
             return orders;
         }
 
@@ -32,7 +32,17 @@ namespace Server.Repositories
 
         public async Task<Order> GetFullOrder(Guid id)
         {
-            Order order = await _dbContext.Orders.Where(x => Guid.Equals(x.Id, id)).Include(x => x.Products).FirstOrDefaultAsync();
+            Order order = await _dbContext.Orders.Where(x => Guid.Equals(x.Id, id))
+                                                 .Include(x => x.Products)
+                                                 .ThenInclude(x => x.Product)
+                                                 .Include(x => x.Buyer)
+                                                 .FirstOrDefaultAsync();
+            return order;
+        }
+
+        public async Task<Order> GetSellerFullOrder(Guid orderId, Guid sellerId)
+        {
+            Order order = await _dbContext.Orders.Where(x => Guid.Equals(x.Id, orderId)).Include(x => x.Products).ThenInclude(x => x.Product).FirstOrDefaultAsync();
             return order;
         }
 

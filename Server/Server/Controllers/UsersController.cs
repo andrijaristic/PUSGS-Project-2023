@@ -14,7 +14,7 @@ namespace Server.Controllers
         private readonly IUserService _userService;
         private readonly IAuthHelperService _authHelperService;
 
-        public UsersController(IUserService userService, IAuthHelperService authHelperService) 
+        public UsersController(IUserService userService, IAuthHelperService authHelperService)
         {
             _userService = userService;
             _authHelperService = authHelperService;
@@ -34,6 +34,14 @@ namespace Server.Controllers
         {
             Guid id = _authHelperService.GetUserIdFromToken(User);
 
+            DisplayUserDTO displayUserDTO = await _userService.GetUserInformation(id);
+            return Ok(displayUserDTO);
+        }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetUserInformationById(Guid id)
+        {
             DisplayUserDTO displayUserDTO = await _userService.GetUserInformation(id);
             return Ok(displayUserDTO);
         }

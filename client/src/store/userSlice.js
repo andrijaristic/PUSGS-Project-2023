@@ -8,6 +8,7 @@ import {
   GetUserAvatar,
   FinishRegistration,
   UpdateUser,
+  GetUserInformationById,
 } from "../services/UserServices";
 
 const initialState = {
@@ -21,6 +22,7 @@ const initialState = {
     localStorage.getItem("user") !== null
       ? JSON.parse(localStorage.getItem("user")).finishedRegistration
       : false,
+  fetchedUser: null,
 };
 
 export const loginAction = createAsyncThunk(
@@ -83,6 +85,18 @@ export const getUserInformationAction = createAsyncThunk(
   }
 );
 
+export const getUserInformationByIdAction = createAsyncThunk(
+  "user/getUserById",
+  async (data, thunkApi) => {
+    try {
+      const response = await GetUserInformationById(data);
+      return thunkApi.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
 export const getUserAvatarAction = createAsyncThunk(
   "user/getAvatar",
   async (id, thunkApi) => {
@@ -118,6 +132,9 @@ const userSlice = createSlice({
 
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+    },
+    clearFetchedUser(state, action) {
+      state.fetchedUser = null;
     },
   },
   extraReducers: (builder) => {
@@ -229,6 +246,23 @@ const userSlice = createSlice({
         pauseOnHover: false,
       });
     });
+    builder.addCase(getUserInformationByIdAction.fulfilled, (state, action) => {
+      state.fetchedUser = { ...action.payload };
+      localStorage.setItem("user", JSON.stringify(action.payload));
+    });
+    builder.addCase(getUserInformationByIdAction.rejected, (state, action) => {
+      let error = "USER INFORMATION ERROR"; // Make a default error message constant somewhere
+      if (typeof action.payload === "string") {
+        error = action.payload;
+      }
+
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+    });
     builder.addCase(getUserAvatarAction.fulfilled, (state, action) => {
       const imageSrc = URL.createObjectURL(new Blob([action.payload]));
       state.user = { ...state.user, imageSrc: imageSrc };
@@ -269,6 +303,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, clearFetchedUser } = userSlice.actions;
 
 export default userSlice.reducer;

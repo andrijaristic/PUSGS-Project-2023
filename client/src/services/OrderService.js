@@ -28,6 +28,18 @@ export const GetAllNewSellerOrders = async () => {
   );
 };
 
+export const GetDetailedOrder = async (id) => {
+  return await axiosClient.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/orders/${id}`
+  );
+};
+
+export const GetSellerDetailedOrder = async (id) => {
+  return await axiosClient.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/orders/seller-orders/${id}`
+  );
+};
+
 export const CreateOrder = async (data) => {
   return await axiosClient.post(
     `${process.env.REACT_APP_API_ENDPOINT}/orders`,

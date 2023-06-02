@@ -36,8 +36,14 @@ export const UpdateUser = async (requestBody) => {
   );
 };
 
-export const GetUserInformation = async (requestBody) => {
+export const GetUserInformation = async () => {
   return await axiosClient.get(`${process.env.REACT_APP_API_ENDPOINT}/users`);
+};
+
+export const GetUserInformationById = async (id) => {
+  return await axiosClient.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/users/${id}`
+  );
 };
 
 export const GetUserAvatar = async (userId) => {

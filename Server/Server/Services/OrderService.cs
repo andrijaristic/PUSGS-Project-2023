@@ -147,9 +147,31 @@ namespace Server.Services
 
         public async Task<List<DisplayOrderDTO>> GetOrders()
         {
-            List<Order> orders = await _unitOfWork.Orders.GetAllOrdersFull();
+            List<Order> orders = await _unitOfWork.Orders.GetAllOrders();
 
             return _mapper.Map<List<DisplayOrderDTO>>(orders);
+        }
+
+        public async Task<DetailedOrderDTO> GetDetailedOrder(Guid id)
+        {
+            Order order = await _unitOfWork.Orders.GetFullOrder(id);
+            if (order == null) 
+            {
+                throw new OrderNotFoundException(id);
+            }
+
+            return _mapper.Map<DetailedOrderDTO>(order);
+        }
+
+        public async Task<DetailedOrderDTO> GetSellerDetailedOrder(SellerDetailedOrderDTO sellerDetailedOrderDTO)
+        {
+            Order order = await _unitOfWork.Orders.GetSellerFullOrder(sellerDetailedOrderDTO.OrderId, sellerDetailedOrderDTO.SellerId);
+            if (order == null)
+            {
+                throw new OrderNotFoundException(sellerDetailedOrderDTO.OrderId);
+            }
+
+            return _mapper.Map<DetailedOrderDTO>(order);
         }
 
         private static DateTime RandomDate()

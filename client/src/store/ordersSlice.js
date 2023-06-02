@@ -7,6 +7,8 @@ import {
   GetAllOldSellerOrders,
   CreateOrder,
   CancelOrder,
+  GetDetailedOrder,
+  GetSellerDetailedOrder,
 } from "../services/OrderService";
 import { toast } from "react-toastify";
 
@@ -16,6 +18,7 @@ const initialState = {
   sellerNewOrders: [],
   buyerOldOrders: [],
   buyerNewOrders: [],
+  detailedOrder: null,
   apiState: "COMPLETED",
 };
 
@@ -79,6 +82,30 @@ export const getAllNewSellerOrdersAction = createAsyncThunk(
   }
 );
 
+export const getDetailedOrderAction = createAsyncThunk(
+  "orders/getDetailed",
+  async (data, thunkApi) => {
+    try {
+      const response = await GetDetailedOrder(data);
+      return thunkApi.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
+export const getSellerDetailedOrderAction = createAsyncThunk(
+  "orders/getSellerDetailed",
+  async (data, thunkApi) => {
+    try {
+      const response = await GetSellerDetailedOrder(data);
+      return thunkApi.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
 export const createOrderAction = createAsyncThunk(
   "orders/create",
   async (data, thunkApi) => {
@@ -122,12 +149,47 @@ const ordersSlice = createSlice({
     clearNewSellerOrders(state, action) {
       state.sellerNewOrders = [];
     },
+    clearDetailedOrder(state, action) {
+      state.detailedOrder = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getAllOrdersAction.fulfilled, (state, action) => {
       state.allOrders = [...action.payload];
     });
     builder.addCase(getAllOrdersAction.rejected, (state, action) => {
+      let error = "ORDER FETCH ERROR"; // Make a default error message constant somewhere
+      if (typeof action.payload === "string") {
+        error = action.payload;
+      }
+
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+    });
+    builder.addCase(getDetailedOrderAction.fulfilled, (state, action) => {
+      state.detailedOrder = { ...action.payload };
+    });
+    builder.addCase(getDetailedOrderAction.rejected, (state, action) => {
+      let error = "ORDER FETCH ERROR"; // Make a default error message constant somewhere
+      if (typeof action.payload === "string") {
+        error = action.payload;
+      }
+
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+    });
+    builder.addCase(getSellerDetailedOrderAction.fulfilled, (state, action) => {
+      state.detailedOrder = { ...action.payload };
+    });
+    builder.addCase(getSellerDetailedOrderAction.rejected, (state, action) => {
       let error = "ORDER FETCH ERROR"; // Make a default error message constant somewhere
       if (typeof action.payload === "string") {
         error = action.payload;
@@ -265,5 +327,6 @@ export const {
   clearNewSellerOrders,
   clearOldBuyerOrders,
   clearOldSellerOrders,
+  clearDetailedOrder,
 } = ordersSlice.actions;
 export default ordersSlice.reducer;

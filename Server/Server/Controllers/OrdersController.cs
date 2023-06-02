@@ -27,6 +27,28 @@ namespace Server.Controllers
             return Ok(displayOrderDTOs);
         }
 
+        [HttpGet("{id}")]
+        [Authorize(Roles = "admin, buyer")]
+        public async Task<IActionResult> GetDetailedOrder(Guid id)
+        {
+            DetailedOrderDTO detailedOrderDTO = await _orderService.GetDetailedOrder(id);
+            return Ok(detailedOrderDTO);    
+        }
+
+        [HttpGet("seller-orders/{id}")]
+        [Authorize(Roles = "seller")]
+        public async Task<IActionResult> GetSellerDetailedOrder(Guid id)
+        {
+            SellerDetailedOrderDTO sellerDetailedOrderDTO = new SellerDetailedOrderDTO()
+            {
+                OrderId = id,
+                SellerId = _authHelperService.GetUserIdFromToken(User)
+            };
+
+            DetailedOrderDTO detailedOrderDTO = await _orderService.GetSellerDetailedOrder(sellerDetailedOrderDTO);
+            return Ok(detailedOrderDTO);
+        }
+
         [HttpGet("buyer-orders")]
         [Authorize(Roles = "buyer")]
         public async Task<IActionResult> GetBuyerOrders()

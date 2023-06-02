@@ -11,5 +11,7 @@ namespace Server.Interfaces.ServiceInterfaces
         Task<List<DisplayOrderDTO>> GetOrders();
         Task<List<DisplayOrderDTO>> GetSellerOrders(Guid sellerId);
         Task<List<DisplayOrderDTO>> GetNewSellerOrders(Guid sellerId);
+        Task<DetailedOrderDTO> GetDetailedOrder(Guid id);
+        Task<DetailedOrderDTO> GetSellerDetailedOrder(SellerDetailedOrderDTO sellerDetailedOrderDTO);
     }
 }
