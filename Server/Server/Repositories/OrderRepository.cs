@@ -42,7 +42,10 @@ namespace Server.Repositories
 
         public async Task<Order> GetSellerFullOrder(Guid orderId, Guid sellerId)
         {
-            Order order = await _dbContext.Orders.Where(x => Guid.Equals(x.Id, orderId)).Include(x => x.Products).ThenInclude(x => x.Product).FirstOrDefaultAsync();
+            Order order = await _dbContext.Orders.Where(x => Guid.Equals(x.Id, orderId))
+                                                 .Include(x => x.Products.Where(x => Guid.Equals(x.Product.SellerId, sellerId)))
+                                                 .ThenInclude(x => x.Product)
+                                                 .FirstOrDefaultAsync();
             return order;
         }
 
