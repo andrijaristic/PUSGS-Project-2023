@@ -28,6 +28,14 @@ namespace Server.Controllers
             return Ok(displayUserDTOs);
         }
 
+        [HttpGet("verified-sellers")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> GetVerifiedSellers()
+        {
+            List<DisplayUserDTO> displayUserDTOs = await _userService.GetVerifiedSellers();
+            return Ok(displayUserDTOs);
+        }
+
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetUserInformation()

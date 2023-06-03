@@ -25,6 +25,13 @@ namespace Server.Repositories
             return sellers;
         }
 
+        public async Task<List<User>> GetVerifiedSellers()
+        {
+            List<User> sellers = await _dbContext.Users.Where(x => x.Role == Enums.UserRole.SELLER && x.VerificationStatus == Enums.VerificationStatus.ACCEPTED)
+                                                       .ToListAsync();
+            return sellers;
+        }
+
         public async Task<Guid> FindUserIdByUsername(string username)
         {
             Guid id = await _dbContext.Users.Where(x => String.Equals(x.Username, username)).Select(x => x.Id).FirstOrDefaultAsync();

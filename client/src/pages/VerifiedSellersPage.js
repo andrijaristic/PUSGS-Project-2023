@@ -9,7 +9,7 @@ import LoadingModal from "../components/UI/Modal/LoadingModal";
 
 const VerifiedSellersPage = () => {
   const dispatch = useDispatch();
-  const sellers = useSelector((state) => state.verification.allSellers);
+  const sellers = useSelector((state) => state.verification.verifiedSellers);
 
   useEffect(() => {
     return () => {

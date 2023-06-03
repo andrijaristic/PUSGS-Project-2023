@@ -24,6 +24,7 @@ import DetailedMyOrdersOrderPage from "../pages/DetailedMyOrdersOrderPage";
 import DetailedHistoryOrderPage from "../pages/DetailedHistoryOrderPage";
 import DetailedActiveOrdersOrderPage from "../pages/DetailedActiveOrdersOrderPage";
 import AllSellersPage from "../pages/AllSellersPage";
+import VerifiedSellersPage from "../pages/VerifiedSellersPage";
 
 const AppRoutes = () => {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -136,7 +137,7 @@ const AppRoutes = () => {
             <Route path="/all-sellers" element={<AllSellersPage />} />
           )}
           {isAdmin && (
-            <Route path="/verified-sellers" element={<AllSellersPage />} />
+            <Route path="/verified-sellers" element={<VerifiedSellersPage />} />
           )}
           <Route path="*" element={<Navigate replace to={""} />} />
         </Route>

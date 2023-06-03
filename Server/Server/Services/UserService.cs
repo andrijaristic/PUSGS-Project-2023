@@ -228,6 +228,13 @@ namespace Server.Services
             return _mapper.Map<List<DisplayUserDTO>>(sellers);
         }
 
+        public async Task<List<DisplayUserDTO>> GetVerifiedSellers()
+        {
+            List<User> sellers = await _unitOfWork.Users.GetVerifiedSellers();
+
+            return _mapper.Map<List<DisplayUserDTO>>(sellers);
+        }
+
         public async Task<DisplayUserDTO> GetUserInformation(Guid id)
         {
             User user = await _unitOfWork.Users.Find(id);
