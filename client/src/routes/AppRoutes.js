@@ -19,6 +19,10 @@ import OrdersPage from "../pages/OrdersPage";
 import DetailedOrderPage from "../pages/DetailedOrderPage";
 import DetailedOrderBuyerPage from "../pages/DetailedOrderBuyerPage";
 import DetailedOrderSellerPage from "../pages/DetailedOrderSellerPage";
+import DetailedNewOrderPage from "../pages/DetailedNewOrderPage";
+import DetailedMyOrdersOrderPage from "../pages/DetailedMyOrdersOrderPage";
+import DetailedHistoryOrderPage from "../pages/DetailedHistoryOrderPage";
+import DetailedActiveOrdersOrderPage from "../pages/DetailedActiveOrdersOrderPage";
 
 const AppRoutes = () => {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -74,12 +78,36 @@ const AppRoutes = () => {
           {isBuyer && (
             <Route path="/active-orders" element={<ActiveOrdersPage />} />
           )}
+          {isBuyer && (
+            <Route
+              path="/active-orders/:orderId"
+              element={<DetailedActiveOrdersOrderPage />}
+            />
+          )}
           {isBuyer && <Route path="/history" element={<HistoryPage />} />}
+          {isBuyer && (
+            <Route
+              path="/history/:orderId"
+              element={<DetailedHistoryOrderPage />}
+            />
+          )}
           {isVerifiedSeller && (
             <Route path="/my-orders" element={<MyOrdersPage />} />
           )}
           {isVerifiedSeller && (
+            <Route
+              path="/my-orders/:orderId"
+              element={<DetailedMyOrdersOrderPage />}
+            />
+          )}
+          {isVerifiedSeller && (
             <Route path="/new-orders" element={<NewOrdersPage />} />
+          )}
+          {isVerifiedSeller && (
+            <Route
+              path="/new-orders/:orderId"
+              element={<DetailedNewOrderPage />}
+            />
           )}
           {isAdmin && <Route path="/orders" element={<OrdersPage />} />}
           {isAdmin && (
