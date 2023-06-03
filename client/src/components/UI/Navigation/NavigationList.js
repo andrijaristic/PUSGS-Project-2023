@@ -17,6 +17,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
+import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 
 const generateNavItems = (user) => {
   if (
@@ -47,7 +48,8 @@ const generateNavItems = (user) => {
   }
 
   if (user.role === "ADMIN") {
-    items.push({ name: "Sellers", index: index++ });
+    items.push({ name: "All Sellers", index: index++ });
+    items.push({ name: "Verified Sellers", index: index++ });
     items.push({ name: "Orders", index: index++ });
 
     return items;
@@ -63,7 +65,8 @@ icons.set("My products", <LibraryBooksIcon />);
 icons.set("New product", <QueueIcon />);
 icons.set("My orders", <InventoryIcon />);
 icons.set("New orders", <LocalMallIcon />);
-icons.set("Sellers", <PeopleIcon />);
+icons.set("All Sellers", <PeopleIcon />);
+icons.set("Verified Sellers", <VerifiedUserIcon />);
 icons.set("Orders", <ViewListIcon />);
 
 const NavigationList = () => {
