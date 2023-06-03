@@ -39,6 +39,7 @@ export const verifySellerAction = createAsyncThunk(
   "verification/verifySeller",
   async (data, thunkApi) => {
     try {
+      console.log(data);
       const response = await VerifySeller(data);
       return thunkApi.fulfillWithValue(response.data);
     } catch (error) {
@@ -92,7 +93,7 @@ const verificationSlice = createSlice({
       });
     });
     builder.addCase(verifySellerAction.fulfilled, (state, action) => {
-      toast.error("Successfully verified seller", {
+      toast.success("Successfully verified seller", {
         position: "top-center",
         autoClose: 2500,
         closeOnClick: true,
@@ -100,7 +101,7 @@ const verificationSlice = createSlice({
       });
     });
     builder.addCase(verifySellerAction.rejected, (state, action) => {
-      let error = "SELLER FETCH ERROR"; // Make a default error message constant somewhere
+      let error = "SELLER VERIFICATION ERROR"; // Make a default error message constant somewhere
       if (typeof action.payload === "string") {
         error = action.payload;
       }

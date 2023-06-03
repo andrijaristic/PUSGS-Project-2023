@@ -2,30 +2,30 @@ import React, { useEffect } from "react";
 import SellerList from "../components/Sellers/SellerList";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  clearAllSellers,
-  getAllSellersAction,
+  clearVerifiedSellers,
+  getAllVerifiedSellersAction,
 } from "../store/verificationSlice";
 import LoadingModal from "../components/UI/Modal/LoadingModal";
 
-const AllSellersPage = () => {
+const VerifiedSellersPage = () => {
   const dispatch = useDispatch();
   const sellers = useSelector((state) => state.verification.allSellers);
 
   useEffect(() => {
     return () => {
-      dispatch(clearAllSellers());
+      dispatch(clearVerifiedSellers());
     };
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getAllSellersAction());
+    dispatch(getAllVerifiedSellersAction());
   }, [dispatch]);
 
   if (sellers) {
-    return <SellerList sellers={sellers} verified={false} />;
+    return <SellerList sellers={sellers} verified={true} />;
   } else {
     <LoadingModal show={true} />;
   }
 };
 
-export default AllSellersPage;
+export default VerifiedSellersPage;

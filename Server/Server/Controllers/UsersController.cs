@@ -97,7 +97,7 @@ namespace Server.Controllers
 
         [HttpPut("verify")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Verify(VerifyUserDTO verifyUserDTO)
+        public async Task<IActionResult> Verify([FromBody]VerifyUserDTO verifyUserDTO)
         {
             await _userService.VerifyUser(verifyUserDTO);
             return Ok();

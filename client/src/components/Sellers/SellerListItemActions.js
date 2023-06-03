@@ -9,9 +9,11 @@ import { verifySellerAction } from "../../store/verificationSlice";
 const SellerListItemActions = (props) => {
   const dispatch = useDispatch();
 
-  const verifyHandler = (verified) => {
-    dispatch(verifySellerAction({ userId: props.id, verified: verified }));
-  };
+  const buttonProps = (value) => ({
+    onClick: () => {
+      dispatch(verifySellerAction({ userId: props.id, verified: value }));
+    },
+  });
 
   return (
     <Box
@@ -23,15 +25,15 @@ const SellerListItemActions = (props) => {
         maxWidth: "20rem",
       }}
     >
-      {props.verified && (
+      {!props.verified && (
         <>
           <Tooltip title={"Verify seller"}>
-            <IconButton onClick={verifyHandler(true)}>
+            <IconButton {...buttonProps(true)}>
               <CheckIcon fontSize="large" />
             </IconButton>
           </Tooltip>
           <Tooltip title={"Decline seller"}>
-            <IconButton onClick={verifyHandler(false)}>
+            <IconButton {...buttonProps(false)}>
               <CloseIcon fontSize="large" />
             </IconButton>
           </Tooltip>

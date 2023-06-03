@@ -68,7 +68,7 @@ export const GetAllVerifiedSellers = async () => {
 };
 
 export const VerifySeller = async (requestBody) => {
-  return await axiosClient.get(
+  return await axiosClient.put(
     `${process.env.REACT_APP_API_ENDPOINT}/users/verify`,
     requestBody
   );
