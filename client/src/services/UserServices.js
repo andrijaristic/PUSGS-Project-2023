@@ -54,3 +54,22 @@ export const GetUserAvatar = async (userId) => {
     }
   );
 };
+
+export const GetAllSellers = async () => {
+  return await axiosClient.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/users/all-sellers`
+  );
+};
+
+export const GetAllVerifiedSellers = async () => {
+  return await axiosClient.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/users/all-verified`
+  );
+};
+
+export const VerifySeller = async (requestBody) => {
+  return await axiosClient.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/users/verify`,
+    requestBody
+  );
+};

@@ -3,6 +3,7 @@ import userSlice from "./userSlice";
 import productsSlice from "./productsSlice";
 import cartSlice from "./cartSlice";
 import ordersSlice from "./ordersSlice";
+import verificationSlice from "./verificationSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     products: productsSlice,
     orders: ordersSlice,
     cart: cartSlice,
+    verification: verificationSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
