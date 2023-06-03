@@ -82,32 +82,34 @@ const DetailedOrderListItemCardContent = (props) => {
                   } each)`}
                 </FormHelperText>
               </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  minWidth: "20rem",
-                  maxWidth: "20rem",
-                }}
-              >
-                <Button
-                  color="secondary"
-                  variant="contained"
-                  onClick={viewSellerHandler}
+              {props.admin && (
+                <Box
                   sx={{
-                    mt: 1,
-                    mb: 2,
-                    border: 1,
-                    width: "50%",
-                    ":hover": {
-                      bgcolor: "#e0dcdc",
-                    },
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    minWidth: "20rem",
+                    maxWidth: "20rem",
                   }}
                 >
-                  VIEW SELLER
-                </Button>
-              </Box>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={viewSellerHandler}
+                    sx={{
+                      mt: 1,
+                      mb: 2,
+                      border: 1,
+                      width: "50%",
+                      ":hover": {
+                        bgcolor: "#e0dcdc",
+                      },
+                    }}
+                  >
+                    VIEW SELLER
+                  </Button>
+                </Box>
+              )}
             </Grid>
           </Grid>
         </CardContent>

@@ -19,6 +19,7 @@ const DetailedOrderListItem = (props) => {
           <DetailedOrderListItemCardContent
             id={props.id}
             item={{ ...props.item, imgSrc: props.imgSrc }}
+            admin={props.admin}
           />
         </Card>
       </Zoom>

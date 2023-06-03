@@ -49,6 +49,7 @@ const DetailedOrderList = (props) => {
           id={item.id}
           item={item}
           imgSrc={image ? image.imageSrc : ""}
+          admin={props.admin}
         />
       );
     });
