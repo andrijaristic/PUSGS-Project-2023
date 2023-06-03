@@ -101,6 +101,12 @@ const AppRoutes = () => {
             />
           )}
           {isVerifiedSeller && (
+            <Route
+              path="/my-orders/:orderId/buyer/:buyerId"
+              element={<DetailedOrderBuyerPage />}
+            />
+          )}
+          {isVerifiedSeller && (
             <Route path="/new-orders" element={<NewOrdersPage />} />
           )}
           {isVerifiedSeller && (
