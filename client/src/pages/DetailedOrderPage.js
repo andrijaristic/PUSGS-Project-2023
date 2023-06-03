@@ -23,7 +23,7 @@ const DetailedOrderPage = () => {
     dispatch(getDetailedOrderAction(id));
   }, [dispatch, id]);
 
-  return <DetailedOrderList order={detailedOrder} />;
+  return <DetailedOrderList order={detailedOrder} admin={true} />;
 };
 
 export default DetailedOrderPage;
