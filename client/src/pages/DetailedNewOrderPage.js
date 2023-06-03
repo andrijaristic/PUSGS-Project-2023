@@ -23,7 +23,9 @@ const DetailedNewOrderPage = () => {
     dispatch(getSellerDetailedOrderAction(id));
   }, [dispatch, id]);
 
-  return <DetailedOrderList order={detailedOrder} admin={false} />;
+  return (
+    <DetailedOrderList order={detailedOrder} admin={false} seller={true} />
+  );
 };
 
 export default DetailedNewOrderPage;

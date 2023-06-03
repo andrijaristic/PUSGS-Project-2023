@@ -24,6 +24,8 @@ const DetailedOrderList = (props) => {
   const nav = useNavigate();
   const productImages = useSelector((state) => state.products.productImages);
 
+  const isBuyer = !props.admin && !props.seller;
+
   useEffect(() => {
     if (!props.order) {
       return;
@@ -50,6 +52,7 @@ const DetailedOrderList = (props) => {
           item={item}
           imgSrc={image ? image.imageSrc : ""}
           admin={props.admin}
+          seller={props.seller}
         />
       );
     });
@@ -163,22 +166,24 @@ const DetailedOrderList = (props) => {
                     label="STATUS"
                     name="status"
                   ></TextField>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    onClick={viewBuyerHandler}
-                    sx={{
-                      mt: 1,
-                      mb: 2,
-                      border: 1,
-                      width: "100%",
-                      ":hover": {
-                        bgcolor: "#e0dcdc",
-                      },
-                    }}
-                  >
-                    VIEW BUYER
-                  </Button>
+                  {!isBuyer && (
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={viewBuyerHandler}
+                      sx={{
+                        mt: 1,
+                        mb: 2,
+                        border: 1,
+                        width: "100%",
+                        ":hover": {
+                          bgcolor: "#e0dcdc",
+                        },
+                      }}
+                    >
+                      VIEW BUYER
+                    </Button>
+                  )}
                 </Card>
               </Box>
             </Grid>

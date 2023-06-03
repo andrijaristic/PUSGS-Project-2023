@@ -20,6 +20,7 @@ const DetailedOrderListItem = (props) => {
             id={props.id}
             item={{ ...props.item, imgSrc: props.imgSrc }}
             admin={props.admin}
+            seller={props.seller}
           />
         </Card>
       </Zoom>

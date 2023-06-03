@@ -23,7 +23,9 @@ const DetailedHistoryOrderPage = () => {
     dispatch(getDetailedOrderAction(id));
   }, [dispatch, id]);
 
-  return <DetailedOrderList order={detailedOrder} admin={false} />;
+  return (
+    <DetailedOrderList order={detailedOrder} admin={false} seller={false} />
+  );
 };
 
 export default DetailedHistoryOrderPage;
