@@ -5,14 +5,13 @@ import {
   VerifySeller,
 } from "../services/UserServices";
 import { toast } from "react-toastify";
-import userSlice from "./userSlice";
 
 const initialState = {
   allSellers: [],
   verifiedSellers: [],
 };
 
-const getAllSellersAction = createAsyncThunk(
+export const getAllSellersAction = createAsyncThunk(
   "verification/getAllSellers",
   async (data, thunkApi) => {
     try {
@@ -24,7 +23,7 @@ const getAllSellersAction = createAsyncThunk(
   }
 );
 
-const getAllVerifiedSellersAction = createAsyncThunk(
+export const getAllVerifiedSellersAction = createAsyncThunk(
   "verification/getAllVerifiedSellers",
   async (data, thunkApi) => {
     try {
@@ -36,7 +35,7 @@ const getAllVerifiedSellersAction = createAsyncThunk(
   }
 );
 
-const verifySellerAction = createAsyncThunk(
+export const verifySellerAction = createAsyncThunk(
   "verification/verifySeller",
   async (data, thunkApi) => {
     try {
@@ -116,6 +115,7 @@ const verificationSlice = createSlice({
   },
 });
 
-export const { clearAllSellers, clearVerifiedSellers } = userSlice.action;
+export const { clearAllSellers, clearVerifiedSellers } =
+  verificationSlice.actions;
 
 export default verificationSlice.reducer;
