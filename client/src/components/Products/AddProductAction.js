@@ -11,6 +11,7 @@ const AddProductAction = (props) => {
   const isBuyer = user && user.role === "BUYER";
 
   const clickHandler = () => {
+    console.log(props.item);
     dispatch(addToCart(props.item));
   };
 

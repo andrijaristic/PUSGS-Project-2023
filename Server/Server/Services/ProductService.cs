@@ -92,6 +92,7 @@ namespace Server.Services
             }
 
             Product product = _mapper.Map<Product>(newProductDTO);
+            product.Timestamp = DateTime.Now.ToLocalTime();
 
             product.ImageURL = _settings.Value.DefaultProductImagePath;
             if (newProductDTO.Image != null)
@@ -211,6 +212,7 @@ namespace Server.Services
             }
 
             product.Amount += productRestockDTO.Amount;
+            product.Timestamp = DateTime.Now.ToLocalTime();
             await _unitOfWork.Save();
 
             return _mapper.Map<DisplayProductDTO>(product);

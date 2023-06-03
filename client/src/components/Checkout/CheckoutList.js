@@ -88,6 +88,7 @@ const CheckoutList = () => {
           productId: item.item.id,
           amount: item.amount,
           itemPrice: item.item.individualPrice,
+          timestamp: item.item.timestamp,
         };
       }),
     };

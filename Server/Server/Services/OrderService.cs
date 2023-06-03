@@ -98,6 +98,11 @@ namespace Server.Services
                     throw new InvalidOrderItemProductAmount(product.Name, product.Amount, item.Amount);
                 }
 
+                if (item.Timestamp < product.Timestamp && item.ItemPrice != product.IndividualPrice)
+                {
+                    throw new OutdatedProductException(product.Name);
+                }
+
                 product.Amount -= item.Amount;
                 item.ItemPrice = product.IndividualPrice * item.Amount;
                 newOrderDTO.Price += item.ItemPrice;

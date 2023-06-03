@@ -10,6 +10,7 @@ namespace Server.Dto.ProductDTOs
         public int Amount { get; set; }
         public double IndividualPrice { get; set; }
         public string Description { get; set; }
+        public DateTime Timestamp { get; set; }
         public Guid SellerId { get; set; }
     }
 }

@@ -8,6 +8,7 @@ namespace Server.Dto.OrderItemDTOs
         public Guid ProductId { get; set; }
         public int Amount { get; set; }
         public double ItemPrice { get; set; }
+        public DateTime Timestamp { get; set; } 
         public Guid OrderId { get; set; }
     }
 }
