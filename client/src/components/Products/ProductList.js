@@ -8,6 +8,7 @@ import {
 import {
   getUserInformationAction,
   getUserAvatarAction,
+  setUserAvatar,
 } from "../../store/userSlice";
 import ProductListItem from "./ProductListItem";
 import { Container, CssBaseline, Grid } from "@mui/material";
@@ -33,8 +34,13 @@ const ProductList = () => {
     }
 
     const execute = async () => {
-      dispatch(getUserInformationAction());
-      dispatch(getUserAvatarAction(id));
+      const postAction = await dispatch(getUserInformationAction());
+      const { imageSrc } = postAction.payload;
+      if (imageSrc) {
+        dispatch(setUserAvatar(imageSrc));
+      } else {
+        dispatch(getUserAvatarAction(id));
+      }
     };
 
     if (!userLoaded) {

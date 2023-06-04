@@ -134,6 +134,9 @@ const userSlice = createSlice({
       localStorage.removeItem("token");
       localStorage.removeItem("user");
     },
+    setUserAvatar(state, action) {
+      state.avatar = action.payload;
+    },
     clearFetchedUser(state, action) {
       state.fetchedUser = null;
     },
@@ -304,6 +307,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout, clearFetchedUser } = userSlice.actions;
+export const { logout, setUserAvatar, clearFetchedUser } = userSlice.actions;
 
 export default userSlice.reducer;

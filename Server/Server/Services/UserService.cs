@@ -144,6 +144,12 @@ namespace Server.Services
                 await _unitOfWork.Save();
             }
 
+            if (!string.Equals(user.ImageURL, socialMediaInfoDTO.ImageSrc))
+            {
+                user.ImageURL = socialMediaInfoDTO.ImageSrc;
+                await _unitOfWork.Save();
+            }
+
             AuthDTO authDTO = _mapper.Map<AuthDTO>(user);
             authDTO.Token = _authHelperService.CreateToken(user);
 

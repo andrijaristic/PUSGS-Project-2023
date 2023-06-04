@@ -25,7 +25,6 @@ const AvatarWithOptions = () => {
   const user = useSelector((state) => state.user.user);
   const avatar = useSelector((state) => state.user.avatar);
   const finishedRegistration = user && user.finishedRegistration;
-
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
