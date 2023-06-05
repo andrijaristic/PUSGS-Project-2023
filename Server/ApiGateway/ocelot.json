@@ -1,0 +1,312 @@
+{
+  "Routes": [
+    // User Web API
+    {
+      "UpstreamPathTemplate": "/api/users",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "api/users"
+    },
+    {
+      "UpstreamPathTemplate": "api/users/all-sellers",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userswebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "api/users/all-sellers"
+    },
+    {
+      "UpstreamPathTemplate": "api/users/verified-sellers",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userswebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "api/users/verified-sellers"
+    },
+    {
+      "UpstreamPathTemplate": "api/users/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userswebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "api/users/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "api/users/avatar/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userswebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "api/users/avatar/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "api/users/login",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userswebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "api/users/login"
+    },
+    {
+      "UpstreamPathTemplate": "api/users/external-login",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userswebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "api/users/external-login"
+    },
+    {
+      "UpstreamPathTemplate": "api/users/finish-registration",
+      "UpstreamHttpMethod": [ "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userswebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "api/users/finish-registration"
+    },
+    {
+      "UpstreamPathTemplate": "api/users/verify",
+      "UpstreamHttpMethod": [ "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userswebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "api/users/verify"
+    },
+
+    // Products and Orders are ONE Service (Same "Host" in "DownstreamHostAndPorts")
+    // Products Web API
+    {
+      "UpstreamPathTemplate": "/api/products",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "api/products"
+    },
+    {
+      "UpstreamPathTemplate": "/api/products/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "api/products/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/products/seller",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "api/products/seller"
+    },
+    {
+      "UpstreamPathTemplate": "/api/products/seller/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "api/products/seller/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/products/image/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "api/products/image/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/products/restock",
+      "UpstreamHttpMethod": [ "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "api/products/restock"
+    },
+
+    // Orders Web API
+    {
+      "UpstreamPathTemplate": "/api/orders",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "/api/orders"
+    },
+    {
+      "UpstreamPathTemplate": "/api/orders/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "/api/orders/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/orders/seller-orders/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "/api/orders/seller-orders/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/orders/buyer-orders",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "/api/orders/buyer-orders"
+    },
+    {
+      "UpstreamPathTemplate": "/api/orders/buyer-orders/new",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "/api/orders/buyer-orders/new"
+    },
+    {
+      "UpstreamPathTemplate": "/api/orders/seller-orders",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "/api/orders/seller-orders"
+    },
+    {
+      "UpstreamPathTemplate": "/api/orders/seller-orders/new",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "/api/orders/seller-orders/new"
+    },
+    {
+      "UpstreamPathTemplate": "/api/orders/cancel-order",
+      "UpstreamHttpMethod": [ "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productsorderswebapi", // dockercompose.yaml file name
+          "Port": 80 // exposed port in docker
+        }
+      ],
+      "DownstreamPathTemplate": "/api/orders/cancel-order"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl" : "http://localhost:800"
+  }
+}
