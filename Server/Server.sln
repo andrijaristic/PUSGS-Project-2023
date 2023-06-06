@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateway", "ApiGateway", "{4ECDDA47-9B74-4472-B9E2-2A6A776DC4BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{EC89F556-2A49-4CB3-8781-2C9AE4CC3096}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{EC89F556-2A49-4CB3-8781-2C9AE4CC3096}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{50D73D05-5060-4F55-A361-B2F95CEF2FD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsersWebApi", "UsersWebApi\UsersWebApi.csproj", "{CF302697-D90F-4150-9AE5-4D4AA3C7F2E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,12 +27,17 @@ Global
 		{EC89F556-2A49-4CB3-8781-2C9AE4CC3096}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC89F556-2A49-4CB3-8781-2C9AE4CC3096}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC89F556-2A49-4CB3-8781-2C9AE4CC3096}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF302697-D90F-4150-9AE5-4D4AA3C7F2E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF302697-D90F-4150-9AE5-4D4AA3C7F2E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF302697-D90F-4150-9AE5-4D4AA3C7F2E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF302697-D90F-4150-9AE5-4D4AA3C7F2E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EC89F556-2A49-4CB3-8781-2C9AE4CC3096} = {4ECDDA47-9B74-4472-B9E2-2A6A776DC4BB}
+		{CF302697-D90F-4150-9AE5-4D4AA3C7F2E9} = {50D73D05-5060-4F55-A361-B2F95CEF2FD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA08A73A-6B55-4A93-8A80-666FFB5F791B}
