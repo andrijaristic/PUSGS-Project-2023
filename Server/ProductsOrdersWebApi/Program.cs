@@ -1,20 +1,21 @@
 using AutoMapper;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Server.Services.Utility;
-using UsersWebApi.Services.Utility;
-using UsersWebApi.Services;
-using UsersWebApi.Infrastructure;
-using UsersWebApi.Interfaces.ServiceInterfaces.UtilityInterfaces;
-using UsersWebApi.Models.AppSettings;
-using UsersWebApi.Interfaces.RepositoryInterfaces;
-using UsersWebApi.Repositories;
-using UsersWebApi.Interfaces.ServiceInterfaces;
-using UsersWebApi.Mapping;
-using UsersWebApi.Middleware;
+using Server.Services;
+using ProductsOrdersWebApi.Services;
+using ProductsOrdersWebApi.Infrastructure;
+using ProductsOrdersWebApi.Mapping;
+using ProductsOrdersWebApi.Models.AppSettings;
+using ProductsOrdersWebApi.Interfaces.ServiceInterfaces.UtilityInterfaces;
+using ProductsOrdersWebApi.Services.Utility;
+using ProductsOrdersWebApi.Repositories;
+using ProductsOrdersWebApi.Interfaces.RepositoryInterfaces;
+using ProductsOrdersWebApi.Interfaces.ServiceInterfaces;
+using ProductsOrdersWebApi.Middleware;
 
 string _cors = "cors";
 var builder = WebApplication.CreateBuilder(args);
@@ -29,8 +30,8 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "eShop Users API",
-        Description = "PUSGS eShop Users API"
+        Title = "eShop Products and Orders API",
+        Description = "PUSGS eShop Products and Orders API"
     });
 
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -94,25 +95,29 @@ builder.Services.AddOptions();
 
 #region Service and Repository registrations
 builder.Services.AddTransient<IAuthHelperService, AuthHelperService>();
-builder.Services.AddTransient<IMailingService, MailingService>();
 builder.Services.AddTransient<IImageService, ImageService>();
 
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 #endregion
 
-builder.Services.AddDbContext<UsersDbContext>(options =>
+builder.Services.AddDbContext<ProductOrdersDbContext>(options =>
         options.UseSqlServer(
-            builder.Configuration.GetConnectionString("UsersDatabase"),
-            b => b.MigrationsAssembly("UsersWebApi"))
+            builder.Configuration.GetConnectionString("ProductOrdersDatabase"),
+            b => b.MigrationsAssembly("ProductOrdersWebApi"))
         );
 
 #region Mapper registration
 var mapperConfig = new MapperConfiguration(mc =>
 {
-    mc.AddProfile(new UserMappingProfile());
+    mc.AddProfile(new ProductMappingProfile());
+    mc.AddProfile(new OrderMappingProfile());
+    mc.AddProfile(new OrderItemMappingProfile());
 });
 
 IMapper mapper = mapperConfig.CreateMapper();
