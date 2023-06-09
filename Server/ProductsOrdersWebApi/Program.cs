@@ -16,13 +16,16 @@ using ProductsOrdersWebApi.Repositories;
 using ProductsOrdersWebApi.Interfaces.RepositoryInterfaces;
 using ProductsOrdersWebApi.Interfaces.ServiceInterfaces;
 using ProductsOrdersWebApi.Middleware;
+using System.Text.Json.Serialization;
 
 string _cors = "cors";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+                .AddDapr()
+                .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -108,8 +111,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddDbContext<ProductOrdersDbContext>(options =>
         options.UseSqlServer(
-            builder.Configuration.GetConnectionString("ProductOrdersDatabase"),
-            b => b.MigrationsAssembly("ProductOrdersWebApi"))
+            builder.Configuration.GetConnectionString("ProductsOrdersDatabase"),
+            b => b.MigrationsAssembly("ProductsOrdersWebApi"))
         );
 
 #region Mapper registration
@@ -130,6 +133,12 @@ builder.Services.AddSingleton(mapper);
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ProductOrdersDbContext>();
+    context.Database.EnsureCreated();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

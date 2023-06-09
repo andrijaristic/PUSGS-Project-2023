@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
+using Dapr.Client;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ProductsOrdersWebApi.Dto.ProductDTOs;
 using ProductsOrdersWebApi.Dto.UserDTOs;
 using ProductsOrdersWebApi.Enums;
 using ProductsOrdersWebApi.Exceptions.ProductExceptions;
-using ProductsOrdersWebApi.Exceptions.UserExceptions;
+//using ProductsOrdersWebApi.Exceptions.UserExceptions;
 using ProductsOrdersWebApi.Interfaces.RepositoryInterfaces;
 using ProductsOrdersWebApi.Interfaces.ServiceInterfaces;
 using ProductsOrdersWebApi.Interfaces.ServiceInterfaces.UtilityInterfaces;
@@ -13,6 +15,7 @@ using ProductsOrdersWebApi.Models;
 using ProductsOrdersWebApi.Models.AppSettings;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 namespace Server.Services
 {
@@ -22,13 +25,22 @@ namespace Server.Services
         private readonly IImageService _imageService;
         private readonly IMapper _mapper;
         private readonly IOptions<AppSettings> _settings;
+        private readonly DaprClient _daprClient;
+        private readonly IHostEnvironment _hostEnvironment;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService, IOptions<AppSettings> settings) 
+        public ProductService(IUnitOfWork unitOfWork,
+                              IMapper mapper,
+                              IImageService imageService,
+                              IOptions<AppSettings> settings,
+                              DaprClient daprClient,
+                              IHostEnvironment hostEnvironment) 
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _imageService = imageService;
             _settings = settings;
+            _daprClient = daprClient;
+            _hostEnvironment = hostEnvironment;
         }
 
         public async Task<List<DisplayProductDTO>> GetAllProducts()
@@ -51,16 +63,18 @@ namespace Server.Services
 
         public async Task<List<DisplayProductDTO>> GetSellerProducts(Guid sellerId)
         {
-            User user = await _unitOfWork.Users.Find(sellerId);
-            if (user == null)
-            {
-                throw new UserByIdNotFoundException(sellerId);
-            }
+            //Product product = await _daprClient.InvokeMethodAsync<Product>(HttpMethod.Get, "productsorderswebapi", $"/api/products");
 
-            if (user.Role != UserRole.SELLER)
-            {
-                throw new InvalidProductSellerTypeException(user.Id);
-            }
+            //User user = await _unitOfWork.Users.Find(sellerId);
+            //if (user == null)
+            //{
+            //    throw new UserByIdNotFoundException(sellerId);
+            //}
+
+            //if (user.Role != UserRole.SELLER)
+            //{
+            //    throw new InvalidProductSellerTypeException(user.Id);
+            //}
 
             List<Product> products = await _unitOfWork.Products.GetProductsForSeller(sellerId);
             if (products == null)
@@ -75,32 +89,31 @@ namespace Server.Services
         {
             ValidateProduct(newProductDTO);
 
-            User seller = await _unitOfWork.Users.Find(newProductDTO.SellerId);
-            if (seller == null)
-            {
-                throw new UserByIdNotFoundException(newProductDTO.SellerId);
-            }
+            //User seller = await _unitOfWork.Users.Find(newProductDTO.SellerId);
+            //if (seller == null)
+            //{
+            //    throw new UserByIdNotFoundException(newProductDTO.SellerId);
+            //}
 
-            if (seller.Role != UserRole.SELLER)
-            {
-                throw new InvalidProductSellerTypeException(seller.Id);
-            }
+            //if (seller.Role != UserRole.SELLER)
+            //{
+            //    throw new InvalidProductSellerTypeException(seller.Id);
+            //}
 
-            if (seller.VerificationStatus == VerificationStatus.PENDING || seller.VerificationStatus == VerificationStatus.DENIED)
-            {
-                throw new InvalidSellerVerificationException(seller.Id);
-            }
+            //if (seller.VerificationStatus == VerificationStatus.PENDING || seller.VerificationStatus == VerificationStatus.DENIED)
+            //{
+            //    throw new InvalidSellerVerificationException(seller.Id);
+            //}
 
             Product product = _mapper.Map<Product>(newProductDTO);
             product.Timestamp = DateTime.Now.ToLocalTime();
 
-            product.ImageURL = _settings.Value.DefaultProductImagePath;
+            product.ImageURL = Path.Combine(_hostEnvironment.ContentRootPath, "Images", _settings.Value.DefaultProductImagePath); ;
             if (newProductDTO.Image != null)
             {
-                string path = "Products";
-                string name = $"{product.Name}_{DateTime.Now.ToLocalTime()}";
+                string name = $"{product.Name}";
 
-                product.ImageURL = await _imageService.SaveImage(newProductDTO.Image, name, path);
+                product.ImageURL = await _imageService.SaveImage(newProductDTO.Image, name, _hostEnvironment.ContentRootPath);
             }
 
             await _unitOfWork.Products.Add(product);
@@ -117,8 +130,7 @@ namespace Server.Services
                 throw new ProductNotFoundException(id);
             }
 
-            string fileName = product.ImageURL.Split('\\')[2];
-            FileStream stream = _imageService.DownloadImage(product.ImageURL);
+            FileStream stream = _imageService.DownloadImage(product.ImageURL, _hostEnvironment.ContentRootPath);
 
             ProductImageDTO productImageDTO = new ProductImageDTO()
             {
@@ -194,11 +206,11 @@ namespace Server.Services
                 throw new InvalidProductAmountException(productRestockDTO.Amount);
             }
 
-            bool sellerExists = await _unitOfWork.Users.Find(productRestockDTO.UserId) != null;
-            if (!sellerExists)
-            {
-                throw new UserByIdNotFoundException(productRestockDTO.UserId);
-            }
+            //bool sellerExists = await _unitOfWork.Users.Find(productRestockDTO.UserId) != null;
+            //if (!sellerExists)
+            //{
+            //    throw new UserByIdNotFoundException(productRestockDTO.UserId);
+            //}
 
             Product product = await _unitOfWork.Products.Find(productRestockDTO.Id);
             if (product == null || product.IsDeleted)

@@ -96,6 +96,7 @@ builder.Services.AddOptions();
 builder.Services.AddTransient<IAuthHelperService, AuthHelperService>();
 builder.Services.AddTransient<IMailingService, MailingService>();
 builder.Services.AddTransient<IImageService, ImageService>();
+builder.Services.AddScoped<IDataInitializer, DataInitializer>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -126,12 +127,19 @@ builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var context = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
+    context.Database.Migrate();
+    scope.ServiceProvider.GetRequiredService<IDataInitializer>().InitializeData();
 }
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

@@ -1,0 +1,63 @@
+version: '3.4'
+
+services:
+  users-db:
+    image: mcr.microsoft.com/mssql/server
+    ports:
+        - "1433:1433"
+    environment:
+        ACCEPT_EULA: "Y"
+        SA_PASSWORD: "Your+password123"
+
+  productsandorders-db:
+    image: mcr.microsoft.com/mssql/server
+    ports:
+        - "1434:1434"
+    environment:
+        ACCEPT_EULA: "Y"
+        SA_PASSWORD: "Your+password123"  
+
+  productsorderswebapi:
+    image: ${DOCKER_REGISTRY-}productsorderswebapi
+    build:
+      context: .
+      dockerfile: ProductsOrdersWebApi/Dockerfile
+    ports:
+        - "7061:80"
+    depends_on:
+        - productsandorders-db
+
+  productsorderswebapi-dapr:
+    image: "daprio/daprd:latest"
+    command: [ "./daprd", "-app-id", "productsorderswebapi", "-app-port", "80",  "-components-path", "/components" ]
+    depends_on:
+      - productsorderswebapi
+    network_mode: "service:productsorderswebapi"
+
+  userswebapi:
+    image: ${DOCKER_REGISTRY-}userswebapi
+    build:
+      context: .
+      dockerfile: UsersWebApi/Dockerfile
+    ports:
+        - "7060:80"
+    depends_on:
+        - users-db
+
+  userswebapi-dapr:
+    image: "daprio/daprd:latest"
+    command: [ "./daprd", "-app-id", "userswebapi", "-app-port", "80", "-components-path", "/components" ]
+    depends_on:
+      - userswebapi
+    network_mode: "service:userswebapi"
+
+  apigateway:
+    image: ${DOCKER_REGISTRY-}apigateway
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    ports:
+        - "7059:80"
+    depends_on:
+        - userswebapi
+        - productsorderswebapi

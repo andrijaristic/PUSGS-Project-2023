@@ -6,7 +6,7 @@ using ProductsOrdersWebApi.Enums;
 using ProductsOrdersWebApi.Exceptions.OrderExceptions;
 using ProductsOrdersWebApi.Exceptions.OrderItemExceptions;
 using ProductsOrdersWebApi.Exceptions.ProductExceptions;
-using ProductsOrdersWebApi.Exceptions.UserExceptions;
+//using ProductsOrdersWebApi.Exceptions.UserExceptions;
 using ProductsOrdersWebApi.Interfaces.RepositoryInterfaces;
 using ProductsOrdersWebApi.Interfaces.ServiceInterfaces;
 using ProductsOrdersWebApi.Models;
@@ -73,16 +73,16 @@ namespace ProductsOrdersWebApi.Services
 
             ValidateOrder(newOrderDTO);
 
-            User user = await _unitOfWork.Users.Find(newOrderDTO.BuyerId);
-            if (user == null)
-            {
-                throw new UserByIdNotFoundException(newOrderDTO.BuyerId);
-            }
+            //User user = await _unitOfWork.Users.Find(newOrderDTO.BuyerId);
+            //if (user == null)
+            //{
+            //    throw new UserByIdNotFoundException(newOrderDTO.BuyerId);
+            //}
 
-            if (user.Role != UserRole.BUYER)
-            {
-                throw new InvalidOrderUserInRequestException(newOrderDTO.BuyerId);
-            }
+            //if (user.Role != UserRole.BUYER)
+            //{
+            //    throw new InvalidOrderUserInRequestException(newOrderDTO.BuyerId);
+            //}
 
             newOrderDTO.Price = 0;
             foreach (var item in newOrderDTO.Products)

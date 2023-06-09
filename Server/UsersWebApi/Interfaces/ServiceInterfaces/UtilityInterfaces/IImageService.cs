@@ -2,8 +2,8 @@
 {
     public interface IImageService
     {
-        Task<string> SaveImage(IFormFile imageFile, string name, string path);
-        FileStream DownloadImage(string path);
+        Task<string> SaveImage(IFormFile imageFile, string name, string rootPath);
+        FileStream DownloadImage(string path, string rootPath);
         void DeleteImage(string path);
     }
 }

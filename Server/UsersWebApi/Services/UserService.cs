@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Options;
+using System.IO;
 using UsersWebApi.Dto.UserDTOs;
 using UsersWebApi.Enums;
 using UsersWebApi.Exceptions.UserExceptions;
@@ -19,13 +20,15 @@ namespace UsersWebApi.Services
         private readonly IOptions<AppSettings> _settings;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IHostEnvironment _hostEnvironment;
 
         public UserService(IAuthHelperService authHelperService,
                            IUnitOfWork unitOfWork,
                            IMapper mapper,
                            IMailingService mailingService,
                            IImageService imageService,
-                           IOptions<AppSettings> settings)
+                           IOptions<AppSettings> settings,
+                           IHostEnvironment hostEnvironment)
         {
             _authHelperService = authHelperService;
             _unitOfWork = unitOfWork;
@@ -33,6 +36,7 @@ namespace UsersWebApi.Services
             _mailingService = mailingService;
             _imageService = imageService;
             _settings = settings;
+            _hostEnvironment = hostEnvironment;
         }
 
         public async Task VerifyUser(VerifyUserDTO verifyUserDTO)
@@ -72,14 +76,13 @@ namespace UsersWebApi.Services
             {
                 user.VerificationStatus = VerificationStatus.EXEMPT;
             }
-
-            user.ImageURL = _settings.Value.DefaultUserImagePath;
+            
+            user.ImageURL = Path.Combine(_hostEnvironment.ContentRootPath, "Images", _settings.Value.DefaultUserImagePath);
             if (newUserDTO.Image != null)
             {
-                string path = "Users";
                 string name = user.Email.Split("@")[0];
 
-                user.ImageURL = await _imageService.SaveImage(newUserDTO.Image, name, path);
+                user.ImageURL = await _imageService.SaveImage(newUserDTO.Image, name, _hostEnvironment.ContentRootPath);
             }
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, BCrypt.Net.BCrypt.GenerateSalt());
@@ -220,10 +223,9 @@ namespace UsersWebApi.Services
                     _imageService.DeleteImage(user.ImageURL);
                 }
 
-                string imagePath = "Images\\Users";
                 string name = user.Email.Split("@")[0];
 
-                user.ImageURL = await _imageService.SaveImage(updateUserDTO.Image, name, imagePath);
+                user.ImageURL = await _imageService.SaveImage(updateUserDTO.Image, name, _hostEnvironment.ContentRootPath);
             }
 
             user.Update(updateUserDTO.Address.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth);
@@ -273,8 +275,8 @@ namespace UsersWebApi.Services
                 throw new UserByIdNotFoundException(id);
             }
 
-            string fileName = user.ImageURL.Split('\\')[2];
-            FileStream stream = _imageService.DownloadImage(user.ImageURL);
+            string fileName = user.ImageURL;
+            FileStream stream = _imageService.DownloadImage(user.ImageURL, _hostEnvironment.ContentRootPath);
             
             UserAvatarDTO userAvatarDTO = new UserAvatarDTO()
             {

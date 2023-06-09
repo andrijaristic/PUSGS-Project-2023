@@ -2,7 +2,7 @@
   "Routes": [
     // User Web API
     {
-      "UpstreamPathTemplate": "/api/users",
+      "UpstreamPathTemplate": "/gateway/users",
       "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
 
       "DownstreamScheme": "http",
@@ -12,10 +12,10 @@
           "Port": 80 // exposed port in docker
         }
       ],
-      "DownstreamPathTemplate": "api/users"
+      "DownstreamPathTemplate": "/api/users"
     },
     {
-      "UpstreamPathTemplate": "api/users/all-sellers",
+      "UpstreamPathTemplate": "/gateway/users/all-sellers",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -25,10 +25,10 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "api/users/all-sellers"
+      "DownstreamPathTemplate": "/api/users/all-sellers"
     },
     {
-      "UpstreamPathTemplate": "api/users/verified-sellers",
+      "UpstreamPathTemplate": "/gateway/users/verified-sellers",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -38,10 +38,10 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "api/users/verified-sellers"
+      "DownstreamPathTemplate": "/api/users/verified-sellers"
     },
     {
-      "UpstreamPathTemplate": "api/users/{id}",
+      "UpstreamPathTemplate": "/gateway/users/{id}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -51,10 +51,10 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "api/users/{id}"
+      "DownstreamPathTemplate": "/api/users/{id}"
     },
     {
-      "UpstreamPathTemplate": "api/users/avatar/{id}",
+      "UpstreamPathTemplate": "/gateway/users/avatar/{id}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -64,10 +64,10 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "api/users/avatar/{id}"
+      "DownstreamPathTemplate": "/api/users/avatar/{id}"
     },
     {
-      "UpstreamPathTemplate": "api/users/login",
+      "UpstreamPathTemplate": "/gateway/users/login",
       "UpstreamHttpMethod": [ "Post" ],
 
       "DownstreamScheme": "http",
@@ -77,10 +77,10 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "api/users/login"
+      "DownstreamPathTemplate": "/api/users/login"
     },
     {
-      "UpstreamPathTemplate": "api/users/external-login",
+      "UpstreamPathTemplate": "/gateway/users/external-login",
       "UpstreamHttpMethod": [ "Post" ],
 
       "DownstreamScheme": "http",
@@ -90,10 +90,10 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "api/users/external-login"
+      "DownstreamPathTemplate": "/api/users/external-login"
     },
     {
-      "UpstreamPathTemplate": "api/users/finish-registration",
+      "UpstreamPathTemplate": "/gateway/users/finish-registration",
       "UpstreamHttpMethod": [ "Put" ],
 
       "DownstreamScheme": "http",
@@ -103,10 +103,10 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "api/users/finish-registration"
+      "DownstreamPathTemplate": "/api/users/finish-registration"
     },
     {
-      "UpstreamPathTemplate": "api/users/verify",
+      "UpstreamPathTemplate": "/gateway/users/verify",
       "UpstreamHttpMethod": [ "Put" ],
 
       "DownstreamScheme": "http",
@@ -116,13 +116,13 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "api/users/verify"
+      "DownstreamPathTemplate": "/api/users/verify"
     },
 
     // Products and Orders are ONE Service (Same "Host" in "DownstreamHostAndPorts")
     // Products Web API
     {
-      "UpstreamPathTemplate": "/api/products",
+      "UpstreamPathTemplate": "/gateway/products",
       "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
 
       "DownstreamScheme": "http",
@@ -132,10 +132,10 @@
           "Port": 80 // exposed port in docker
         }
       ],
-      "DownstreamPathTemplate": "api/products"
+      "DownstreamPathTemplate": "/api/products"
     },
     {
-      "UpstreamPathTemplate": "/api/products/{id}",
+      "UpstreamPathTemplate": "/gateway/products/{id}",
       "UpstreamHttpMethod": [ "Get", "Delete" ],
 
       "DownstreamScheme": "http",
@@ -145,10 +145,10 @@
           "Port": 80 // exposed port in docker
         }
       ],
-      "DownstreamPathTemplate": "api/products/{id}"
+      "DownstreamPathTemplate": "/api/products/{id}"
     },
     {
-      "UpstreamPathTemplate": "/api/products/seller",
+      "UpstreamPathTemplate": "/gateway/products/seller",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -158,10 +158,10 @@
           "Port": 80 // exposed port in docker
         }
       ],
-      "DownstreamPathTemplate": "api/products/seller"
+      "DownstreamPathTemplate": "/api/products/seller"
     },
     {
-      "UpstreamPathTemplate": "/api/products/seller/{id}",
+      "UpstreamPathTemplate": "/gateway/products/seller/{id}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -171,10 +171,10 @@
           "Port": 80 // exposed port in docker
         }
       ],
-      "DownstreamPathTemplate": "api/products/seller/{id}"
+      "DownstreamPathTemplate": "/api/products/seller/{id}"
     },
     {
-      "UpstreamPathTemplate": "/api/products/image/{id}",
+      "UpstreamPathTemplate": "/gateway/products/image/{id}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -184,10 +184,10 @@
           "Port": 80 // exposed port in docker
         }
       ],
-      "DownstreamPathTemplate": "api/products/image/{id}"
+      "DownstreamPathTemplate": "/api/products/image/{id}"
     },
     {
-      "UpstreamPathTemplate": "/api/products/restock",
+      "UpstreamPathTemplate": "/gateway/products/restock",
       "UpstreamHttpMethod": [ "Put" ],
 
       "DownstreamScheme": "http",
@@ -197,12 +197,12 @@
           "Port": 80 // exposed port in docker
         }
       ],
-      "DownstreamPathTemplate": "api/products/restock"
+      "DownstreamPathTemplate": "/api/products/restock"
     },
 
     // Orders Web API
     {
-      "UpstreamPathTemplate": "/api/orders",
+      "UpstreamPathTemplate": "/gateway/orders",
       "UpstreamHttpMethod": [ "Get", "Post" ],
 
       "DownstreamScheme": "http",
@@ -215,7 +215,7 @@
       "DownstreamPathTemplate": "/api/orders"
     },
     {
-      "UpstreamPathTemplate": "/api/orders/{id}",
+      "UpstreamPathTemplate": "/gateway/orders/{id}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -228,7 +228,7 @@
       "DownstreamPathTemplate": "/api/orders/{id}"
     },
     {
-      "UpstreamPathTemplate": "/api/orders/seller-orders/{id}",
+      "UpstreamPathTemplate": "/gateway/orders/seller-orders/{id}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -241,7 +241,7 @@
       "DownstreamPathTemplate": "/api/orders/seller-orders/{id}"
     },
     {
-      "UpstreamPathTemplate": "/api/orders/buyer-orders",
+      "UpstreamPathTemplate": "/gateway/orders/buyer-orders",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -254,7 +254,7 @@
       "DownstreamPathTemplate": "/api/orders/buyer-orders"
     },
     {
-      "UpstreamPathTemplate": "/api/orders/buyer-orders/new",
+      "UpstreamPathTemplate": "/gateway/orders/buyer-orders/new",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -267,7 +267,7 @@
       "DownstreamPathTemplate": "/api/orders/buyer-orders/new"
     },
     {
-      "UpstreamPathTemplate": "/api/orders/seller-orders",
+      "UpstreamPathTemplate": "/gateway/orders/seller-orders",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -280,7 +280,7 @@
       "DownstreamPathTemplate": "/api/orders/seller-orders"
     },
     {
-      "UpstreamPathTemplate": "/api/orders/seller-orders/new",
+      "UpstreamPathTemplate": "/gateway/orders/seller-orders/new",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -293,7 +293,7 @@
       "DownstreamPathTemplate": "/api/orders/seller-orders/new"
     },
     {
-      "UpstreamPathTemplate": "/api/orders/cancel-order",
+      "UpstreamPathTemplate": "/gateway/orders/cancel-order",
       "UpstreamHttpMethod": [ "Put" ],
 
       "DownstreamScheme": "http",
@@ -307,6 +307,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl" : "http://localhost:800"
+    "BaseUrl" : "http://localhost:7059"
   }
 }

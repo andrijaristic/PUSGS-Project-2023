@@ -35,7 +35,6 @@ namespace ProductsOrdersWebApi.Repositories
             Order order = await _dbContext.Orders.Where(x => Guid.Equals(x.Id, id))
                                                  .Include(x => x.Products)
                                                  .ThenInclude(x => x.Product)
-                                                 .Include(x => x.Buyer)
                                                  .FirstOrDefaultAsync();
             return order;
         }
@@ -45,7 +44,6 @@ namespace ProductsOrdersWebApi.Repositories
             Order order = await _dbContext.Orders.Where(x => Guid.Equals(x.Id, orderId))
                                                  .Include(x => x.Products.Where(x => Guid.Equals(x.Product.SellerId, sellerId)))
                                                  .ThenInclude(x => x.Product)
-                                                 .Include(x => x.Buyer)
                                                  .FirstOrDefaultAsync();
             return order;
         }

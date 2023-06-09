@@ -5,26 +5,26 @@ namespace Server.Services.Utility
 {
     public class ImageService : IImageService
     {
-        public async Task<string> SaveImage(IFormFile imageFile, string name, string path)
+        public async Task<string> SaveImage(IFormFile imageFile, string name, string rootPath)
         {
-            //string imageName = new string(Path.GetFileNameWithoutExtension(imageFile.FileName));
-            string currentTime = DateTime.Now.ToLocalTime().ToString().Replace(':', '-');
-            string imageName = name + "_" + currentTime + Path.GetExtension(imageFile.FileName);
-            var imagePath = Path.Combine(path, imageName);
+            string imageName = new string(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
+            imageName = imageName + name + Path.GetExtension(imageFile.FileName);
+            var imagePath = Path.Combine(rootPath, "Images", imageName);
 
-            using (var fileStream = new FileStream(imagePath, FileMode.Create, FileAccess.Write))
+            using (var fileStream = new FileStream(imagePath, FileMode.Create))
             {
                 await imageFile.CopyToAsync(fileStream);
             }
 
-            return imagePath;
+            return imageName;
         }
 
-        public FileStream DownloadImage(string path)
+        public FileStream DownloadImage(string imagePath, string rootPath)
         {
-            if (File.Exists(path))
+            //var imagePath = Path.Combine(rootPath, "Images", path);
+            if (File.Exists(imagePath))
             {
-                FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                FileStream stream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
                 return stream;
             }
 
