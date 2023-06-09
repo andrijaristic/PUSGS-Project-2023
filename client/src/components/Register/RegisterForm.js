@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { registerAction } from "../../store/userSlice";
 import {
@@ -11,6 +11,7 @@ import {
   TextField,
   Zoom,
 } from "@mui/material";
+import RegisterFormImageItem from "./RegisterFormImage";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link } from "react-router-dom";
@@ -21,8 +22,10 @@ const USER_TYPES = ["BUYER", "SELLER"];
 
 const RegisterForm = () => {
   const dispatch = useDispatch();
+  const imageInput = useRef(null);
 
   const [secondaryInformation, setSecondaryInformation] = useState(false);
+  const [addImage, setAddImage] = useState(false);
 
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [isUsernameTouched, setIsUsernameTouched] = useState(false);
@@ -50,6 +53,9 @@ const RegisterForm = () => {
   const [date, setDate] = useState(null);
   const [isDateValid, setIsDateValid] = useState(false);
   const [isDateTouched, setIsDateTouched] = useState(false);
+
+  const [displayImage, setDisplayImage] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   const roles = USER_TYPES.map((item) => {
     return (
@@ -129,6 +135,30 @@ const RegisterForm = () => {
     setIsUserTypeTouched(true);
   };
 
+  const imageUploadHandler = () => {
+    if (!imageInput.current) {
+      return;
+    }
+
+    imageInput.current.children[0].click();
+  };
+
+  const imageChangeHandler = (event) => {
+    if (!event.target.files) {
+      return;
+    }
+
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    if (file) {
+      setUploadedImage(file);
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setDisplayImage(reader.result.toString());
+      };
+    }
+  };
+
   const submitHandler = (event) => {
     event.preventDefault();
 
@@ -167,6 +197,9 @@ const RegisterForm = () => {
 
       return;
     }
+    if (uploadedImage !== null) {
+      formData.append("image", uploadedImage);
+    }
 
     formData.append("dateOfBirth", date.toISOString());
 
@@ -179,6 +212,14 @@ const RegisterForm = () => {
 
   const registrationBackwardHandler = () => {
     setSecondaryInformation(false);
+  };
+
+  const registrationImageForwardHandler = () => {
+    setAddImage(true);
+  };
+
+  const registrationImageBackwardHandler = () => {
+    setAddImage(false);
   };
 
   return (
@@ -306,7 +347,7 @@ const RegisterForm = () => {
                   },
                 }}
               >
-                Finalize registration
+                Continue registration
               </Button>
             </Fade>
           </>
@@ -326,7 +367,7 @@ const RegisterForm = () => {
                 autoComplete="off"
                 sx={{
                   display: {
-                    xl: `${secondaryInformation ? "" : "none"}`,
+                    xl: `${secondaryInformation && !addImage ? "" : "none"}`,
                   },
                 }}
               />
@@ -346,7 +387,7 @@ const RegisterForm = () => {
                 autoComplete="off"
                 sx={{
                   display: {
-                    xl: `${secondaryInformation ? "" : "none"}`,
+                    xl: `${secondaryInformation && !addImage ? "" : "none"}`,
                   },
                 }}
               />
@@ -365,7 +406,7 @@ const RegisterForm = () => {
                   mb: 1,
                   width: "100%",
                   display: {
-                    xl: `${secondaryInformation ? "" : "none"}`,
+                    xl: `${secondaryInformation && !addImage ? "" : "none"}`,
                   },
                 }}
               />
@@ -387,7 +428,7 @@ const RegisterForm = () => {
                   mb: 1,
                   width: "100%",
                   display: {
-                    xl: `${secondaryInformation ? "" : "none"}`,
+                    xl: `${secondaryInformation && !addImage ? "" : "none"}`,
                   },
                 }}
               >
@@ -417,7 +458,70 @@ const RegisterForm = () => {
                     bgcolor: "#e0dcdc",
                   },
                   display: {
-                    xl: `${secondaryInformation ? "" : "none"}`,
+                    xl: `${secondaryInformation && !addImage ? "" : "none"}`,
+                  },
+                }}
+              >
+                <ArrowBackIcon />
+              </Button>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={registrationImageForwardHandler}
+                disabled={
+                  !isUsernameValid ||
+                  !isPasswordValid ||
+                  !isConfirmPasswordValid ||
+                  !isEmailValid ||
+                  !isNameValid ||
+                  !isAddressValid ||
+                  !isDateValid ||
+                  !isUserTypeValid
+                }
+                sx={{
+                  mt: 1,
+                  mb: 2,
+                  border: 1,
+                  width: "80%",
+                  ":hover": {
+                    bgcolor: "#e0dcdc",
+                  },
+                  display: {
+                    xl: `${secondaryInformation && !addImage ? "" : "none"}`,
+                  },
+                }}
+              >
+                Finalise
+              </Button>
+            </Box>
+            <Box>
+              <RegisterFormImageItem
+                image={displayImage}
+                imageInput={imageInput}
+                uploadHandler={imageChangeHandler}
+                avatarClickHandler={imageUploadHandler}
+                sx={{
+                  display: {
+                    xl: `${secondaryInformation && addImage ? "" : "none"}`,
+                  },
+                }}
+              />
+
+              <Button
+                onClick={registrationImageBackwardHandler}
+                color="secondary"
+                variant="contained"
+                sx={{
+                  mt: 1,
+                  mb: 2,
+                  mr: 2,
+                  border: 1,
+                  width: "10%",
+                  ":hover": {
+                    bgcolor: "#e0dcdc",
+                  },
+                  display: {
+                    xl: `${secondaryInformation && addImage ? "" : "none"}`,
                   },
                 }}
               >
@@ -446,7 +550,7 @@ const RegisterForm = () => {
                     bgcolor: "#e0dcdc",
                   },
                   display: {
-                    xl: `${secondaryInformation ? "" : "none"}`,
+                    xl: `${secondaryInformation && addImage ? "" : "none"}`,
                   },
                 }}
               >
