@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import DetailedOrderUserInformation from "../components/DetailedOrder/DetailedOrderUserInformation";
+import DetailedOrderUserInformation from "../components/DetailedUserInformation/DetailedOrderUserInformation";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,7 +8,7 @@ import {
   getUserInformationByIdAction,
 } from "../store/userSlice";
 
-const DetailedOrderSellerPage = () => {
+const DetailedSellerPage = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.fetchedUser);
@@ -30,4 +30,4 @@ const DetailedOrderSellerPage = () => {
   return <DetailedOrderUserInformation user={user} avatar={avatar} />;
 };
 
-export default DetailedOrderSellerPage;
+export default DetailedSellerPage;

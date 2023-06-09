@@ -18,7 +18,7 @@ import NewOrdersPage from "../pages/NewOrdersPage";
 import OrdersPage from "../pages/OrdersPage";
 import DetailedOrderPage from "../pages/DetailedOrderPage";
 import DetailedOrderBuyerPage from "../pages/DetailedOrderBuyerPage";
-import DetailedOrderSellerPage from "../pages/DetailedOrderSellerPage";
+import DetailedSellerPage from "../pages/DetailedSellerPage";
 import DetailedNewOrderPage from "../pages/DetailedNewOrderPage";
 import DetailedMyOrdersOrderPage from "../pages/DetailedMyOrdersOrderPage";
 import DetailedHistoryOrderPage from "../pages/DetailedHistoryOrderPage";
@@ -117,6 +117,12 @@ const AppRoutes = () => {
               element={<DetailedNewOrderPage />}
             />
           )}
+          {isVerifiedSeller && (
+            <Route
+              path="/new-orders/:orderId/buyer/:buyerId"
+              element={<DetailedOrderBuyerPage />}
+            />
+          )}
           {isAdmin && <Route path="/orders" element={<OrdersPage />} />}
           {isAdmin && (
             <Route path="/orders/:orderId" element={<DetailedOrderPage />} />
@@ -130,14 +136,26 @@ const AppRoutes = () => {
           {isAdmin && (
             <Route
               path="/orders/:orderId/seller/:sellerId"
-              element={<DetailedOrderSellerPage />}
+              element={<DetailedSellerPage />}
             />
           )}
           {isAdmin && (
             <Route path="/all-sellers" element={<AllSellersPage />} />
           )}
           {isAdmin && (
+            <Route
+              path="/all-sellers/:sellerId"
+              element={<DetailedSellerPage />}
+            />
+          )}
+          {isAdmin && (
             <Route path="/verified-sellers" element={<VerifiedSellersPage />} />
+          )}
+          {isAdmin && (
+            <Route
+              path="/verified-sellers/:sellerId"
+              element={<DetailedSellerPage />}
+            />
           )}
           <Route path="*" element={<Navigate replace to={""} />} />
         </Route>

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import DetailedOrderUserInformation from "../components/DetailedOrder/DetailedOrderUserInformation";
+import DetailedOrderUserInformation from "../components/DetailedUserInformation/DetailedOrderUserInformation";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
