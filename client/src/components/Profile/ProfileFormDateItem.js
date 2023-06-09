@@ -15,7 +15,9 @@ const ProfileFormDateItem = (props) => {
         required
         fullWidth
         disableFuture
-        defaultValue={new Date(props.initalValue || new Date())}
+        defaultValue={
+          props.initialValue ? new Date(props.initialValue) : new Date()
+        }
         onChange={(value) => props.setValue(new Date(value))}
         sx={{
           mt: 2,

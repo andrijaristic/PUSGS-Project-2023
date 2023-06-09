@@ -131,9 +131,7 @@ const DetailedOrderUserInformation = (props) => {
                         <ProfileFormDateItem
                           id="date"
                           label="Birthday"
-                          initialValue={new Date(
-                            props.user.dateOfBirth
-                          ).toLocaleDateString()}
+                          initialValue={props.user.dateOfBirth}
                           editable={editable}
                         />
                       </Box>
@@ -151,7 +149,7 @@ const DetailedOrderUserInformation = (props) => {
                           },
                         }}
                       >
-                        Return to order
+                        Previous page
                       </Button>
                     </Box>
                   </Grid>

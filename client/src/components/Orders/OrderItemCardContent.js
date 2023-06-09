@@ -68,7 +68,10 @@ const OrderItemCardContent = (props) => {
               >
                 {props.active ? (
                   <OrderCancelTimer
-                    cancellationWindow={new Date(props.item.cancellationWindow)}
+                    string={props.item.cancellationWindow}
+                    cancellationWindow={
+                      new Date(`${props.item.cancellationWindow}Z`)
+                    }
                   />
                 ) : (
                   props.item.status

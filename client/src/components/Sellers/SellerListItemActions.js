@@ -5,15 +5,23 @@ import CloseIcon from "@mui/icons-material/Close";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import { useDispatch } from "react-redux";
 import { verifySellerAction } from "../../store/verificationSlice";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SellerListItemActions = (props) => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const { pathname } = location;
+  const nav = useNavigate();
 
   const buttonProps = (value) => ({
     onClick: () => {
       dispatch(verifySellerAction({ userId: props.id, verified: value }));
     },
   });
+
+  const viewSellerHandler = () => {
+    nav(`${pathname}/${props.id}`);
+  };
 
   return (
     <Box
@@ -40,7 +48,7 @@ const SellerListItemActions = (props) => {
         </>
       )}
       <Tooltip title={"View seller"}>
-        <IconButton>
+        <IconButton onClick={viewSellerHandler}>
           <ContactPageIcon fontSize="large" />
         </IconButton>
       </Tooltip>

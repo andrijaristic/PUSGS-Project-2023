@@ -81,7 +81,7 @@ namespace ProductsOrdersWebApi.Services
                 throw new InvalidBuyerInRequestException(newOrderDTO.BuyerId);
             }
 
-            newOrderDTO.CancellationWindow = DateTime.Now.AddMinutes(60).ToUniversalTime();
+            newOrderDTO.CancellationWindow = DateTime.Now.ToUniversalTime().AddMinutes(60);
             newOrderDTO.TimeOfDelivery = RandomDate();
             newOrderDTO.Status = "PENDING";
 
@@ -208,7 +208,7 @@ namespace ProductsOrdersWebApi.Services
             int deliveryHoursWindow = 7 * 24 * 3; // 3 weeks into future
 
             int randomHoursIntoFuture = gen.Next(deliveryHoursWindow);
-            return DateTime.Now.AddHours(randomHoursIntoFuture).ToUniversalTime();
+            return DateTime.Now.ToUniversalTime().AddHours(randomHoursIntoFuture);
         }
 
         public static void ValidateOrder(NewOrderDTO newOrderDTO)
