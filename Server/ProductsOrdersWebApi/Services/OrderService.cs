@@ -48,7 +48,7 @@ namespace ProductsOrdersWebApi.Services
                 throw new InvalidOrderBuyerInRequestException(cancelOrderDTO.OrderId, cancelOrderDTO.BuyerId);
             }
 
-            if (order.CancellationWindow <= DateTime.Now.ToLocalTime())
+            if (order.CancellationWindow <= DateTime.Now.ToUniversalTime())
             {
                 throw new OrderCancellationWindowExpiredException(order.CancellationWindow.ToLongDateString());
             }
@@ -81,7 +81,7 @@ namespace ProductsOrdersWebApi.Services
                 throw new InvalidBuyerInRequestException(newOrderDTO.BuyerId);
             }
 
-            newOrderDTO.CancellationWindow = DateTime.Now.AddMinutes(60).ToLocalTime();
+            newOrderDTO.CancellationWindow = DateTime.Now.AddMinutes(60).ToUniversalTime();
             newOrderDTO.TimeOfDelivery = RandomDate();
             newOrderDTO.Status = "PENDING";
 
@@ -208,7 +208,7 @@ namespace ProductsOrdersWebApi.Services
             int deliveryHoursWindow = 7 * 24 * 3; // 3 weeks into future
 
             int randomHoursIntoFuture = gen.Next(deliveryHoursWindow);
-            return DateTime.Now.AddHours(randomHoursIntoFuture).ToLocalTime();
+            return DateTime.Now.AddHours(randomHoursIntoFuture).ToUniversalTime();
         }
 
         public static void ValidateOrder(NewOrderDTO newOrderDTO)
@@ -238,7 +238,7 @@ namespace ProductsOrdersWebApi.Services
             //    throw new InvalidOrderCancellationWindowException(newOrderDTO.CancellationWindow.ToLongDateString());
             //}
 
-            if (newOrderDTO.TimeOfDelivery.ToLocalTime() <= DateTime.Now.AddMinutes(60).ToLocalTime())
+            if (newOrderDTO.TimeOfDelivery.ToUniversalTime() <= DateTime.Now.AddMinutes(60).ToUniversalTime())
             {
                 throw new InvalidOrderTimeOfDeliveryException(newOrderDTO.TimeOfDelivery.ToLongDateString());
             }

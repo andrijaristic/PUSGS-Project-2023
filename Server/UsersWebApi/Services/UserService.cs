@@ -190,7 +190,7 @@ namespace UsersWebApi.Services
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, BCrypt.Net.BCrypt.GenerateSalt());
             user.Address = finishRegistrationDTO.Address.Trim();
-            user.DateOfBirth = finishRegistrationDTO.DateOfBirth.ToLocalTime();
+            user.DateOfBirth = finishRegistrationDTO.DateOfBirth.ToUniversalTime();
 
             if (!Enum.TryParse(finishRegistrationDTO.Role, out UserRole role))
             {
@@ -234,7 +234,7 @@ namespace UsersWebApi.Services
                 user.ImageURL = await _imageService.SaveImage(updateUserDTO.Image, name, _hostEnvironment.ContentRootPath);
             }
 
-            user.Update(updateUserDTO.Address.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth);
+            user.Update(updateUserDTO.Address.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth.ToUniversalTime());
             await _unitOfWork.Save();
 
             return _mapper.Map<DisplayUserDTO>(user);

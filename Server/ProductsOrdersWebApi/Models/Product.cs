@@ -18,7 +18,7 @@ namespace ProductsOrdersWebApi.Models
         {
             Description = description;
             IndividualPrice = individualPrice;
-            Timestamp = DateTime.Now.ToLocalTime();
+            Timestamp = DateTime.Now.ToUniversalTime();
         }
     }
 }
