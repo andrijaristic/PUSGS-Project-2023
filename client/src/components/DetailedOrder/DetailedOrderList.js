@@ -59,7 +59,7 @@ const DetailedOrderList = (props) => {
   }
 
   const viewBuyerHandler = () => {
-    nav(`${pathname}/buyer/${props.order.buyer.id}`);
+    nav(`${pathname}/buyer/${props.order.buyerId}`);
   };
 
   if (props.order) {

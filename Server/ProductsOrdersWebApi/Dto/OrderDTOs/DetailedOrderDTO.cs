@@ -13,6 +13,7 @@ namespace ProductsOrdersWebApi.Dto.OrderDTOs
         public string Status { get; set; }
         public DateTime CancellationWindow { get; set; }    // 1 Hour from creation
         public DateTime TimeOfDelivery { get; set; }
-        public DisplayUserDTO Buyer { get; set; }
+        //public DisplayUserDTO Buyer { get; set; }
+        public Guid BuyerId { get; set; }
     }
 }
