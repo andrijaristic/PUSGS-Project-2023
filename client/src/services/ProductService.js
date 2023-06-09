@@ -56,6 +56,7 @@ export const RestockProduct = async (data) => {
 
 export const DeleteExistingProduct = async (data) => {
   return await axiosClient.delete(
-    `${process.env.REACT_APP_API_ENDPOINT}/products/${data}`
+    `${process.env.REACT_APP_API_ENDPOINT}/products/`,
+    data
   );
 };

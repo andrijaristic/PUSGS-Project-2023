@@ -23,7 +23,7 @@ const ProductListItemContent = (props) => {
         <CardMedia
           component="img"
           alt="alt text"
-          image={props.item.imgSrc ? props.item.imageSrc : null}
+          image={props.item.imgSrc ? props.item.imgSrc : null}
           height="150"
           sx={{
             objectFit: "contain",

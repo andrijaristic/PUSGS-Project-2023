@@ -18,9 +18,9 @@ import {
 } from "@mui/material";
 import LoadingModal from "../UI/Modal/LoadingModal";
 import ProfileFormItem from "../Profile/ProfileFormItem";
-import ProfileFormDateItem from "./ProfileFormDateItem";
-import ProfileFormImageItem from "./ProfileFormImageItem";
-import ProfileFormIcon from "./ProfileFormIcon";
+import ProfileFormDateItem from "../Profile/ProfileFormDateItem";
+import ProfileFormImageItem from "../Profile/ProfileFormImageItem";
+import ProfileFormIcon from "../Profile/ProfileFormIcon";
 
 const ProfileForm = () => {
   const dispatch = useDispatch();

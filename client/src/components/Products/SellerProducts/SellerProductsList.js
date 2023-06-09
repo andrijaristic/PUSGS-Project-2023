@@ -11,6 +11,7 @@ import { Container, CssBaseline, Grid } from "@mui/material";
 const SellerProductsList = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+
   const sellerProducts = useSelector((state) => state.products.sellerProducts);
   const sellerProductsLoaded = useSelector(
     (state) => state.products.sellerProductsLoaded

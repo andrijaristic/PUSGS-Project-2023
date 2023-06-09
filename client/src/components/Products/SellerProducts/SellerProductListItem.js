@@ -17,7 +17,10 @@ const SellerProductListItem = (props) => {
           }}
         >
           <ProductListItemContent
-            item={{ ...props.item, imgSrc: props.imgSrc }}
+            item={{
+              ...props.item,
+              imgSrc: props.imgSrc,
+            }}
             showSellerActions={true}
           />
         </Card>

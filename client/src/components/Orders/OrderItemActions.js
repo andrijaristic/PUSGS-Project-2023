@@ -3,16 +3,19 @@ import { Box, Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { cancelOrderAction } from "../../store/ordersSlice";
 import { useLocation, useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
 const OrderItemActions = (props) => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const nav = useNavigate();
   const user = useSelector((state) => state.user.user);
+  const token = useSelector((state) => state.user.token);
+  const { id: buyerId } = jwtDecode(token);
   const isBuyer = user.role === "BUYER";
 
   const cancelOrderHandler = () => {
-    dispatch(cancelOrderAction({ orderId: props.id }));
+    dispatch(cancelOrderAction({ orderId: props.id, buyerId: buyerId }));
   };
 
   const viewOrderHandler = () => {

@@ -19,6 +19,7 @@ import EuroIcon from "@mui/icons-material/Euro";
 import { clearCart } from "../../store/cartSlice";
 import { getProductImageAction } from "../../store/productsSlice";
 import { createOrderAction } from "../../store/ordersSlice";
+import jwtDecode from "jwt-decode";
 
 const CheckoutList = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,9 @@ const CheckoutList = () => {
   const cartPrice = useSelector((state) => state.cart.price);
   const productImages = useSelector((state) => state.products.productImages);
   const apiState = useSelector((state) => state.orders.apiState);
+
+  const token = useSelector((state) => state.user.token);
+  const { id: buyerId } = jwtDecode(token);
 
   const [isAddressValid, setIsAddressValid] = useState(false);
   const [isAddressTouched, setIsAddressTouched] = useState(false);
@@ -91,6 +95,7 @@ const CheckoutList = () => {
           timestamp: item.item.timestamp,
         };
       }),
+      buyerId: buyerId,
     };
 
     dispatch(createOrderAction(data));

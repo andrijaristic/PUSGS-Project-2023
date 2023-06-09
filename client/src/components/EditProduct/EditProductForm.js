@@ -21,9 +21,14 @@ import {
 } from "@mui/material";
 import EditProductFormImageItem from "./EditProductFormImageItem";
 import EditProductFormItem from "./EditProductFormItem";
+import jwtDecode from "jwt-decode";
 
 const EditProductForm = () => {
   const dispatch = useDispatch();
+
+  const token = useSelector((state) => state.user.token);
+  const { id: sellerId } = jwtDecode(token);
+
   const params = useParams();
   const imageInput = useRef(null);
   const [displayImage, setDisplayImage] = useState(null);
@@ -39,7 +44,7 @@ const EditProductForm = () => {
 
   useEffect(() => {
     const execute = async () => {
-      await dispatch(getProductByIdAction(id));
+      dispatch(getProductByIdAction(id));
       dispatch(getProductImageAction(id));
     };
 
@@ -89,6 +94,7 @@ const EditProductForm = () => {
       return;
     }
 
+    formData.append("sellerId", sellerId);
     if (uploadedImage !== null) {
       formData.append("image", uploadedImage);
     }
@@ -109,6 +115,7 @@ const EditProductForm = () => {
     const data = {
       id: editProduct.id,
       amount,
+      sellerId: sellerId,
     };
 
     dispatch(restockProductAction(data));

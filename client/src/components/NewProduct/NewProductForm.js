@@ -10,12 +10,16 @@ import {
   Zoom,
 } from "@mui/material";
 import EuroSymbolIcon from "@mui/icons-material/EuroSymbol";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NewProductFormImageItem from "../NewProduct/NewProductFormImageItem";
 import { createNewProductAction } from "../../store/productsSlice";
+import jwtDecode from "jwt-decode";
 
 const NewProductForm = () => {
   const dispatch = useDispatch();
+
+  const token = useSelector((state) => state.user.token);
+  const { id } = jwtDecode(token);
 
   const [isNameValid, setIsNameValid] = useState(false);
   const [isNameTouched, setIsNameTouched] = useState(false);
@@ -103,6 +107,8 @@ const NewProductForm = () => {
     ) {
       return;
     }
+
+    formData.append("sellerId", id);
 
     if (uploadedImage !== null) {
       formData.append("image", uploadedImage);
