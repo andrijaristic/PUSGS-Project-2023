@@ -66,9 +66,7 @@ namespace ProductsOrdersWebApi.Controllers
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> Post([FromForm]NewProductDTO newProductDTO)
         {
-            newProductDTO.SellerId = _authHelperService.GetUserIdFromToken(User);
-
-            DisplayProductDTO displayProductDTO = await _productService.CreateProduct(newProductDTO);
+            DisplayProductDTO displayProductDTO = await _productService.CreateProduct(newProductDTO, _authHelperService.GetUserIdFromToken(User));
             return CreatedAtAction(nameof(Get), new { id = displayProductDTO.Id}, displayProductDTO);
         }
 
@@ -76,33 +74,23 @@ namespace ProductsOrdersWebApi.Controllers
         [Authorize(Roles = "seller")]
         public async Task<IActionResult> Put([FromForm]UpdateProductDTO updateProductDTO)
         {
-            updateProductDTO.SellerId = _authHelperService.GetUserIdFromToken(User);
-
-            DisplayProductDTO displayProductDTO = await _productService.UpdateProduct(updateProductDTO);
+            DisplayProductDTO displayProductDTO = await _productService.UpdateProduct(updateProductDTO, _authHelperService.GetUserIdFromToken(User));
             return Ok(displayProductDTO);
         }
 
         [HttpPut("restock")]
         [Authorize(Roles = "seller")]
-        public async Task<IActionResult> ProductRestock(ProductRestockDTO productRestockDTO)
+        public async Task<IActionResult> ProductRestock([FromBody]ProductRestockDTO productRestockDTO)
         {
-            productRestockDTO.UserId = _authHelperService.GetUserIdFromToken(User);
-
-            DisplayProductDTO displayProductDTO = await _productService.RestockProduct(productRestockDTO);
+            DisplayProductDTO displayProductDTO = await _productService.RestockProduct(productRestockDTO, _authHelperService.GetUserIdFromToken(User));
             return Ok(displayProductDTO);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [Authorize(Roles = "seller")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete([FromBody]DeleteProductDTO deleteProductDTO)
         {
-            DeleteProductDTO deleteProductDTO = new DeleteProductDTO() 
-            {
-                UserId = _authHelperService.GetUserIdFromToken(User),
-                ProductId = id
-            };
-
-            await _productService.DeleteProduct(deleteProductDTO);
+            await _productService.DeleteProduct(deleteProductDTO, _authHelperService.GetUserIdFromToken(User));
             return Ok();
         }
     }

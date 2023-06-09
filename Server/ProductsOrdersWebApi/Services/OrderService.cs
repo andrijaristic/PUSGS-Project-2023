@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
+using Dapr.Client;
 using Microsoft.Extensions.Options;
 using ProductsOrdersWebApi.Dto.OrderDTOs;
 using ProductsOrdersWebApi.Dto.UserDTOs;
 using ProductsOrdersWebApi.Enums;
+using ProductsOrdersWebApi.Exceptions.Common;
 using ProductsOrdersWebApi.Exceptions.OrderExceptions;
 using ProductsOrdersWebApi.Exceptions.OrderItemExceptions;
 using ProductsOrdersWebApi.Exceptions.ProductExceptions;
-//using ProductsOrdersWebApi.Exceptions.UserExceptions;
+using ProductsOrdersWebApi.Exceptions.UserExceptions;
 using ProductsOrdersWebApi.Interfaces.RepositoryInterfaces;
 using ProductsOrdersWebApi.Interfaces.ServiceInterfaces;
 using ProductsOrdersWebApi.Models;
@@ -19,15 +21,22 @@ namespace ProductsOrdersWebApi.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IOptions<AppSettings> _settings;
-        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IOptions<AppSettings> settings) 
+        private readonly DaprClient _daprClient;
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IOptions<AppSettings> settings, DaprClient daprClient) 
         { 
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _settings = settings;
+            _daprClient = daprClient;
         }
 
-        public async Task CancelOrder(CancelOrderDTO cancelOrderDTO)
+        public async Task CancelOrder(CancelOrderDTO cancelOrderDTO, Guid tokenId)
         {
+            if (tokenId != cancelOrderDTO.BuyerId)
+            {
+                throw new InvalidBuyerInRequestException(cancelOrderDTO.BuyerId);
+            }
+
             Order order = await _unitOfWork.Orders.GetFullOrder(cancelOrderDTO.OrderId);
             if (order == null)
             {
@@ -65,24 +74,38 @@ namespace ProductsOrdersWebApi.Services
             await _unitOfWork.Save();
         }
 
-        public async Task<DisplayOrderDTO> CreateOrder(NewOrderDTO newOrderDTO)
+        public async Task<DisplayOrderDTO> CreateOrder(NewOrderDTO newOrderDTO, Guid tokenId)
         {
+            if (tokenId != newOrderDTO.BuyerId)
+            {
+                throw new InvalidBuyerInRequestException(newOrderDTO.BuyerId);
+            }
+
             newOrderDTO.CancellationWindow = DateTime.Now.AddMinutes(60).ToLocalTime();
             newOrderDTO.TimeOfDelivery = RandomDate();
             newOrderDTO.Status = "PENDING";
 
             ValidateOrder(newOrderDTO);
 
-            //User user = await _unitOfWork.Users.Find(newOrderDTO.BuyerId);
-            //if (user == null)
-            //{
-            //    throw new UserByIdNotFoundException(newOrderDTO.BuyerId);
-            //}
+            DisplayUserDTO buyer = null;
+            try
+            {
+                buyer = await _daprClient.InvokeMethodAsync<DisplayUserDTO>(HttpMethod.Get, "userswebapi", $"api/users/{newOrderDTO.BuyerId}");
+            }
+            catch (Exception e)
+            {
+                throw new DaprBadRequestException(e.Message);
+            }
 
-            //if (user.Role != UserRole.BUYER)
-            //{
-            //    throw new InvalidOrderUserInRequestException(newOrderDTO.BuyerId);
-            //}
+            if (buyer == null)
+            {
+                throw new UserByIdNotFoundException(newOrderDTO.BuyerId);
+            }
+
+            if (!Enum.TryParse(buyer.Role, out UserRole role) && role != UserRole.BUYER)
+            {
+                throw new InvalidOrderUserInRequestException(newOrderDTO.BuyerId);
+            }
 
             newOrderDTO.Price = 0;
             foreach (var item in newOrderDTO.Products)

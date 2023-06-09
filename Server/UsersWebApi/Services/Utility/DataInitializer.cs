@@ -10,13 +10,11 @@ namespace UsersWebApi.Services.Utility
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOptions<AppSettings> _settings;
-        private readonly IHostEnvironment _hostEnvironment;
 
-        public DataInitializer(IUnitOfWork unitOfWork, IOptions<AppSettings> settings, IHostEnvironment hostEnvironment)
+        public DataInitializer(IUnitOfWork unitOfWork, IOptions<AppSettings> settings)
         {
             _unitOfWork = unitOfWork;
             _settings = settings;
-            _hostEnvironment = hostEnvironment;
         }
 
         public void InitializeData()
@@ -41,7 +39,7 @@ namespace UsersWebApi.Services.Utility
                 DateOfBirth = DateTime.Parse(_settings.Value.DefaultDateOfBirth),
                 VerificationStatus = Enums.VerificationStatus.EXEMPT,
                 FinishedRegistration = true,
-                ImageURL = Path.Combine(_hostEnvironment.ContentRootPath, "Images", _settings.Value.DefaultUserImagePath)
+                ImageURL = _settings.Value.DefaultUserImagePath
             };
 
             _unitOfWork.Users.Add(newUser).Wait();

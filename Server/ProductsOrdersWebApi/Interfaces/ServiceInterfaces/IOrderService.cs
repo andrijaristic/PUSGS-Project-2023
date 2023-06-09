@@ -4,8 +4,8 @@ namespace ProductsOrdersWebApi.Interfaces.ServiceInterfaces
 {
     public interface IOrderService
     {
-        Task<DisplayOrderDTO> CreateOrder(NewOrderDTO newOrderDTO);
-        Task CancelOrder(CancelOrderDTO cancelOrderDTO);
+        Task<DisplayOrderDTO> CreateOrder(NewOrderDTO newOrderDTO, Guid tokenId);
+        Task CancelOrder(CancelOrderDTO cancelOrderDTO, Guid tokenId);
         Task<List<DisplayOrderDTO>> GetBuyerOrders(Guid buyerId);
         Task<List<DisplayOrderDTO>> GetNewBuyerOrders(Guid buyerId);
         Task<List<DisplayOrderDTO>> GetOrders();

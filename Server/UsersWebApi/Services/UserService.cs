@@ -220,7 +220,7 @@ namespace UsersWebApi.Services
             {
                 if (!String.Equals(user.ImageURL, _settings.Value.DefaultUserImagePath))
                 {
-                    _imageService.DeleteImage(user.ImageURL);
+                    _imageService.DeleteImage(user.ImageURL, _hostEnvironment.ContentRootPath);
                 }
 
                 string name = user.Email.Split("@")[0];

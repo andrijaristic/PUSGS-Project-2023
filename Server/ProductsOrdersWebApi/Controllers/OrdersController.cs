@@ -93,9 +93,7 @@ namespace ProductsOrdersWebApi.Controllers
         [Authorize(Roles = "buyer")]
         public async Task<IActionResult> Post([FromBody]NewOrderDTO newOrderDTO)
         {
-            newOrderDTO.BuyerId = _authHelperService.GetUserIdFromToken(User);
-
-            DisplayOrderDTO displayOrderDTO = await _orderService.CreateOrder(newOrderDTO);
+            DisplayOrderDTO displayOrderDTO = await _orderService.CreateOrder(newOrderDTO, _authHelperService.GetUserIdFromToken(User));
             return CreatedAtAction(nameof(Get), new { Id = displayOrderDTO.Id }, displayOrderDTO);
         }
 
@@ -103,8 +101,7 @@ namespace ProductsOrdersWebApi.Controllers
         [Authorize(Roles = "buyer")]
         public async Task<IActionResult> Put([FromBody]CancelOrderDTO cancelOrderDTO)
         {
-            cancelOrderDTO.BuyerId = _authHelperService.GetUserIdFromToken(User);
-            await _orderService.CancelOrder(cancelOrderDTO);
+            await _orderService.CancelOrder(cancelOrderDTO, _authHelperService.GetUserIdFromToken(User));
             return Ok();
         }
     }

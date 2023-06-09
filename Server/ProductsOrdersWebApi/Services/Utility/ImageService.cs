@@ -19,9 +19,9 @@ namespace ProductsOrdersWebApi.Services.Utility
             return imageName;
         }
 
-        public FileStream DownloadImage(string imagePath, string rootPath)
+        public FileStream DownloadImage(string path, string rootPath)
         {
-            //var imagePath = Path.Combine(rootPath, "Images", path);
+            var imagePath = Path.Combine(rootPath, "Images", path);
             if (File.Exists(imagePath))
             {
                 FileStream stream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
@@ -31,11 +31,12 @@ namespace ProductsOrdersWebApi.Services.Utility
             return null;
         }
 
-        public void DeleteImage(string path)
+        public void DeleteImage(string path, string rootPath)
         {
-            if (File.Exists(path))
+            var imagePath = Path.Combine(rootPath, "Images", path);
+            if (File.Exists(imagePath))
             {
-                File.Delete(path);
+                File.Delete(imagePath);
             }
         }
     }

@@ -3,6 +3,6 @@
     public class DeleteProductDTO
     {
         public Guid ProductId { get; set; }
-        public Guid UserId { get; set; }
+        public Guid SellerId { get; set; }
     }
 }

@@ -47,7 +47,7 @@ namespace UsersWebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> GetUserInformationById(Guid id)
         {
             DisplayUserDTO displayUserDTO = await _userService.GetUserInformation(id);
