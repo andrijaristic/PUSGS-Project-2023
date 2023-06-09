@@ -150,7 +150,7 @@ namespace Server.Services
             Product product = _mapper.Map<Product>(newProductDTO);
             product.Timestamp = DateTime.Now.ToLocalTime();
 
-            product.ImageURL = Path.Combine(_hostEnvironment.ContentRootPath, "Images", _settings.Value.DefaultProductImagePath); ;
+            product.ImageURL = _settings.Value.DefaultProductImagePath;
             if (newProductDTO.Image != null)
             {
                 string name = $"{product.Name}";

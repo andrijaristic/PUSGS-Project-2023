@@ -59,6 +59,12 @@ namespace UsersWebApi.Services
 
             user.VerificationStatus = verifyUserDTO.Verified ? VerificationStatus.ACCEPTED : VerificationStatus.DENIED;
             await _unitOfWork.Save();
+
+            string subject = "Seller verification status";
+            string body;
+            body = $"Your verification status has been updated to {user.VerificationStatus}";
+
+            await _mailingService.SendEmail(user.Email, subject, body);
         }
 
         public async Task<DisplayUserDTO> CreateUser(NewUserDTO newUserDTO)
@@ -76,8 +82,8 @@ namespace UsersWebApi.Services
             {
                 user.VerificationStatus = VerificationStatus.EXEMPT;
             }
-            
-            user.ImageURL = Path.Combine(_hostEnvironment.ContentRootPath, "Images", _settings.Value.DefaultUserImagePath);
+
+            user.ImageURL = _settings.Value.DefaultUserImagePath;
             if (newUserDTO.Image != null)
             {
                 string name = user.Email.Split("@")[0];
