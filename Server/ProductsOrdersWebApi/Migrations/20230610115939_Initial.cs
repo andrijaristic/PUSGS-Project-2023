@@ -17,6 +17,7 @@ namespace ProductsOrdersWebApi.Migrations
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeliveryAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<double>(type: "float", nullable: false),
+                    DeliveryFee = table.Column<double>(type: "float", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CancellationWindow = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TimeOfDelivery = table.Column<DateTime>(type: "datetime2", nullable: false),

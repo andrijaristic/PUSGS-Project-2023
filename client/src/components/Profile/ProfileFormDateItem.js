@@ -18,7 +18,7 @@ const ProfileFormDateItem = (props) => {
         defaultValue={
           props.initialValue ? new Date(props.initialValue) : new Date()
         }
-        onChange={(value) => props.setValue(new Date(value))}
+        onChange={(value) => props.setValue(value)}
         sx={{
           mt: 2,
           mb: 1,

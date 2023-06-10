@@ -12,7 +12,7 @@ using ProductsOrdersWebApi.Infrastructure;
 namespace ProductsOrdersWebApi.Migrations
 {
     [DbContext(typeof(ProductOrdersDbContext))]
-    [Migration("20230607124232_Initial")]
+    [Migration("20230610115939_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,9 @@ namespace ProductsOrdersWebApi.Migrations
 
                     b.Property<string>("DeliveryAddress")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("DeliveryFee")
+                        .HasColumnType("float");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");

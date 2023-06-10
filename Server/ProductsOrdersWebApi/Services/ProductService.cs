@@ -164,7 +164,7 @@ namespace Server.Services
             return _mapper.Map<DisplayProductDTO>(product);
         }
 
-        public async Task DeleteProduct(DeleteProductDTO deleteProductDTO, Guid tokenId)
+        public async Task DeleteProduct(DeleteProductDTO deleteProductDTO)
         {
             Product product = await _unitOfWork.Products.Find(deleteProductDTO.ProductId);
             if (product == null || product.IsDeleted)
@@ -177,10 +177,10 @@ namespace Server.Services
                 throw new InvalidProductUserInRequestException(deleteProductDTO.ProductId, deleteProductDTO.SellerId);
             }
 
-            if (tokenId != deleteProductDTO.SellerId)
-            {
-                throw new InvalidProductSellerException(deleteProductDTO.SellerId);
-            }
+            //if (tokenId != deleteProductDTO.SellerId)
+            //{
+            //    throw new InvalidProductSellerException(deleteProductDTO.SellerId);
+            //}
 
             bool inOrder = await _unitOfWork.OrderItems.FindOrderForItem(deleteProductDTO.ProductId);
             if (!inOrder)

@@ -11,7 +11,7 @@ const SellerDeleteAction = (props) => {
   const { id: sellerId } = jwtDecode(token);
 
   const clickHandler = () => {
-    dispatch(deleteProductAction({ productId: props.id, sellerId: sellerId }));
+    dispatch(deleteProductAction(props.id));
   };
 
   return (

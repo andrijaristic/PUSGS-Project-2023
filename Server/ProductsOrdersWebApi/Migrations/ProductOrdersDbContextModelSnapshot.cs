@@ -40,6 +40,9 @@ namespace ProductsOrdersWebApi.Migrations
                     b.Property<string>("DeliveryAddress")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("DeliveryFee")
+                        .HasColumnType("float");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
 

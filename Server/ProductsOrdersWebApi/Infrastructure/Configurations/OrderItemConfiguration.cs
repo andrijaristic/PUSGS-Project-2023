@@ -9,6 +9,7 @@ namespace ProductsOrdersWebApi.Infrastructure.Configurations
         public void Configure(EntityTypeBuilder<OrderItem> builder)
         {
             builder.HasKey(x => x.Id);
+
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
             builder.HasOne(x => x.Order)

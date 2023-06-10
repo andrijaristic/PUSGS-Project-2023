@@ -234,7 +234,7 @@ namespace UsersWebApi.Services
                 user.ImageURL = await _imageService.SaveImage(updateUserDTO.Image, name, _hostEnvironment.ContentRootPath);
             }
 
-            user.Update(updateUserDTO.Address.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth.ToUniversalTime());
+            user.Update(updateUserDTO.Address.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth);
             await _unitOfWork.Save();
 
             return _mapper.Map<DisplayUserDTO>(user);

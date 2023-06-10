@@ -86,11 +86,17 @@ namespace ProductsOrdersWebApi.Controllers
             return Ok(displayProductDTO);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [Authorize(Roles = "seller")]
-        public async Task<IActionResult> Delete([FromBody]DeleteProductDTO deleteProductDTO)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            await _productService.DeleteProduct(deleteProductDTO, _authHelperService.GetUserIdFromToken(User));
+            DeleteProductDTO deleteProductDTO = new DeleteProductDTO()
+            {
+                SellerId = _authHelperService.GetUserIdFromToken(User),
+                ProductId = id
+            };
+
+            await _productService.DeleteProduct(deleteProductDTO);
             return Ok();
         }
     }

@@ -18,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 const DetailedOrderUserInformation = (props) => {
   const editable = false;
   const nav = useNavigate();
-  console.log(props);
   const returnHandler = () => {
     nav(-1);
   };

@@ -62,6 +62,8 @@ const DetailedOrderList = (props) => {
     nav(`${pathname}/buyer/${props.order.buyerId}`);
   };
 
+  console.log(props.order);
+
   if (props.order) {
     return (
       <Container component="main">
@@ -131,7 +133,7 @@ const DetailedOrderList = (props) => {
                   >
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <EuroIcon fontSize="small" />
-                      {props.order.price}
+                      {props.order.price.toFixed(2)}
                     </Box>
                   </Typography>
                   <TextField

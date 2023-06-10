@@ -23,7 +23,7 @@ namespace UsersWebApi.Models
         {
             Name = name;
             Address = address;
-            DateOfBirth = dateOfBirth;  
+            DateOfBirth = dateOfBirth.ToUniversalTime();  
         }
     }
 }

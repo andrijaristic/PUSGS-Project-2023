@@ -24,6 +24,7 @@ const initialState = {
       ? JSON.parse(localStorage.getItem("user")).finishedRegistration
       : false,
   fetchedUser: null,
+  fetchedUserAvatar: null,
 };
 
 export const loginAction = createAsyncThunk(
@@ -110,6 +111,18 @@ export const getUserAvatarAction = createAsyncThunk(
   }
 );
 
+export const getFetchedUserAvatarAction = createAsyncThunk(
+  "user/getFetchAvatar",
+  async (id, thunkApi) => {
+    try {
+      const response = await GetUserAvatar(id);
+      return thunkApi.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
 export const updateUserAction = createAsyncThunk(
   "user/update",
   async (data, thunkApi) => {
@@ -137,8 +150,14 @@ const userSlice = createSlice({
     setUserAvatar(state, action) {
       state.avatar = action.payload;
     },
+    setFetchedUserAvatar(state, action) {
+      state.fetchedUserAvatar = action.payload;
+    },
     clearFetchedUser(state, action) {
       state.fetchedUser = null;
+    },
+    clearFetchedUserAvatar(state, action) {
+      state.fetchedUserAvatar = null;
     },
   },
   extraReducers: (builder) => {
@@ -267,6 +286,23 @@ const userSlice = createSlice({
         pauseOnHover: false,
       });
     });
+    builder.addCase(getFetchedUserAvatarAction.fulfilled, (state, action) => {
+      const imageSrc = URL.createObjectURL(new Blob([action.payload]));
+      state.fetchedUserAvatar = imageSrc;
+    });
+    builder.addCase(getFetchedUserAvatarAction.rejected, (state, action) => {
+      let error = "IMAGE ERROR"; // Make a default error message constant somewhere
+      if (typeof action.payload === "string") {
+        error = action.payload;
+      }
+
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+    });
     builder.addCase(getUserAvatarAction.fulfilled, (state, action) => {
       const imageSrc = URL.createObjectURL(new Blob([action.payload]));
       state.avatar = imageSrc;
@@ -290,6 +326,12 @@ const userSlice = createSlice({
       state.user.dateOfBirth = action.payload.dateOfBirth;
 
       localStorage.setItem("user", JSON.stringify(state.user));
+      toast.success("Information update successful.", {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
     });
     builder.addCase(updateUserAction.rejected, (state, action) => {
       let error = "USER UPDATE ERROR"; // Make a default error message constant somewhere
@@ -307,6 +349,12 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout, setUserAvatar, clearFetchedUser } = userSlice.actions;
+export const {
+  logout,
+  setUserAvatar,
+  setFetchedUserAvatar,
+  clearFetchedUser,
+  clearFetchedUserAvatar,
+} = userSlice.actions;
 
 export default userSlice.reducer;

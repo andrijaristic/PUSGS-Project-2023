@@ -99,6 +99,7 @@ const ProfileForm = () => {
     data.append("address", address);
 
     if (date !== null) {
+      date.setHours(12);
       data.append("dateOfBirth", date.toISOString());
     }
 
@@ -132,22 +133,7 @@ const ProfileForm = () => {
             spacing={2}
             maxHeight="70vh"
           >
-            <Grid item minWidth="20rem">
-              <Card
-                sx={{
-                  height: "34rem",
-                  display: "flex",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Box>
-                  {/*!TODO: Actually add navigation between the two*/}
-                  <InputLabel>Account</InputLabel>
-                  <InputLabel>Change Password</InputLabel>
-                </Box>
-              </Card>
-            </Grid>
-            <Grid item minWidth="50rem">
+            <Grid item minWidth="60rem">
               <Card
                 raised
                 sx={{
