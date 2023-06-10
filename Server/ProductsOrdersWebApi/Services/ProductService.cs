@@ -226,7 +226,7 @@ namespace Server.Services
                 product.ImageURL = await _imageService.SaveImage(updateProductDTO.Image, name, _hostEnvironment.ContentRootPath);
             }
 
-            product.Update(updateProductDTO.Description, updateProductDTO.IndividualPrice);
+            product.Update(updateProductDTO.Name.Trim(), updateProductDTO.Description.Trim(), updateProductDTO.IndividualPrice);
             await _unitOfWork.Save();
 
             return _mapper.Map<DisplayProductDTO>(product);

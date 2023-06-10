@@ -14,8 +14,9 @@ namespace ProductsOrdersWebApi.Models
         public DateTime Timestamp { get; set; }
         public bool IsDeleted { get; set; } = false;
         
-        public void Update(string description, double individualPrice)
+        public void Update(string name, string description, double individualPrice)
         {
+            Name = name;
             Description = description;
             IndividualPrice = individualPrice;
             Timestamp = DateTime.Now.ToUniversalTime();

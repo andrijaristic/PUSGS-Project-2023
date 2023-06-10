@@ -137,6 +137,7 @@ namespace ProductsOrdersWebApi.Services
             }
 
             newOrderDTO.Price += _settings.Value.DeliveryFee;
+            newOrderDTO.DeliveryFee += _settings.Value.DeliveryFee;
             
             Order order = _mapper.Map<Order>(newOrderDTO);
             await _unitOfWork.Orders.Add(order);

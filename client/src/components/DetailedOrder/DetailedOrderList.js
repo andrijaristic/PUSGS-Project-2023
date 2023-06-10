@@ -5,6 +5,7 @@ import {
   Card,
   Container,
   CssBaseline,
+  FormHelperText,
   Grid,
   InputLabel,
   TextField,
@@ -116,8 +117,8 @@ const DetailedOrderList = (props) => {
                     border: 1,
                     width: "100%",
                     maxWidth: "100%",
-                    maxHeight: "30rem",
-                    minHeight: "30rem",
+                    maxHeight: "34rem",
+                    minHeight: "32rem",
                   }}
                 >
                   <InputLabel sx={{ fontSize: "20px", mb: -1 }}>
@@ -134,6 +135,31 @@ const DetailedOrderList = (props) => {
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <EuroIcon fontSize="small" />
                       {props.order.price.toFixed(2)}
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "row" }}>
+                      <Box>
+                        <FormHelperText sx={{ fontSize: 14 }}>
+                          {"Delivery fee"}
+                        </FormHelperText>
+                        <Typography
+                          sx={{ display: "flex", alignItems: "center" }}
+                        >
+                          <EuroIcon fontSize="small" />
+                          {props.order.deliveryFee.toFixed(2)}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ ml: 4 }}>
+                        <FormHelperText sx={{ fontSize: 14 }}>
+                          {"Price without fee"}
+                        </FormHelperText>
+                        <Typography
+                          sx={{ display: "flex", alignItems: "center" }}
+                        >
+                          <EuroIcon fontSize="small" />
+                          {props.order.price.toFixed(2) -
+                            props.order.deliveryFee.toFixed(2)}
+                        </Typography>
+                      </Box>
                     </Box>
                   </Typography>
                   <TextField

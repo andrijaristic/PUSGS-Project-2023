@@ -83,7 +83,6 @@ const EditProductForm = () => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    formData.delete("name");
     formData.delete("amount");
     formData.append("id", editProduct.id);
 
