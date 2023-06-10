@@ -123,7 +123,7 @@
     // Products Web API
     {
       "UpstreamPathTemplate": "/gateway/products",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
 
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -136,7 +136,7 @@
     },
     {
       "UpstreamPathTemplate": "/gateway/products/{id}",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
 
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
