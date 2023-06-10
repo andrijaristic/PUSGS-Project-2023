@@ -1,13 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getProductByIdAction,
-  clearEditProduct,
-  getProductImageAction,
   updateProductAction,
   restockProductAction,
 } from "../../store/productsSlice";
-import { useParams } from "react-router-dom";
 import LoadingModal from "../UI/Modal/LoadingModal";
 import {
   Box,
@@ -18,38 +14,24 @@ import {
   Grid,
   Switch,
   Zoom,
+  InputLabel,
 } from "@mui/material";
+
 import EditProductFormImageItem from "./EditProductFormImageItem";
 import EditProductFormItem from "./EditProductFormItem";
 import jwtDecode from "jwt-decode";
+import { toast } from "react-toastify";
 
-const EditProductForm = () => {
+const EditProductForm = (props) => {
   const dispatch = useDispatch();
 
   const token = useSelector((state) => state.user.token);
   const { id: sellerId } = jwtDecode(token);
 
-  const params = useParams();
   const imageInput = useRef(null);
   const [displayImage, setDisplayImage] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [editable, setEditable] = useState(false);
-  const editProduct = useSelector((state) => state.products.editProduct);
-  const productImages = useSelector((state) => state.products.productImages);
-  const id = params.productId || "";
-
-  useEffect(() => {
-    dispatch(clearEditProduct());
-  }, [dispatch]);
-
-  useEffect(() => {
-    const execute = async () => {
-      dispatch(getProductByIdAction(id));
-      dispatch(getProductImageAction(id));
-    };
-
-    execute();
-  }, [dispatch, id]);
 
   const editEnableHandler = (event) => {
     setEditable((editState) => !editState);
@@ -84,12 +66,19 @@ const EditProductForm = () => {
 
     const formData = new FormData(event.currentTarget);
     formData.delete("amount");
-    formData.append("id", editProduct.id);
+    formData.append("id", props.product.id);
 
+    const name = formData.get("name");
     const individualPrice = formData.get("individualPrice");
     const description = formData.get("description");
 
-    if (!individualPrice || isNaN(individualPrice) || !description) {
+    if (!name || !individualPrice || isNaN(individualPrice) || !description) {
+      toast.error("Please fill in all fields correctly", {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
       return;
     }
 
@@ -98,7 +87,6 @@ const EditProductForm = () => {
       formData.append("image", uploadedImage);
     }
 
-    console.log(formData);
     dispatch(updateProductAction(formData));
   };
 
@@ -112,7 +100,7 @@ const EditProductForm = () => {
     }
 
     const data = {
-      id: editProduct.id,
+      id: props.product.id,
       amount,
       sellerId: sellerId,
     };
@@ -120,135 +108,162 @@ const EditProductForm = () => {
     dispatch(restockProductAction(data));
   };
 
-  if (editProduct) {
+  if (props.product) {
     return (
-      <Container
-        margin="normal"
-        component="main"
-        sx={{
-          position: "static",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "80vh",
-        }}
-      >
+      <Container>
         <CssBaseline />
         <Zoom in={true}>
-          <Grid container spacing={2}>
-            <Grid item>
-              <Card
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  bgcolor: "black",
-                }}
-              >
-                <Switch onChange={editEnableHandler} color="warning" />
-                <EditProductFormImageItem
-                  disabled={editable}
-                  image={
-                    displayImage
-                      ? displayImage
-                      : productImages[0]
-                      ? productImages[0].imageSrc
-                      : null
-                  }
-                  imageInput={imageInput}
-                  uploadHandler={imageChangeHandler}
-                  avatarClickHandler={imageUploadHandler}
-                ></EditProductFormImageItem>
-              </Card>
-            </Grid>
-            <Grid item>
-              <Card
-                wrap="nowrap"
-                sx={{
-                  height: "32rem",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "20rem",
-                  overflow: "auto",
-                }}
-              >
-                <Box component="form" onSubmit={submitHandler} sx={{ mt: 2 }}>
-                  <EditProductFormItem
-                    id="name"
-                    label="Product name"
-                    initialValue={editProduct.name}
-                    editable={editable}
-                  ></EditProductFormItem>
-                  <EditProductFormItem
-                    id="individualPrice"
-                    label="Individual item price"
-                    type="number"
-                    initialValue={editProduct.individualPrice}
-                    editable={editable}
-                  ></EditProductFormItem>
-                  <EditProductFormItem
-                    id="description"
-                    label="Description"
-                    multiline={true}
-                    initialValue={editProduct.description}
-                    editable={editable}
-                  ></EditProductFormItem>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    type="submit"
-                    disabled={!editable}
-                    sx={{
-                      mt: 1,
-                      mb: 2,
-                      border: 1,
-                      width: "100%",
-                      ":hover": {
-                        bgcolor: "#e0dcdc",
-                      },
-                    }}
-                  >
-                    Update product information
-                  </Button>
-                </Box>
+          <Box
+            component="form"
+            onSubmit={submitHandler}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: "65vh",
+            }}
+          >
+            <Grid
+              container
+              spacing={2}
+              direction="column"
+              wrap="nowrap"
+              sx={{ overflow: "auto" }}
+            >
+              <Grid item>
+                <Card sx={{ p: 1, border: 1, display: "flex" }}>
+                  <EditProductFormImageItem
+                    disabled={editable}
+                    image={
+                      displayImage
+                        ? displayImage
+                        : props.image
+                        ? props.image.imageSrc
+                        : null
+                    }
+                    imageInput={imageInput}
+                    uploadHandler={imageChangeHandler}
+                    avatarClickHandler={imageUploadHandler}
+                  ></EditProductFormImageItem>
+                  <Box sx={{ ml: 2, width: "100%" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Switch onChange={editEnableHandler} color="warning" />
+                      <InputLabel>{"Enable product editing"}</InputLabel>
+                    </Box>
+                    <EditProductFormItem
+                      id="name"
+                      label="Product name"
+                      initialValue={props.product.name}
+                      editable={editable}
+                    ></EditProductFormItem>
 
-                <Box component="form" onSubmit={restockSubmitHandler}>
-                  <EditProductFormItem
-                    id="amount"
-                    label="Current amount"
-                    initialValue={editProduct.amount}
-                    value={editProduct.amount}
-                    editable={false}
-                  ></EditProductFormItem>
-                  <EditProductFormItem
-                    id="restockAmount"
-                    label="Amount to be added"
-                    initialValue={0}
-                    type="number"
-                    editable={editable}
-                  ></EditProductFormItem>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    type="submit"
-                    disabled={!editable}
+                    <EditProductFormItem
+                      id="individualPrice"
+                      label="Individual item price"
+                      type="number"
+                      initialValue={props.product.individualPrice}
+                      editable={editable}
+                      inputProps={true}
+                    ></EditProductFormItem>
+
+                    <Box
+                      onSubmit={restockSubmitHandler}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Grid container spacing={2} sx={{ display: "flex" }}>
+                        <Grid item xs={3}>
+                          <EditProductFormItem
+                            id="amount"
+                            label="Current amount"
+                            initialValue={props.product.amount}
+                            value={props.product.amount}
+                            editable={false}
+                            sx={{ mr: 2 }}
+                          ></EditProductFormItem>
+                        </Grid>
+
+                        <Grid item xs>
+                          <EditProductFormItem
+                            id="restockAmount"
+                            label="Amount to be added"
+                            initialValue={0}
+                            type="number"
+                            editable={editable}
+                          ></EditProductFormItem>
+                        </Grid>
+                      </Grid>
+
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        type="submit"
+                        disabled={!editable}
+                        sx={{
+                          mt: 1,
+                          mb: 2,
+                          ml: "auto",
+                          border: 1,
+                          width: "40%",
+                          ":hover": {
+                            bgcolor: "#e0dcdc",
+                          },
+                        }}
+                      >
+                        Restock products
+                      </Button>
+                    </Box>
+                  </Box>
+                </Card>
+              </Grid>
+              <Grid item xs={1}>
+                <Box>
+                  <Card sx={{ p: 2, border: 1 }}>
+                    <EditProductFormItem
+                      id="description"
+                      label="Description"
+                      multiline={true}
+                      rows={4}
+                      initialValue={props.product.description}
+                      editable={editable}
+                    ></EditProductFormItem>
+                  </Card>
+                  <Box
                     sx={{
-                      mt: 1,
-                      mb: 2,
-                      border: 1,
-                      width: "100%",
-                      ":hover": {
-                        bgcolor: "#e0dcdc",
-                      },
+                      display: "flex",
+                      justifyContent: "flex-end",
                     }}
                   >
-                    Restock
-                  </Button>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      type="submit"
+                      disabled={!editable}
+                      sx={{
+                        mt: 1,
+                        mb: 2,
+                        border: 1,
+                        ":hover": {
+                          bgcolor: "#e0dcdc",
+                        },
+                      }}
+                    >
+                      Update product information
+                    </Button>
+                  </Box>
                 </Box>
-              </Card>
+              </Grid>
             </Grid>
-          </Grid>
+          </Box>
         </Zoom>
       </Container>
     );

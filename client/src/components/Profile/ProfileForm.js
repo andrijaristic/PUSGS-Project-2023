@@ -21,6 +21,7 @@ import ProfileFormItem from "../Profile/ProfileFormItem";
 import ProfileFormDateItem from "../Profile/ProfileFormDateItem";
 import ProfileFormImageItem from "../Profile/ProfileFormImageItem";
 import ProfileFormIcon from "../Profile/ProfileFormIcon";
+import { toast } from "react-toastify";
 
 const ProfileForm = () => {
   const dispatch = useDispatch();
@@ -90,7 +91,13 @@ const ProfileForm = () => {
     const name = formData.get("name");
     const address = formData.get("address");
 
-    if (!name || !address) {
+    if (!name || !address || !date) {
+      toast.error("Please fill in all fields correctly", {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
       return;
     }
 

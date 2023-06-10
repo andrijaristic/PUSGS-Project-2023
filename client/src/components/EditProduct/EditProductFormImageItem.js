@@ -9,7 +9,7 @@ const EditProductFormImageItem = (props) => {
           alt="profile-picture"
           variant="square"
           src={props.image}
-          sx={{ width: "500px", height: "500px" }}
+          sx={{ width: "300px", height: "300px" }}
         ></Avatar>
       </Button>
       <Box sx={{ display: "none" }}>
