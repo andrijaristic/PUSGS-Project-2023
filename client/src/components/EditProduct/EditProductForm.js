@@ -93,8 +93,8 @@ const EditProductForm = (props) => {
   const restockSubmitHandler = (event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-    const amount = formData.get("restockAmount");
+    const amount = document.getElementById("restockAmount").value;
+
     if (isNaN(amount)) {
       return;
     }
@@ -174,7 +174,6 @@ const EditProductForm = (props) => {
                     ></EditProductFormItem>
 
                     <Box
-                      onSubmit={restockSubmitHandler}
                       sx={{
                         display: "flex",
                         flexDirection: "column",
@@ -206,7 +205,7 @@ const EditProductForm = (props) => {
                       <Button
                         color="secondary"
                         variant="contained"
-                        type="submit"
+                        onClick={restockSubmitHandler}
                         disabled={!editable}
                         sx={{
                           mt: 1,
