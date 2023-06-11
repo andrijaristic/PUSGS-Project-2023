@@ -25,6 +25,7 @@ import DetailedHistoryOrderPage from "../pages/DetailedHistoryOrderPage";
 import DetailedActiveOrdersOrderPage from "../pages/DetailedActiveOrdersOrderPage";
 import AllSellersPage from "../pages/AllSellersPage";
 import VerifiedSellersPage from "../pages/VerifiedSellersPage";
+import ChangePasswordPage from "../pages/ChangePasswordPage";
 
 const AppRoutes = () => {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -64,6 +65,7 @@ const AppRoutes = () => {
         <Route element={<Navigation />}>
           <Route path="" element={<HomePage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/change-password" element={<ChangePasswordPage />} />
           {isVerifiedSeller && (
             <Route path="/my-products" element={<SellerProductsPage />} />
           )}

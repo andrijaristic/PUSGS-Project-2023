@@ -114,6 +114,7 @@ const LoginForm = () => {
             id="password"
             label="Password"
             name="password"
+            type="password"
             error={isPasswordTouched && !isPasswordValid}
             onChange={passwordChangeHandler}
             onBlur={passwordBlurHandler}

@@ -54,6 +54,19 @@
       "DownstreamPathTemplate": "/api/users/{id}"
     },
     {
+      "UpstreamPathTemplate": "/gateway/users/{id}/change-password",
+      "UpstreamHttpMethod": [ "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userswebapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/users/{id}/change-password"
+    },
+    {
       "UpstreamPathTemplate": "/gateway/users/avatar/{id}",
       "UpstreamHttpMethod": [ "Get" ],
 

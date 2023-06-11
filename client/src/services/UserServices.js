@@ -67,9 +67,16 @@ export const GetAllVerifiedSellers = async () => {
   );
 };
 
-export const VerifySeller = async (requestBody) => {
+export const VerifySeller = async (data) => {
   return await axiosClient.put(
     `${process.env.REACT_APP_API_ENDPOINT}/users/verify`,
-    requestBody
+    data
+  );
+};
+
+export const ChangePassword = async (id, data) => {
+  return await axiosClient.put(
+    `${process.env.REACT_APP_API_ENDPOINT}/users/${id}/change-password`,
+    data
   );
 };

@@ -14,5 +14,6 @@ namespace UsersWebApi.Interfaces.ServiceInterfaces
         Task<UserAvatarDTO> GetUserAvatar(Guid id);
         Task<DisplayUserDTO> GetUserInformation(Guid id);
         Task<AuthDTO> FinishRegistration(FinishRegistrationDTO finishRegistrationDTO);
+        Task<DisplayUserDTO> ChangePassword(Guid id, ChangePasswordDTO changePasswordDTO, Guid tokenId);
     }
 }

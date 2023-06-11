@@ -110,5 +110,13 @@ namespace UsersWebApi.Controllers
             await _userService.VerifyUser(verifyUserDTO);
             return Ok();
         }
+
+        [HttpPut("{id}/change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(Guid id, [FromBody]ChangePasswordDTO changePasswordDTO)
+        {
+            DisplayUserDTO displayUserDTO = await _userService.ChangePassword(id, changePasswordDTO, _authHelperService.GetUserIdFromToken(User));
+            return Ok(displayUserDTO);
+        }
     }
 }

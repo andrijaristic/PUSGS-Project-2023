@@ -9,6 +9,7 @@ import {
   FinishRegistration,
   UpdateUser,
   GetUserInformationById,
+  ChangePassword,
 } from "../services/UserServices";
 
 const initialState = {
@@ -25,6 +26,7 @@ const initialState = {
       : false,
   fetchedUser: null,
   fetchedUserAvatar: null,
+  apiState: "COMPLETED",
 };
 
 export const loginAction = createAsyncThunk(
@@ -128,6 +130,18 @@ export const updateUserAction = createAsyncThunk(
   async (data, thunkApi) => {
     try {
       const response = await UpdateUser(data);
+      return thunkApi.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
+export const changePasswordAction = createAsyncThunk(
+  "user/changePassword",
+  async (data, thunkApi) => {
+    try {
+      const response = await ChangePassword(data.id, data.body);
       return thunkApi.fulfillWithValue(response.data);
     } catch (error) {
       return thunkApi.rejectWithValue(error.response.data.error);
@@ -334,6 +348,32 @@ const userSlice = createSlice({
       });
     });
     builder.addCase(updateUserAction.rejected, (state, action) => {
+      let error = "USER UPDATE ERROR"; // Make a default error message constant somewhere
+      if (typeof action.payload === "string") {
+        error = action.payload;
+      }
+
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+    });
+    builder.addCase(changePasswordAction.pending, (state, action) => {
+      state.apiState = "PENDING";
+    });
+    builder.addCase(changePasswordAction.fulfilled, (state, action) => {
+      state.apiState = "COMPLETED";
+      toast.success("Password successfully updated.", {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+    });
+    builder.addCase(changePasswordAction.rejected, (state, action) => {
+      state.apiState = "REJECTED";
       let error = "USER UPDATE ERROR"; // Make a default error message constant somewhere
       if (typeof action.payload === "string") {
         error = action.payload;

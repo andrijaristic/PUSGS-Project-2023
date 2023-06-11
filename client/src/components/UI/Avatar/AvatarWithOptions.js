@@ -15,7 +15,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Logout } from "@mui/icons-material";
+import { Logout, Settings } from "@mui/icons-material";
 import PersonIcon from "@mui/icons-material/Person";
 import { clearCart } from "../../../store/cartSlice";
 
@@ -50,6 +50,23 @@ const AvatarWithOptions = () => {
     }
 
     navigate("/profile");
+    setAnchorEl(null);
+  };
+
+  const changePasswordHandler = () => {
+    if (!finishedRegistration) {
+      toast.info("Please finish registration process", {
+        position: "top-center",
+        autoClose: 2500,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+
+      setAnchorEl(null);
+      return;
+    }
+
+    navigate("/change-password");
     setAnchorEl(null);
   };
 
@@ -131,6 +148,13 @@ const AvatarWithOptions = () => {
             <PersonIcon fontSize="medium" />
           </ListItemIcon>
           Profile
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={changePasswordHandler}>
+          <ListItemIcon>
+            <Settings fontSize="medium" />
+          </ListItemIcon>
+          Change password
         </MenuItem>
         <Divider />
         <MenuItem onClick={logoutHandler}>

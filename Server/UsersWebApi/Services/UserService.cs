@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System.IO;
 using UsersWebApi.Dto.UserDTOs;
 using UsersWebApi.Enums;
@@ -235,6 +236,40 @@ namespace UsersWebApi.Services
             }
 
             user.Update(updateUserDTO.Address.Trim(), updateUserDTO.Name.Trim(), updateUserDTO.DateOfBirth);
+            await _unitOfWork.Save();
+
+            return _mapper.Map<DisplayUserDTO>(user);
+        }
+
+        public async Task<DisplayUserDTO> ChangePassword(Guid id, ChangePasswordDTO changePasswordDTO, Guid tokenId)
+        {
+            if (id != tokenId)
+            {
+                throw new InvalidUserException();
+            }
+
+            User user = await _unitOfWork.Users.Find(tokenId);
+            if (user == null)
+            {
+                throw new UserByIdNotFoundException(tokenId);
+            }
+
+            if (!user.FinishedRegistration)
+            {
+                throw new InvalidRegistrationStatusException();
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(changePasswordDTO.OldPassword, user.Password))
+            {
+                throw new InvalidCurrentPasswordException();
+            }
+
+            if (String.IsNullOrWhiteSpace(changePasswordDTO.NewPassword))
+            {
+                throw new InvalidUserPasswordException(changePasswordDTO.NewPassword);
+            }
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordDTO.NewPassword, BCrypt.Net.BCrypt.GenerateSalt());
             await _unitOfWork.Save();
 
             return _mapper.Map<DisplayUserDTO>(user);

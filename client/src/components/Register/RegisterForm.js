@@ -77,7 +77,7 @@ const RegisterForm = () => {
 
   const passwordChangeHandler = (event) => {
     setIsPasswordValid(
-      event.target.value !== "" && event.target.value.trim().length >= 6
+      event.target.value !== "" && event.target.value.trim().length >= 5
     );
     setDoPasswordsMatch(true);
   };
@@ -88,7 +88,7 @@ const RegisterForm = () => {
 
   const confirmPasswordChangeHandler = (event) => {
     setIsConfirmedPasswordValid(
-      event.target.value !== "" && event.target.value.trim().length >= 6
+      event.target.value !== "" && event.target.value.trim().length >= 5
     );
     setDoPasswordsMatch(true);
   };
