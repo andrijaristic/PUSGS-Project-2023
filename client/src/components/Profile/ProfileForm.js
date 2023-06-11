@@ -29,7 +29,9 @@ const ProfileForm = () => {
   const user = useSelector((state) => state.user.user);
   const avatar = useSelector((state) => state.user.avatar);
   const [displayImage, setDisplayImage] = useState(avatar);
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState(
+    user ? new Date(user.dateOfBirth) : new Date()
+  );
   const [uploadedImage, setUploadedImage] = useState(null);
   const [editable, setEditable] = useState(false);
   const [isInitial, setIsInitial] = useState(true);
@@ -91,7 +93,7 @@ const ProfileForm = () => {
     const name = formData.get("name");
     const address = formData.get("address");
 
-    if (!name || !address || !date) {
+    if (!name || !address) {
       toast.error("Please fill in all fields correctly", {
         position: "top-center",
         autoClose: 2500,
@@ -114,7 +116,8 @@ const ProfileForm = () => {
       data.append("image", uploadedImage);
     }
 
-    dispatch(updateUserAction(data));
+    console.log(data);
+    // dispatch(updateUserAction(data));
   };
 
   if (user) {
