@@ -116,8 +116,7 @@ const ProfileForm = () => {
       data.append("image", uploadedImage);
     }
 
-    console.log(data);
-    // dispatch(updateUserAction(data));
+    dispatch(updateUserAction(data));
   };
 
   if (user) {
